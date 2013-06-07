@@ -5,6 +5,7 @@ import controller.action.net.Manual;
 import controller.action.ui.CancelUndo;
 import controller.action.ui.ClockPause;
 import controller.action.ui.ClockReset;
+import controller.action.ui.Corner;
 import controller.action.ui.DropBall;
 import controller.action.ui.GlobalStuck;
 import controller.action.ui.Goal;
@@ -95,6 +96,7 @@ public class ActionBoard
     public static Defense defense;
     public static PickUpHL pickUpHL;
     public static DropBall dropBall;
+    public static Corner[] corner;
     
     public static Manual[][] manualPen = new Manual[2][Rules.league.teamSize];
     public static Manual[][] manualUnpen = new Manual[2][Rules.league.teamSize];
@@ -154,6 +156,10 @@ public class ActionBoard
         defense = new Defense();
         pickUpHL = new PickUpHL();
         dropBall = new DropBall();
+        corner = new Corner[3];
+        corner[0] = new Corner(0);
+        corner[1] = new Corner(3);
+        corner[2] = new Corner(5);
         
         for(int i=0; i<2; i++) {
             for(int j=0; j<Rules.league.teamSize; j++) {

@@ -84,6 +84,10 @@ public class KeyboardListener implements KeyEventDispatcher
                 case KeyEvent.VK_O: event = ActionBoard.holding; break;
                 case KeyEvent.VK_H: event = ActionBoard.hands; break;
                 case KeyEvent.VK_U: event = ActionBoard.pickUp; break;
+                /* Hack for b-human open challange */
+                case KeyEvent.VK_Y: event = ActionBoard.corner[0]; break;
+                case KeyEvent.VK_X: event = ActionBoard.corner[1]; break;
+                case KeyEvent.VK_C: event = ActionBoard.corner[2]; break;
             }
         } else if(Rules.league instanceof HL) {
             switch(key) {
