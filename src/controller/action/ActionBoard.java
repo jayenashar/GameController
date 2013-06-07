@@ -33,6 +33,7 @@ import controller.action.ui.penalty.Leaving;
 import controller.action.ui.penalty.PickUp;
 import controller.action.ui.penalty.PickUpHL;
 import controller.action.ui.penalty.Pushing;
+import controller.action.ui.penalty.Substitute;
 import controller.action.ui.state.Finish;
 import controller.action.ui.state.Initial;
 import controller.action.ui.state.Play;
@@ -95,6 +96,7 @@ public class ActionBoard
     public static Attack attack;
     public static Defense defense;
     public static PickUpHL pickUpHL;
+    public static Substitute substitute;
     public static DropBall dropBall;
     public static Corner[] corner;
     
@@ -155,6 +157,7 @@ public class ActionBoard
         attack = new Attack();
         defense = new Defense();
         pickUpHL = new PickUpHL();
+        substitute = new Substitute();
         dropBall = new DropBall();
         corner = new Corner[3];
         corner[0] = new Corner(0);

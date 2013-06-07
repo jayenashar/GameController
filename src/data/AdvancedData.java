@@ -84,6 +84,13 @@ public class AdvancedData extends GameControlData implements Cloneable
         if(Rules.league.startWithPenalty) {
             secGameState = GameControlData.STATE2_PENALTYSHOOT;
         }
+        for(int i=0; i<2; i++) {
+            for (int j=0; j < team[i].player.length; j++) {
+                if(j >= Rules.league.robotsPlaying) {
+                    team[i].player[j].penalty = PlayerInfo.PENALTY_SUBSTITUTE;
+                }
+            }
+        }
     }
     
     /**
@@ -252,11 +259,27 @@ public class AdvancedData extends GameControlData implements Cloneable
     public int getRemainingPenaltyTime(int side, int number)
     {
         int penalty = team[side].player[number].penalty;
-        assert penalty == PlayerInfo.PENALTY_MANUAL || Rules.league.penaltyTime[penalty] != -1;
-        return penalty == PlayerInfo.PENALTY_MANUAL ? 0
+        assert penalty == PlayerInfo.PENALTY_MANUAL || penalty == PlayerInfo.PENALTY_SUBSTITUTE || Rules.league.penaltyTime[penalty] != -1;
+        return penalty == PlayerInfo.PENALTY_MANUAL || penalty == PlayerInfo.PENALTY_SUBSTITUTE ? 0
                 : gameState == STATE_READY && Rules.league.returnRobotsInGameStoppages && whenPenalized[side][number] >= whenCurrentGameStateBegan
                 ? Rules.league.readyTime - getSecondsSince(whenCurrentGameStateBegan)
                 : Math.max(0, getRemainingSeconds(whenPenalized[side][number], Rules.league.penaltyTime[penalty]));
+    }
+    
+    /**
+     * Calculates the Number of robots in play (not substitute) on one side
+     * @param side 0 or 1 depending on whether the team is shown left or right.
+     * @return The number of robots without substitute penalty on the side
+     */
+    public int getNumberOfRobotsInPlay(int side)
+    {
+        int count = 0;
+        for(int i=0; i<team[side].player.length; i++) {
+            if(team[side].player[i].penalty != PlayerInfo.PENALTY_SUBSTITUTE) {
+                count++;
+            }
+        }
+        return count;
     }
     
     /**
