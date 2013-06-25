@@ -65,8 +65,12 @@ public class GameControlData implements Serializable
     public byte secGameState = STATE2_NORMAL;                   // Extra state information - (STATE2_NORMAL, STATE2_PENALTYSHOOT, etc)
     public byte dropInTeam;                                     // team that caused last drop in
     protected short dropInTime = -1;                            // number of seconds passed since the last drop in. -1 before first dropin
-    protected int secsRemaining = Rules.league.halfTime;        // estimate of number of seconds remaining in the half
+    public int secsRemaining = Rules.league.halfTime;        // estimate of number of seconds remaining in the half
     public TeamInfo[] team = new TeamInfo[2];
+    // hacked into the package
+    public byte penaltyShot[] = {0, 0};        // how many penalty-shots have been made by each team so far
+    public short penaltyTries[] = {0, 0};      // each bit, from lower to higher, represents a penalty shot: 1 = goal; 0 = fail
+    public short subTime = 0;                  // sub-time (remaining in ready state etc.) in seconds
     
     
     /**
@@ -105,6 +109,13 @@ public class GameControlData implements Serializable
         for (TeamInfo aTeam : team) {
             buffer.put(aTeam.toByteArray());
         }
+        /* Hack to have this in the package */
+        buffer.position(SIZE-8);
+        buffer.put(penaltyShot[0]);
+        buffer.put(penaltyShot[1]);
+        buffer.putShort(penaltyTries[0]);
+        buffer.putShort(penaltyTries[1]);
+        buffer.putShort(subTime);
         return buffer;
     }
     
@@ -134,6 +145,13 @@ public class GameControlData implements Serializable
         for(int i=0; i<team.length; i++) {
             team[i].fromByteArray(buffer);
         }
+        /* Hack to have this in the package */
+        buffer.position(SIZE-8);
+        penaltyShot[0] = buffer.get();
+        penaltyShot[1] = buffer.get();
+        penaltyTries[0] = buffer.getShort();
+        penaltyTries[1] = buffer.getShort();
+        subTime = buffer.getShort();
         return true;
     }
     

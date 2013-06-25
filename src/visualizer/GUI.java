@@ -1,19 +1,20 @@
 package visualizer;
 
-import common.TotalScaleLayout;
+import common.Log;
 import data.GameControlData;
 import data.Rules;
-import java.awt.Color;
-import java.awt.EventQueue;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.Image;
+import data.Teams;
+
+import java.awt.*;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
 
 /**
  * @author: Michel Bartsch
@@ -28,71 +29,76 @@ public class GUI extends JFrame
      */
     private static final boolean IS_OSX = System.getProperty("os.name").contains("OS X");
     private static final String WINDOW_TITLE = "GameController";
-    private static final String STANDARD_FONT = "Helvetica";
+    private static final String STANDARD_FONT = Font.DIALOG;
+    private static final double STANDARD_FONT_SIZE = 0.06;
+    private static final double STANDARD_FONT_XXL_SIZE = 0.16;
+    private static final double STANDARD_FONT_S_SIZE = 0.04;
     private static final String TEST_FONT = "Lucida Console";
+    private static final double TEST_FONT_SIZE = 0.01;
     private static final String CONFIG_PATH = "config/";
-    private static final String BACKGROUND = "background.png";
-    private static final String ICONS_PATH = "config/icons/";
-    private final static String WAITING_FOR_PACKAGE = "waiting for package...";
-    
-    /** All the components of this GUI. */
-    private ImagePanel background;
-    private JTextArea testDisplayMain;
-    private JTextArea testDisplayRobotsLeft;
-    private JTextArea testDisplayRobotsRight;
-    private JTextArea state;
-    
+    private static final String BACKGROUND = "background";
+    private static final String WAITING_FOR_PACKAGE = "waiting for package...";
+
+    /** Available screens. */
+    private static final GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+
+    BufferStrategy bufferStrategy;
     /** If testmode is on to just display whole GameControlData. */
     private boolean testmode = false;
     /** The current data to show. */
     private GameControlData data;
+    
+    private BufferedImage background;
+    
+    private Font testFont;
+    private Font standardFont;
+    private Font standardSmalFont;
+    private Font scoreFont;
+    private SimpleDateFormat clockFormat = new SimpleDateFormat("mm:ss");
     
     /**
      * Creates a new GUI.
      */
     GUI()
     {
-        super(WINDOW_TITLE);
+        super(WINDOW_TITLE, devices[devices.length - 1].getDefaultConfiguration());
+        
         setUndecorated(true);
-        GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
-        devices[devices.length-1].setFullScreenWindow(this);
-        
-        background = new ImagePanel((new ImageIcon(CONFIG_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND)).getImage(), true);
-        testDisplayMain = new JTextArea();
-        testDisplayRobotsLeft = new JTextArea();
-        testDisplayRobotsRight = new JTextArea();
-        Font testDisplayFont = new Font(TEST_FONT, Font.PLAIN, 14);
-        testDisplayMain.setFont(testDisplayFont);
-        testDisplayRobotsLeft.setFont(testDisplayFont);
-        testDisplayRobotsRight.setFont(testDisplayFont);
-        testDisplayMain.setFocusable(false);
-        testDisplayRobotsLeft.setFocusable(false);
-        testDisplayRobotsRight.setFocusable(false);
-        
-        state = new JTextArea();
-        
-        //--layout--
-        TotalScaleLayout layout = new TotalScaleLayout(this);
-        setLayout(layout);
-        layout.add(0, 0, 1, 1, background);
-        layout.add(0.2, 0.3, 0.2, 0.6, testDisplayMain);
-        layout.add(0.425, 0.2, 0.2, 0.7, testDisplayRobotsLeft);
-        layout.add(0.65, 0.2, 0.2, 0.7, testDisplayRobotsRight);
-        layout.add(0.4, 0.7, 0.2, 0.1, state);
-        
-        if(IS_OSX) {
-            devices[devices.length-1].setFullScreenWindow(null);
-            setSize(devices[devices.length-1].getDisplayMode().getWidth(), devices[devices.length-1].getDisplayMode().getHeight());
+        if(IS_OSX && devices.length != 1) {
+            setSize(devices[devices.length-1].getDefaultConfiguration().getBounds().getSize());
+        } else {
+            devices[devices.length-1].setFullScreenWindow(this);
         }
+
+        for (String format : new String [] {".png", ".jpeg", ".jpg"}) {
+            try {
+                background = ImageIO.read(new File(CONFIG_PATH+Rules.league.leagueDirectory+"/"+BACKGROUND+format));
+            } catch(IOException e) {
+            }
+        }
+        if(background == null) {
+            Log.error("Unable to load background image");
+        }
+        float scaleFactor = (float)getWidth()/background.getWidth();
+        Image tmp = (new ImageIcon(background).getImage()).getScaledInstance(
+                (int)(background.getWidth()*scaleFactor),
+                (int)(background.getHeight()*scaleFactor),
+                Image.SCALE_DEFAULT);
+        background = new BufferedImage((int) (background.getWidth() * scaleFactor), (int) (background.getWidth() * scaleFactor), BufferedImage.TYPE_INT_ARGB);
+        background.getGraphics().drawImage(tmp, 0, 0, null);
+        
+        testFont = new Font(TEST_FONT, Font.PLAIN, (int)(TEST_FONT_SIZE*getWidth()));
+        standardFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STANDARD_FONT_SIZE*getWidth()));
+        standardSmalFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STANDARD_FONT_S_SIZE*getWidth()));
+        scoreFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STANDARD_FONT_XXL_SIZE*getWidth()));
         
         setVisible(true);
-        
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                testDisplayMain.setText(WAITING_FOR_PACKAGE);
-            }
-        } );
+        createBufferStrategy(2);
+        bufferStrategy = getBufferStrategy();
+        Graphics g = bufferStrategy.getDrawGraphics();
+        draw(g);
+        bufferStrategy.show();
+        g.dispose();
     }
     
     /**
@@ -100,18 +106,8 @@ public class GUI extends JFrame
      */
     public void toggleTestmode()
     {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                testmode = !testmode;
-                testDisplayMain.setText(WAITING_FOR_PACKAGE);
-                testDisplayRobotsLeft.setText("");
-                testDisplayRobotsRight.setText("");
-                state.setText("");
-                //debug
-                update(new GameControlData());
-            }
-        } );
+        testmode = !testmode;
+        update(data);
     }
     
     /**
@@ -120,109 +116,255 @@ public class GUI extends JFrame
      * 
      * @param data  The GameControlData to show.
      */
-    public void update(GameControlData newData)
+    public synchronized void update(GameControlData data)
     {
-        data = newData;
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if(testmode) {
-                    String disp = "";
-                    disp += data;
-                    for(int i=0; i<2; i++) {
-                        disp += data.team[i];
-                    }
-                    testDisplayMain.setText(disp);
-                    disp = "";
-                    for(int j=0; j<data.team[0].player.length; j++) {
-                        disp += data.team[0].player[j];
-                    }
-                    testDisplayRobotsLeft.setText(disp);
-                    disp = "";
-                    for(int j=0; j<data.team[1].player.length; j++) {
-                        disp += data.team[1].player[j];
-                    }
-                    testDisplayRobotsRight.setText(disp);
-                    state.setText("");
-                } else {
-                    testDisplayMain.setText("");
-                    testDisplayRobotsLeft.setText("");
-                    testDisplayRobotsRight.setText("");
-                    String temp;
-                    switch(data.gameState) {
-                        case GameControlData.STATE_INITIAL:  temp = "initial"; break;
-                        case GameControlData.STATE_READY:    temp = "ready";   break;
-                        case GameControlData.STATE_SET:      temp = "set";     break;
-                        case GameControlData.STATE_PLAYING:  temp = "playing"; break;
-                        case GameControlData.STATE_FINISHED: temp = "finish";  break;
-                        default: temp = "undefinied("+data.gameState+")";
-                    }
-                    state.setText(temp);
-                }
-            }
-        } );
+        this.data = data;
+        Graphics g = bufferStrategy.getDrawGraphics();
+        if (!bufferStrategy.contentsLost()) {
+            draw(g);
+            bufferStrategy.show();
+            g.dispose();
+        }
     }
     
-    /**
-     * @author: Michel Bartsch
-     * 
-     * This is a normal JPanel, but it has a background image.
-     */
-    class ImagePanel extends JPanel
+    public final void draw(Graphics g)
     {
-        /** The image that is shown in the background. */
-        private Image image;
-        /** If true, the Image will be displayed at the top and not vertical centered. */
-        private boolean alignTop = false;
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        /**
-         * Creates a new ImagePanel.
-         * 
-         * @param image     The Image to be shown in the background.
-         * @param alignTop  If true, the Image will be displayed at the top and not vertical centered.
-         */
-        public ImagePanel(Image image, boolean alignTop)
-        {
-            this.image = image;
-            this.alignTop = alignTop;
-        }
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, getWidth(), getHeight());
+        g.drawImage(background, 0, 0, null);
         
-        /**
-         * Changes the background image.
-         * 
-         * @param image     Changes the image to this one.
-         */
-        public void setImage(Image image)
-        {
-            this.image = image;
+        if(data == null) {
+            drawNoPackage(g);
+        } else if(testmode) {
+            drawTestmode(g);
+        } else {
+            drawTeams(g);
+            drawScores(g);
+            drawTime(g);
+            drawSecState(g);
+            drawState(g);
+            drawSubTime(g);
+            drawPenaltyInfo(g);
         }
-        
-        /**
-         * Paints this Component, should be called automatically.
-         * 
-         * @param g     This components graphical content.
-         */
-        @Override
-        public void paintComponent(Graphics g)
-        {
-            if(super.isOpaque()) {
-                g.setColor(Color.WHITE);
-                g.fillRect(0, 0, getWidth(), getHeight());
+    }
+    
+    private void drawNoPackage(Graphics g)
+    {
+        g.setColor(Color.BLACK);
+        g.setFont(testFont);
+        g.drawString(WAITING_FOR_PACKAGE, (int)(0.2*getWidth()), (int)(0.3*getHeight()));
+    }
+    
+    private void drawTestmode(Graphics g)
+    {
+        g.setColor(Color.BLACK);
+        g.setFont(testFont);
+        int x = getSizeToWidth(0.08);
+        int y = getSizeToHeight(0.3);
+        String[] out = data.toString().split("\n");
+        for(int i=0; i<out.length; i++) {
+            g.drawString(out[i], x, y);
+            y += testFont.getSize()*1.2;
+        }
+        for(int j=0; j<2; j++) {
+            out = data.team[j].toString().split("\n");
+            for(int i=0; i<out.length; i++) {
+                g.drawString(out[i], x, y);
+                y += testFont.getSize()*1.2;
             }
-            float scaleFactor;
-            if(image.getWidth(null) > image.getHeight(null)) {
-                scaleFactor = (float)getWidth()/image.getWidth(null);
+        }
+        
+        x = getSizeToWidth(0.35);
+        for(int i=0; i<2; i++) {
+            y = getSizeToHeight(0.2);
+            for(int j=0; j<data.team[i].player.length; j++) {
+                out = data.team[i].player[j].toString().split("\n");
+                for(int k=0; k<out.length; k++) {
+                    g.drawString(out[k], x, y);
+                    y += testFont.getSize()*1.2;
+                }
+            }
+            x = getSizeToWidth(0.64);
+        }
+    }
+
+    private void drawTeams(Graphics g)
+    {
+        int x = getSizeToWidth(0.02);
+        int y = getSizeToHeight(0.33);
+        int size = getSizeToWidth(0.27);
+        //int yName = (int)(y + size * 1.15);
+        BufferedImage[] icons = new BufferedImage[] {
+            Teams.getIcon(data.team[0].teamNumber),
+            Teams.getIcon(data.team[1].teamNumber)};
+        /* Use this lines to display team-names and one line below
+        g.setFont(standardSmalFont);
+        int fontSize = g.getFont().getSize();
+        boolean fittingSize = false;
+        while(!fittingSize) {
+            fittingSize = true;
+            for(int i=0; i<2; i++) {
+                if(g.getFontMetrics().stringWidth(Teams.getNames(false)[data.team[i].teamNumber]) > size) {
+                    fittingSize = false;
+                    g.setFont(g.getFont().deriveFont(Font.PLAIN, --fontSize));
+                }
+            }
+        }*/
+        for(int i=0; i<2; i++) {
+            g.setColor(Rules.league.teamColor[data.team[i].teamColor]);
+            float scaleFactorX = 1;
+            float scaleFactorY = 1;
+            if(icons[i].getWidth() > icons[i].getHeight()) {
+                scaleFactorY = icons[i].getHeight()/(float)icons[i].getWidth();
             } else {
-                scaleFactor = (float)getHeight()/image.getHeight(null);
+                scaleFactorX = icons[i].getWidth()/(float)icons[i].getHeight();
             }
-            int imageWidth = (int)(scaleFactor*image.getWidth(null));
-            int imageHeight = (int)(scaleFactor*image.getHeight(null));
-            int offsetHorizontal = (int)((getWidth()-imageWidth)/2);;
-            int offsetVetical = 0;
-            if(!alignTop) {
-                offsetVetical = (int)((getHeight()-imageHeight)/2);
-            }
-            g.drawImage(image, offsetHorizontal, offsetVetical, imageWidth, imageHeight, null);
+            int offsetX = (int)((size - size*scaleFactorX)/2);
+            int offsetY = (int)((size - size*scaleFactorY)/2);
+            g.drawImage(icons[i],
+                    (i==1 ? x : getWidth()-x-size) + offsetX,
+                    y+offsetY,
+                    (int)(scaleFactorX*size),
+                    (int)(scaleFactorY*size), null);
+            /* Use this line to display team-names
+            drawCenteredString(g, Teams.getNames(false)[data.team[i].teamNumber],
+                    (i==1 ? x : getWidth()-x-size) + offsetX,
+                    yName,
+                    size);*/
         }
+    }
+    
+    private void drawScores(Graphics g)
+    {
+        g.setFont(scoreFont);
+        int x = getSizeToWidth(0.34);
+        int y = getSizeToHeight(0.62);
+        int yDiv = getSizeToHeight(0.62);
+        int size = getSizeToWidth(0.12);
+        g.setColor(Color.BLACK);
+        drawCenteredString(g, ":", getWidth()/2-size, yDiv, 2*size);
+        for(int i=0; i<2; i++) {
+            g.setColor(Rules.league.teamColor[data.team[i].teamColor]);
+            drawCenteredString(
+                    g,
+                    data.team[i].score+"",
+                    i==1 ? x : getWidth()-x-size,
+                    y,
+                    size);
+        }
+    }
+    
+    private void drawTime(Graphics g)
+    {
+        g.setColor(Color.BLACK);
+        g.setFont(standardFont);
+        int x = getSizeToWidth(0.4);
+        int y = getSizeToHeight(0.37);
+        int size = getSizeToWidth(0.2);
+        drawCenteredString(g, formatTime(data.secsRemaining), x, y, size);
+    }
+    
+    private void drawSecState(Graphics g)
+    {
+        g.setColor(Color.BLACK);
+        g.setFont(standardSmalFont);
+        int x = getSizeToWidth(0.4);
+        int y = getSizeToHeight(0.74);
+        int size = getSizeToWidth(0.2);
+        String state;
+        switch(data.secGameState) {
+            case GameControlData.STATE2_NORMAL:
+                if(data.firstHalf == GameControlData.C_TRUE) {
+                    if(data.gameState == GameControlData.STATE_FINISHED) {
+                        state = "Half Time";
+                    } else {
+                        state = "First Half";
+                    }
+                } else {
+                    if(data.gameState == GameControlData.STATE_INITIAL) {
+                        state = "Half Time";
+                    } else {
+                        state = "Second Half";
+                    }
+                }
+                break;
+            case GameControlData.STATE2_OVERTIME:     state = "Overtime";   break;
+            case GameControlData.STATE2_PENALTYSHOOT: state = "Penalty Shoot";     break;
+            default: state = "";
+        }
+        drawCenteredString(g, state, x, y, size);
+    }
+    
+    private void drawState(Graphics g)
+    {
+        g.setColor(Color.BLACK);
+        g.setFont(standardSmalFont);
+        int x = getSizeToWidth(0.4);
+        int y = getSizeToHeight(0.84);
+        int size = getSizeToWidth(0.2);
+        String state;
+        switch(data.gameState) {
+            case GameControlData.STATE_INITIAL:  state = "Initial"; break;
+            case GameControlData.STATE_READY:    state = "Ready";   break;
+            case GameControlData.STATE_SET:      state = "Set";     break;
+            case GameControlData.STATE_PLAYING:  state = "Playing"; break;
+            case GameControlData.STATE_FINISHED: state = "Finished";  break;
+            default: state = "";
+        }
+        drawCenteredString(g, state, x, y, size);
+    }
+    
+    private void drawSubTime(Graphics g)
+    {
+        if(data.subTime == 0) {
+            return;
+        }
+        g.setColor(Color.BLACK);
+        g.setFont(standardSmalFont);
+        int x = getSizeToWidth(0.4);
+        int y = getSizeToHeight(0.94);
+        int size = getSizeToWidth(0.2);
+        drawCenteredString(g, formatTime(data.subTime), x, y, size);
+    }
+    
+    private void drawPenaltyInfo(Graphics g)
+    {
+        g.setColor(Color.RED);
+        int x = getSizeToWidth(0.05);
+        int y = getSizeToHeight(0.86);
+        int size = getSizeToWidth(0.02);
+        for(int i=0; i<2; i++) {
+            g.setColor(Rules.league.teamColor[data.team[i].teamColor]);
+            for(int j=0; j<data.penaltyShot[i]; j++) {
+                if((data.penaltyTries[i] & (1<<j)) != 0) {
+                    g.fillOval(i==1 ? x+j*2*size : getWidth()-x-(5-j)*2*size-size, y, size, size);
+                } else {
+                    g.drawOval(i==1 ? x+j*2*size : getWidth()-x-(5-j)*2*size-size, y, size, size);
+                }
+            }
+        }
+    }
+    
+    private int getSizeToWidth(double size)
+    {
+        return (int)(size*getWidth());
+    }
+    
+    private int getSizeToHeight(double size)
+    {
+        return (int)(size*getHeight());
+    }
+    
+    private void drawCenteredString(Graphics g, String s, int x, int y, int width)
+    {
+        int offset = (width - g.getFontMetrics().stringWidth(s)) / 2;
+        g.drawString(s, x+offset, y);
+    }
+    
+    private String formatTime(int seconds) {
+        return (seconds < 0 ? "-" : "") + clockFormat.format(new Date(Math.abs(seconds) * 1000));
     }
 }

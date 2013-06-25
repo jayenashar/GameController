@@ -137,6 +137,7 @@ public class GUI extends JFrame implements GCGUI
     private static final String PEN_ATTACK = "Illegal Attack";
     private static final String PEN_SERVICE = "Service/Incapable";
     private static final String PEN_SUBSTITUTE = "Substitute";
+    private static final String PEN_SUBSTITUTE_SHORT = "Sub";
     private static final String DROP_BALL = "Dropped Ball";
     private static final String CANCEL = "Cancel";
     private static final String BACKGROUND_BOTTOM = "timeline_ground.png";
@@ -148,6 +149,7 @@ public class GUI extends JFrame implements GCGUI
     private static final int KICKOFF_BLOCKED_HIGHLIGHT_SECONDS = 3;
   
     /** Some attributes used in the GUI components. */
+    private double lastSize = 0;
     private Font standardFont;
     private Font titleFont;
     private Font goalsFont;
@@ -871,10 +873,13 @@ public class GUI extends JFrame implements GCGUI
                                 robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+" ("+PEN_PICKUP+")");
                                 highlight(robot[i][j], true);
                             } else if(data.team[i].player[j].penalty == PlayerInfo.PENALTY_SUBSTITUTE) {
-                                robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+" ("+PEN_SUBSTITUTE+")");
+                                robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+" ("+PEN_SUBSTITUTE_SHORT+")");
                                 highlight(robot[i][j], false);
+                            } else {
+                                robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+": "+formatTime(seconds));
+                                highlight(robot[i][j], seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT);
                             }
-                        } else {
+                        }  else {
                             robotLabel[i][j].setText(Rules.league.teamColorName[i]+" "+(j+1)+": "+formatTime(seconds));
                             highlight(robot[i][j], seconds <= UNPEN_HIGHLIGHT_SECONDS && robot[i][j].getBackground() != COLOR_HIGHLIGHT);
                         }
@@ -1061,6 +1066,11 @@ public class GUI extends JFrame implements GCGUI
     private void updateFonts()
     {
         double size = Math.min((getWidth()/(double)WINDOW_WIDTH), (getHeight()/(double)WINDOW_HEIGHT));
+        
+        if(size == lastSize) {
+            return;
+        }
+        lastSize = size;
         
         titleFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(TITLE_FONT_SIZE*(size)));
         standardFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(STANDARD_FONT_SIZE*(size)));
