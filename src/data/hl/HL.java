@@ -85,7 +85,9 @@ public class HL extends Rules
         /** On how many pushings is a robot ejected. */
         pushesToEjection = new int[] {};
         /** Defines if the option for a referee timeout is available */
-        isRefereeTimeoutAvailable = false;
+        isRefereeTimeoutAvailable = true;
+        /** How long the referee timeout is **/
+        refereeTimeout = 10*60;
         /** Defines if coach is available */
         isCoachAvailable = false;
         /** Allowed to compensate for lost time? */
