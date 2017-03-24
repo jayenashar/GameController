@@ -46,6 +46,15 @@ public class AdvancedData extends GameControlData implements Cloneable
 
     /** When was the last drop-in? (ms, 0 = never) */
     public long whenDropIn;
+
+    /** The Game Clock object that can be stopped, paused, etc. **/
+    public GameClock gameClock;
+
+    /** When was the last FreeKick? (ms, 0 = never) */
+    public long whenFreeKick;
+
+    /** When was the last PenaltyKick? (ms, 0 = never) */
+    public long whenPenaltyKick;
     
     /** When was each player penalized last (ms, 0 = never)? */
     public long[][] whenPenalized = Rules.league.isCoachAvailable ? new long[2][Rules.league.teamSize+1] : new long[2][Rules.league.teamSize];
@@ -70,7 +79,13 @@ public class AdvancedData extends GameControlData implements Cloneable
     
     /** TimeOut counters for each team, 0:left side, 1:right side. */
     public boolean[] timeOutTaken = {false, false};
-    
+
+    /** Whether we are in the free kick mode */
+    public boolean[] freeKickActive = {false, false};
+
+    /** Whether we are in the penalty kick mode */
+    public boolean[] penaltyKickActive = {false, false};
+
     /** If true, left side has the kickoff. */
     public boolean leftSideKickoff = true;
     
@@ -130,6 +145,8 @@ public class AdvancedData extends GameControlData implements Cloneable
             }
             penaltyQueueForSubPlayers.add(new ArrayList<PenaltyQueueData>());
         }
+
+        gameClock = new GameClock();
     }
 
     /**
@@ -238,7 +255,9 @@ public class AdvancedData extends GameControlData implements Cloneable
     {
         int regularNumberOfPenaltyShots = (gameType == GAME_PLAYOFF) ? Rules.league.numberOfPenaltyShotsLong : Rules.league.numberOfPenaltyShotsShort;
         int duration = secGameState == STATE2_TIMEOUT ? secsRemaining : 
-                secGameState == STATE2_NORMAL ? Rules.league.halfTime
+                secGameState == STATE2_NORMAL ? Rules.league.halfTime :
+                secGameState == SecondaryState.SECONDARY_STATE_FREEKICK ? secsRemaining :
+                secGameState == SecondaryState.SECONDARY_STATE_PENALTYKICK ? secsRemaining
                 : secGameState == STATE2_OVERTIME ? Rules.league.overtimeTime
                 : Math.max(team[0].penaltyShot, team[1].penaltyShot) > regularNumberOfPenaltyShots
                 ? Rules.league.penaltyShotTimeSuddenDeath
@@ -363,6 +382,15 @@ public class AdvancedData extends GameControlData implements Cloneable
      */
     public Integer getSecondaryTime(int timeKickOffBlockedOvertime)
     {
+
+        if (secGameState == SecondaryState.SECONDARY_STATE_FREEKICK){
+            return gameClock.getSecondaryTime();
+        }
+
+        if (secGameState == SecondaryState.SECONDARY_STATE_PENALTYKICK){
+            return gameClock.getSecondaryTime();
+        }
+
         if(timeKickOffBlockedOvertime == 0 // preparing data packet
                 && secGameState == STATE2_NORMAL && gameState == STATE_PLAYING
                 && getSecondsSince(whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying) {

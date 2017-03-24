@@ -121,4 +121,10 @@ public abstract class Rules
     public boolean dropBroadcastMessages;
     /** BackgroundSide **/
     public String[][] backgroundSide;
+
+    /** The time a team has to prepare for the free kick **/
+    public int free_kick_preparation_time;
+
+    /** The time a team has to prepare for the penalty kick **/
+    public int penalty_kick_preparation_time;
 }

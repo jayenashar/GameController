@@ -10,16 +10,7 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.swing.AbstractButton;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JRadioButton;
-import javax.swing.JToggleButton;
+import javax.swing.*;
 
 import common.Log;
 import common.TotalScaleLayout;
@@ -46,19 +37,24 @@ import data.Teams;
  * In this class you will find the whole graphical output and the bindings
  * of buttons to their actions, nothing less and nothing more.
  */
-public class GUI extends JFrame implements GCGUI
+public class GUI extends JFrame implements GCGUI, CommonGUI
 {
-    private static final boolean IS_OSX = System.getProperty("os.name").contains("OS X");
-    private static final boolean IS_APPLE_JAVA = IS_OSX && System.getProperty("java.version").compareTo("1.7") < 0;
-    private static final Insets insets = IS_APPLE_JAVA ? new Insets (2, -30, 2, -30) : null;
-    private static final String BUTTON_MASK = IS_APPLE_JAVA
+    protected static final boolean IS_OSX = System.getProperty("os.name").contains("OS X");
+    protected static final boolean IS_APPLE_JAVA = IS_OSX && System.getProperty("java.version").compareTo("1.7") < 0;
+    protected static final Insets insets = IS_APPLE_JAVA ? new Insets (2, -30, 2, -30) : null;
+    protected static final String BUTTON_MASK = IS_APPLE_JAVA
             ? "<html><div style=\"padding: 0px 12px\"><center>%s</center></div></html>"
             : "<html><center>%s</center></html>";
-    
+
+    @Override
+    public void setupGuiElement() {
+
+    }
+
     /** Fix button centering for Apple Java. */
-    private class Button extends JButton
+    protected class Button extends JButton
     {
-        private static final long serialVersionUID = -1533689100759569853L;
+        protected static final long serialVersionUID = -1533689100759569853L;
 
         public Button()
         {
@@ -78,9 +74,9 @@ public class GUI extends JFrame implements GCGUI
     }
     
     /** Fix button centering for Apple Java. */
-    private class ToggleButton extends JToggleButton
+    protected class ToggleButton extends JToggleButton
     {
-        private static final long serialVersionUID = -7733709666734108610L;
+        protected static final long serialVersionUID = -7733709666734108610L;
 
         public ToggleButton()
         {
@@ -99,151 +95,153 @@ public class GUI extends JFrame implements GCGUI
         }
     }
     
-    private static final long serialVersionUID = 1L;
+    protected static final long serialVersionUID = 1L;
     
     /**
      * Some constants defining this GUI`s appearance as their names say.
      * Feel free to change them and see what happens.
      */
-    private static final int WINDOW_WIDTH = 1024;
-    private static final int WINDOW_HEIGHT = 768;
-    private static final int STANDARD_FONT_SIZE = 17;
-    private static final int TITLE_FONT_SIZE = 24;
-    private static final String STANDARD_FONT = "Helvetica";
-    private static final int GOALS_FONT_SIZE = 60;
-    private static final int TIME_FONT_SIZE = 50;
-    private static final int TIME_SUB_FONT_SIZE = 40;
-    private static final int TIMEOUT_FONT_SIZE = 14;
-    private static final int STATE_FONT_SIZE = 12;
-    private static final String WINDOW_TITLE = "GameController";
-    private static final String ICONS_PATH = "config/icons/";
+    protected static final int WINDOW_WIDTH = 1024;
+    protected static final int WINDOW_HEIGHT = 768;
+    protected static final int STANDARD_FONT_SIZE = 17;
+    protected static final int TITLE_FONT_SIZE = 24;
+    protected static final String STANDARD_FONT = "Helvetica";
+    protected static final int GOALS_FONT_SIZE = 60;
+    protected static final int TIME_FONT_SIZE = 50;
+    protected static final int TIME_SUB_FONT_SIZE = 40;
+    protected static final int TIMEOUT_FONT_SIZE = 14;
+    protected static final int STATE_FONT_SIZE = 12;
+    protected static final String WINDOW_TITLE = "GameController";
+    protected static final String ICONS_PATH = "config/icons/";
 
-    private static final String BACKGROUND_MID = "field.png";
-    private static final String BACKGROUND_CLOCK_SMALL = "time_ground_small.png";
-    private static final String BACKGROUND_CLOCK = "time_ground.png";
-    private static final String KICKOFF = "Kickoff";
-    private static final String KICKOFF_PENALTY_SHOOTOUT = "P.-taker";
-    private static final String PUSHES = "Pushes";
-    private static final String SHOT = "Shot";
-    private static final String SHOTS = "Shots";
-    private static final String EJECTED = "Ejected";
-    private static final String ONLINE = "wlan_status_green.png";
-    private static final String OFFLINE = "wlan_status_red.png";
-    private static final String HIGH_LATENCY = "wlan_status_yellow.png";
-    private static final String UNKNOWN_ONLINE_STATUS = "wlan_status_grey.png";
-    private static final String TIMEOUT = "Timeout";
-    private static final String REFEREE_TIMEOUT = "Referee<br/>Timeout";
-    private static final String STUCK = "Global <br/> Game <br/> Stuck";
-    private static final String OUT = "Out";
-    private static final String STATE_INITIAL = "Initial";
-    private static final String STATE_READY = "Ready";
-    private static final String STATE_SET = "Set";
-    private static final String STATE_PLAY = "Play";
-    private static final String STATE_FINISH = "Finish";
-    private static final String CLOCK_RESET = "reset.png";
-    private static final String CLOCK_PAUSE = "pause.png";
-    private static final String CLOCK_PLAY = "play.png";
-    private static final String CLOCK_PLUS = "plus.png";
-    private static final String FIRST_HALF = "First Half";
-    private static final String SECOND_HALF = "Second Half";
-    private static final String FIRST_HALF_SHORT = "1st Half";
-    private static final String SECOND_HALF_SHORT = "2nd Half";
-    private static final String FIRST_HALF_OVERTIME = "1st Extra";
-    private static final String SECOND_HALF_OVERTIME = "2nd Extra";
-    private static final String PENALTY_SHOOT = "Penalty Shots";
-    private static final String PENALTY_SHOOT_SHORT = "Penalty";
-    private static final String PEN_PUSHING = "Pushing";
-    private static final String PEN_LEAVING = "Leaving the Field";
-    private static final String PEN_MOTION_IN_SET = "Motion in Set";
-    private static final String PEN_MOTION_IN_SET_SHORT = "Motion";
-    private static final String PEN_INACTIVE = "Fallen / Inactive / Local Game Stuck";
-    private static final String PEN_DEFENDER = "Illegal Defender";
-    private static final String PEN_BALL_CONTACT = "Ball Holding / Hands";
-    private static final String PEN_KICK_OFF_GOAL = "Kickoff Goal";
-    private static final String PEN_COACH_MOTION = "Coach Motion";
-    private static final String PEN_PICKUP = "Pick-Up";
-    private static final String PEN_MANIPULATION = "Ball Manipulation";
-    private static final String PEN_PHYSICAL = "Physical Contact";
-    private static final String PEN_DEFENSE = "Illegal Defense";
-    private static final String PEN_ATTACK = "Illegal Attack";
-    private static final String PEN_PICKUP_INCAPABLE = "Pickup/Incapable";
-    private static final String PEN_SERVICE = "Service";
-    private static final String PEN_SUBSTITUTE = "Substitute";
-    private static final String PEN_SUBSTITUTE_SHORT = "Sub";
-    private static final String DROP_BALL = "Dropped Ball";
-    private static final String TEAMMATE_PUSHING = "Teammate Pushing";
-    private static final String CANCEL = "Cancel";
-    private static final String COACH = "Coach";
-    private static final String BACKGROUND_BOTTOM = "timeline_ground.png";
-    private static final Color COLOR_HIGHLIGHT = Color.YELLOW;
-    private static final Color COLOR_STANDARD = (new JButton()).getBackground();
-    private static final int UNPEN_HIGHLIGHT_SECONDS = 10;
-    private static final int TIMEOUT_HIGHLIGHT_SECONDS = 10;
-    private static final int FINISH_HIGHLIGHT_SECONDS = 10;
-    private static final int KICKOFF_BLOCKED_HIGHLIGHT_SECONDS = 3;
+    protected static final String BACKGROUND_MID = "field.png";
+    protected static final String BACKGROUND_CLOCK_SMALL = "time_ground_small.png";
+    protected static final String BACKGROUND_CLOCK = "time_ground.png";
+    protected static final String KICKOFF = "Kickoff";
+    protected static final String KICKOFF_PENALTY_SHOOTOUT = "P.-taker";
+    protected static final String PUSHES = "Pushes";
+    protected static final String SHOT = "Shot";
+    protected static final String SHOTS = "Shots";
+    protected static final String EJECTED = "Ejected";
+    protected static final String ONLINE = "wlan_status_green.png";
+    protected static final String OFFLINE = "wlan_status_red.png";
+    protected static final String HIGH_LATENCY = "wlan_status_yellow.png";
+    protected static final String UNKNOWN_ONLINE_STATUS = "wlan_status_grey.png";
+    protected static final String TIMEOUT = "Timeout";
+    protected static final String REFEREE_TIMEOUT = "Referee<br/>Timeout";
+    protected static final String STUCK = "Global <br/> Game <br/> Stuck";
+    protected static final String OUT = "Out";
+    protected static final String STATE_INITIAL = "Initial";
+    protected static final String STATE_READY = "Ready";
+    protected static final String STATE_SET = "Set";
+    protected static final String STATE_PLAY = "Play";
+    protected static final String STATE_FINISH = "Finish";
+    protected static final String CLOCK_RESET = "reset.png";
+    protected static final String CLOCK_PAUSE = "pause.png";
+    protected static final String CLOCK_PLAY = "play.png";
+    protected static final String CLOCK_PLUS = "plus.png";
+    protected static final String FIRST_HALF = "First Half";
+    protected static final String SECOND_HALF = "Second Half";
+    protected static final String FIRST_HALF_SHORT = "1st Half";
+    protected static final String SECOND_HALF_SHORT = "2nd Half";
+    protected static final String FIRST_HALF_OVERTIME = "1st Extra";
+    protected static final String SECOND_HALF_OVERTIME = "2nd Extra";
+    protected static final String PENALTY_SHOOT = "Penalty Shots";
+    protected static final String PENALTY_SHOOT_SHORT = "Penalty";
+    protected static final String PEN_PUSHING = "Pushing";
+    protected static final String PEN_LEAVING = "Leaving the Field";
+    protected static final String PEN_MOTION_IN_SET = "Motion in Set";
+    protected static final String PEN_MOTION_IN_SET_SHORT = "Motion";
+    protected static final String PEN_INACTIVE = "Fallen / Inactive / Local Game Stuck";
+    protected static final String PEN_DEFENDER = "Illegal Defender";
+    protected static final String PEN_BALL_CONTACT = "Ball Holding / Hands";
+    protected static final String PEN_KICK_OFF_GOAL = "Kickoff Goal";
+    protected static final String PEN_COACH_MOTION = "Coach Motion";
+    protected static final String PEN_PICKUP = "Pick-Up";
+    protected static final String PEN_MANIPULATION = "Ball Manipulation";
+    protected static final String PEN_PHYSICAL = "Physical Contact";
+    protected static final String PEN_DEFENSE = "Illegal Defense";
+    protected static final String PEN_ATTACK = "Illegal Attack";
+    protected static final String PEN_PICKUP_INCAPABLE = "Pickup/Incapable";
+    protected static final String PEN_SERVICE = "Service";
+    protected static final String PEN_SUBSTITUTE = "Substitute";
+    protected static final String PEN_SUBSTITUTE_SHORT = "Sub";
+    protected static final String DROP_BALL = "Dropped Ball";
+    protected static final String TEAMMATE_PUSHING = "Teammate Pushing";
+    protected static final String CANCEL = "Cancel";
+    protected static final String COACH = "Coach";
+    protected static final String BACKGROUND_BOTTOM = "timeline_ground.png";
+    protected static final Color COLOR_HIGHLIGHT = Color.YELLOW;
+    protected static final Color COLOR_STANDARD = (new JButton()).getBackground();
+    protected static final int UNPEN_HIGHLIGHT_SECONDS = 10;
+    protected static final int TIMEOUT_HIGHLIGHT_SECONDS = 10;
+    protected static final int FINISH_HIGHLIGHT_SECONDS = 10;
+    protected static final int KICKOFF_BLOCKED_HIGHLIGHT_SECONDS = 3;
 
     /** Some attributes used in the GUI components. */
-    private double lastSize = 0;
-    private Font standardFont;
-    private Font titleFont;
-    private Font goalsFont;
-    private Font timeFont;
-    private Font timeSubFont;
-    private Font timeoutFont;
-    private Font stateFont;
-    private ImageIcon clockImgReset;
-    private ImageIcon clockImgPlay;
-    private ImageIcon clockImgPause;
-    private ImageIcon clockImgPlus;
-    private ImageIcon lanOnline;
-    private ImageIcon lanHighLatency;
-    private ImageIcon lanOffline;
-    private ImageIcon lanUnknown;
-    private ImageIcon[][] backgroundSide;
+    protected double lastSize = 0;
+    protected Font standardFont;
+    protected Font titleFont;
+    protected Font goalsFont;
+    protected Font timeFont;
+    protected Font timeSubFont;
+    protected Font timeoutFont;
+    protected Font stateFont;
+    protected ImageIcon clockImgReset;
+    protected ImageIcon clockImgPlay;
+    protected ImageIcon clockImgPause;
+    protected ImageIcon clockImgPlus;
+    protected ImageIcon lanOnline;
+    protected ImageIcon lanHighLatency;
+    protected ImageIcon lanOffline;
+    protected ImageIcon lanUnknown;
+    protected ImageIcon[][] backgroundSide;
     
     /** All the components of this GUI. */
-    private ImagePanel[] side;
-    private JLabel[] name;
-    private JButton[] goalDec;
-    private JButton[] goalInc;
-    private JLabel[] goals;
-    private JRadioButton[] kickOff;
-    private ButtonGroup kickOffGroup;
-    private JLabel[] pushes;
-    private JPanel[] robots;
-    private JButton[][] robot;
-    private JLabel[][] robotLabel;
-    private ImageIcon[][] lanIcon;
-    private JProgressBar[][] robotTime;
-    private JToggleButton refereeTimeout;
-    private JToggleButton[] timeOut;
-    private JButton[] stuck;
-    private JButton[] out;
-    private JPanel mid;
-    private JToggleButton initial;
-    private JToggleButton ready;
-    private JToggleButton set;
-    private JToggleButton play;
-    private JToggleButton finish;
-    private ButtonGroup stateGroup;
-    private ImageButton clockReset;
-    private ImagePanel clockContainer;
-    private JLabel clock;
-    private JLabel clockSub;
-    private ImageButton incGameClock;
-    private ImageButton clockPause;
-    private JToggleButton firstHalf;
-    private JToggleButton secondHalf;
-    private JToggleButton firstHalfOvertime;
-    private JToggleButton secondHalfOvertime;
-    private JToggleButton penaltyShoot;
-    private ButtonGroup halfGroup;
-    private JToggleButton[] pen;
-    private JButton dropBall;
-    private ImagePanel bottom;
-    private JPanel log;
-    private JToggleButton[] undo;
-    private JButton cancelUndo;
+    protected ImagePanel[] side;
+    protected JLabel[] name;
+    protected JButton[] goalDec;
+    protected JButton[] goalInc;
+    protected JLabel[] goals;
+    protected JRadioButton[] kickOff;
+    protected ButtonGroup kickOffGroup;
+    protected JLabel[] pushes;
+    protected JPanel[] robots;
+    protected JButton[][] robot;
+    protected JLabel[][] robotLabel;
+    protected ImageIcon[][] lanIcon;
+    protected JProgressBar[][] robotTime;
+    protected JToggleButton refereeTimeout;
+    protected JToggleButton[] timeOut;
+    protected JButton[] stuck;
+    protected JButton[] out;
+
+
+    protected JPanel mid;
+    protected JToggleButton initial;
+    protected JToggleButton ready;
+    protected JToggleButton set;
+    protected JToggleButton play;
+    protected JToggleButton finish;
+    protected ButtonGroup stateGroup;
+    protected ImageButton clockReset;
+    protected ImagePanel clockContainer;
+    protected JLabel clock;
+    protected JLabel clockSub;
+    protected ImageButton incGameClock;
+    protected ImageButton clockPause;
+    protected JToggleButton firstHalf;
+    protected JToggleButton secondHalf;
+    protected JToggleButton firstHalfOvertime;
+    protected JToggleButton secondHalfOvertime;
+    protected JToggleButton penaltyShoot;
+    protected ButtonGroup halfGroup;
+    protected JToggleButton[] pen;
+    protected JButton dropBall;
+    protected ImagePanel bottom;
+    protected JPanel log;
+    protected JToggleButton[] undo;
+    protected JButton cancelUndo;
   
     
     /**
@@ -366,6 +364,7 @@ public class GUI extends JFrame implements GCGUI
                 robots[i].add(robot[i][j]);
             }
         }
+
         //  team
         timeOut = new JToggleButton[2];
         out = new JButton[2];
@@ -486,11 +485,92 @@ public class GUI extends JFrame implements GCGUI
         }
         cancelUndo = new Button(CANCEL);
         cancelUndo.setVisible(false);
+
+        // TODO - move above stuff there
+        setupGuiElement();
+        
+        // Setting up how the screen should look like
+        setupLayout();
+        
+        //--listener--
+        setupActionHandlers();
       
+        //fullscreen
+        if (fullscreen) {
+            setUndecorated(true);
+            GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
+            if (IS_APPLE_JAVA) {
+                setVisible(false); // without this, keyboard input is missing on OS X
+            }
+        }
+        
+        setVisible(true);
+    }
+
+    public void setupActionHandlers() {
+        for (int i=0; i<2; i++) {
+            goalDec[i].addActionListener(ActionBoard.goalDec[i]);
+            goalInc[i].addActionListener(ActionBoard.goalInc[i]);
+            kickOff[i].addActionListener(ActionBoard.kickOff[i]);
+            for (int j=0; j<robot[i].length; j++) {
+                robot[i][j].addActionListener(ActionBoard.robot[i][j]);
+            }
+            timeOut[i].addActionListener(ActionBoard.timeOut[i]);
+            out[i].addActionListener(ActionBoard.out[i]);
+            if (Rules.league instanceof SPL) {
+                stuck[i].addActionListener(ActionBoard.stuck[i]);
+            }
+        }
+        refereeTimeout.addActionListener(ActionBoard.refereeTimeout);
+        initial.addActionListener(ActionBoard.initial);
+        ready.addActionListener(ActionBoard.ready);
+        set.addActionListener(ActionBoard.set);
+        play.addActionListener(ActionBoard.play);
+        finish.addActionListener(ActionBoard.finish);
+        clockReset.addActionListener(ActionBoard.clockReset);
+        clockPause.addActionListener(ActionBoard.clockPause);
+        if (Rules.league.lostTime) {
+            incGameClock.addActionListener(ActionBoard.incGameClock);
+        }
+        firstHalf.addActionListener(ActionBoard.firstHalf);
+        secondHalf.addActionListener(ActionBoard.secondHalf);
+        if (Rules.league.overtime) {
+            firstHalfOvertime.addActionListener(ActionBoard.firstHalfOvertime);
+            secondHalfOvertime.addActionListener(ActionBoard.secondHalfOvertime);
+        }
+        penaltyShoot.addActionListener(ActionBoard.penaltyShoot);
+        if (Rules.league instanceof SPL) {
+            pen[0].addActionListener(ActionBoard.pushing);
+            pen[1].addActionListener(ActionBoard.leaving);
+            pen[2].addActionListener(ActionBoard.inactive);
+            pen[3].addActionListener(ActionBoard.defender);
+            pen[4].addActionListener(ActionBoard.motionInSet);
+            pen[5].addActionListener(ActionBoard.kickOffGoal);
+            pen[6].addActionListener(ActionBoard.ballContact);
+            pen[7].addActionListener(ActionBoard.pickUp);
+            pen[8].addActionListener(Rules.league.dropInPlayerMode ? ActionBoard.teammatePushing : ActionBoard.coachMotion);
+            pen[9].addActionListener(ActionBoard.substitute);
+        } else if (Rules.league instanceof HL) {
+            pen[0].addActionListener(ActionBoard.ballManipulation);
+            pen[1].addActionListener(ActionBoard.pushing);
+            pen[2].addActionListener(ActionBoard.attack);
+            pen[3].addActionListener(ActionBoard.defense);
+            pen[4].addActionListener(ActionBoard.pickUpHL);
+            pen[5].addActionListener(ActionBoard.serviceHL);
+            pen[6].addActionListener(ActionBoard.substitute);
+            dropBall.addActionListener(ActionBoard.dropBall);
+        }
+        for (int i=0; i<undo.length; i++) {
+            undo[i].addActionListener(ActionBoard.undo[i+1]);
+        }
+        cancelUndo.addActionListener(ActionBoard.cancelUndo);
+    }
+
+    public void setupLayout() {
         //--layout--
         TotalScaleLayout layout = new TotalScaleLayout(this);
         setLayout(layout);
-        
+
         layout.add(0, 0, .3, .04, name[0]);
         layout.add(.7, 0, .3, .04, name[1]);
         layout.add(.01, .05, .08, .07, goalInc[0]);
@@ -595,77 +675,8 @@ public class GUI extends JFrame implements GCGUI
         layout.add(.3, 0, .4, .87, mid);
         layout.add(.7, 0, .3, .87, side[1]);
         layout.add(0, .87, 1, .132, bottom);
-        
-        //--listener--
-        for (int i=0; i<2; i++) {
-            goalDec[i].addActionListener(ActionBoard.goalDec[i]);
-            goalInc[i].addActionListener(ActionBoard.goalInc[i]);
-            kickOff[i].addActionListener(ActionBoard.kickOff[i]);
-            for (int j=0; j<robot[i].length; j++) {
-                robot[i][j].addActionListener(ActionBoard.robot[i][j]);
-            }
-            timeOut[i].addActionListener(ActionBoard.timeOut[i]);
-            out[i].addActionListener(ActionBoard.out[i]);
-            if (Rules.league instanceof SPL) {
-                stuck[i].addActionListener(ActionBoard.stuck[i]);
-            }
-        }
-        refereeTimeout.addActionListener(ActionBoard.refereeTimeout);
-        initial.addActionListener(ActionBoard.initial);
-        ready.addActionListener(ActionBoard.ready);
-        set.addActionListener(ActionBoard.set);
-        play.addActionListener(ActionBoard.play);
-        finish.addActionListener(ActionBoard.finish);
-        clockReset.addActionListener(ActionBoard.clockReset);
-        clockPause.addActionListener(ActionBoard.clockPause);
-        if (Rules.league.lostTime) {
-            incGameClock.addActionListener(ActionBoard.incGameClock);
-        }
-        firstHalf.addActionListener(ActionBoard.firstHalf);
-        secondHalf.addActionListener(ActionBoard.secondHalf);
-        if (Rules.league.overtime) {
-            firstHalfOvertime.addActionListener(ActionBoard.firstHalfOvertime);
-            secondHalfOvertime.addActionListener(ActionBoard.secondHalfOvertime);
-        }
-        penaltyShoot.addActionListener(ActionBoard.penaltyShoot);
-        if (Rules.league instanceof SPL) {
-            pen[0].addActionListener(ActionBoard.pushing);
-            pen[1].addActionListener(ActionBoard.leaving);
-            pen[2].addActionListener(ActionBoard.inactive);
-            pen[3].addActionListener(ActionBoard.defender);
-            pen[4].addActionListener(ActionBoard.motionInSet);
-            pen[5].addActionListener(ActionBoard.kickOffGoal);
-            pen[6].addActionListener(ActionBoard.ballContact);
-            pen[7].addActionListener(ActionBoard.pickUp);
-            pen[8].addActionListener(Rules.league.dropInPlayerMode ? ActionBoard.teammatePushing : ActionBoard.coachMotion);
-            pen[9].addActionListener(ActionBoard.substitute);
-        } else if (Rules.league instanceof HL) {
-            pen[0].addActionListener(ActionBoard.ballManipulation);
-            pen[1].addActionListener(ActionBoard.pushing);
-            pen[2].addActionListener(ActionBoard.attack);
-            pen[3].addActionListener(ActionBoard.defense);
-            pen[4].addActionListener(ActionBoard.pickUpHL);
-            pen[5].addActionListener(ActionBoard.serviceHL);
-            pen[6].addActionListener(ActionBoard.substitute);
-            dropBall.addActionListener(ActionBoard.dropBall);
-        }
-        for (int i=0; i<undo.length; i++) {
-            undo[i].addActionListener(ActionBoard.undo[i+1]);
-        }
-        cancelUndo.addActionListener(ActionBoard.cancelUndo);
-      
-        //fullscreen
-        if (fullscreen) {
-            setUndecorated(true);
-            GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
-            if (IS_APPLE_JAVA) {
-                setVisible(false); // without this, keyboard input is missing on OS X
-            }
-        }
-        
-        setVisible(true);
     }
-    
+
     /**
      * @author Michel Bartsch
      * 
@@ -673,11 +684,11 @@ public class GUI extends JFrame implements GCGUI
      */
     class ImagePanel extends JPanel
     {
-        private static final long serialVersionUID = 1L;
+        protected static final long serialVersionUID = 1L;
         
         
         /** The image that is shown in the background. */
-        private Image image;
+        protected Image image;
 
         /**
          * Creates a new ImagePanel.
@@ -722,11 +733,11 @@ public class GUI extends JFrame implements GCGUI
      */
     class ImageButton extends JButton
     {
-        private static final long serialVersionUID = 1L;
+        protected static final long serialVersionUID = 1L;
         
         
         /** The image that is shown in the background. */
-        private Image image;
+        protected Image image;
 
         /**
          * Creates a new ImageButton.
@@ -818,7 +829,7 @@ public class GUI extends JFrame implements GCGUI
      * 
      * @param data     The current data (model) the GUI should view.
      */
-    private void updateClock(AdvancedData data)
+    protected void updateClock(AdvancedData data)
     {
         clock.setText(formatTime(data.getRemainingGameTime(true)));
         Integer secondaryTime = data.getSecondaryTime(KICKOFF_BLOCKED_HIGHLIGHT_SECONDS - 1);
@@ -855,7 +866,7 @@ public class GUI extends JFrame implements GCGUI
      * 
      * @param data     The current data (model) the GUI should view.
      */
-    private void updateHalf(AdvancedData data)
+    protected void updateHalf(AdvancedData data)
     {
         for (int i=0; i<2; i++) {
             name[i].setText(Teams.getNames(false)[data.team[i].teamNumber]);
@@ -885,7 +896,7 @@ public class GUI extends JFrame implements GCGUI
      * 
      * @param data     The current data (model) the GUI should view.
      */
-    private void updateColor(AdvancedData data)
+    protected void updateColor(AdvancedData data)
     {
         for (int i=0; i<2; i++) {
             if(data.team[i].teamColor == GameControlData.TEAM_WHITE) {
@@ -902,7 +913,7 @@ public class GUI extends JFrame implements GCGUI
      * 
      * @param data     The current data (model) the GUI should view.
      */
-    private void updateState(AdvancedData data)
+    protected void updateState(AdvancedData data)
     {
         initial.setEnabled(ActionBoard.initial.isLegal(data));
         ready.setEnabled(ActionBoard.ready.isLegal(data));
@@ -936,7 +947,7 @@ public class GUI extends JFrame implements GCGUI
      * 
      * @param data     The current data (model) the GUI should view.
      */
-    private void updateGoal(AdvancedData data)
+    protected void updateGoal(AdvancedData data)
     {
         for (int i=0; i<2; i++) {
             goals[i].setText(""+data.team[i].score);
@@ -950,7 +961,7 @@ public class GUI extends JFrame implements GCGUI
      * 
      * @param data     The current data (model) the GUI should view.
      */
-    private void updateKickoff(AdvancedData data)
+    protected void updateKickoff(AdvancedData data)
     {
         if (data.kickOffTeam == GameControlData.DROPBALL) {
             kickOff[2].setSelected(true);
@@ -973,7 +984,7 @@ public class GUI extends JFrame implements GCGUI
      * 
      * @param data     The current data (model) the GUI should view.
      */
-    private void updatePushes(AdvancedData data)
+    protected void updatePushes(AdvancedData data)
     {
         for (int i=0; i<2; i++) {
             if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT && data.previousSecGameState != GameControlData.STATE2_PENALTYSHOOT) {
@@ -994,7 +1005,7 @@ public class GUI extends JFrame implements GCGUI
      * 
      * @param data     The current data (model) the GUI should view.
      */
-    private void updateRobots(AdvancedData data)
+    protected void updateRobots(AdvancedData data)
     {
         RobotOnlineStatus[][] onlineStatus = RobotWatcher.updateRobotOnlineStatus();
         for (int i=0; i<robot.length; i++) {
@@ -1077,7 +1088,7 @@ public class GUI extends JFrame implements GCGUI
      * 
      * @param data     The current data (model) the GUI should view.
      */
-    private void updateTimeOut(AdvancedData data)
+    protected void updateTimeOut(AdvancedData data)
     {
         for (int i=0; i<2; i++) {
             if (!data.timeOutActive[i]) {
@@ -1093,7 +1104,7 @@ public class GUI extends JFrame implements GCGUI
         }
     }
     
-    private void updateRefereeTimeout(AdvancedData data) {
+    protected void updateRefereeTimeout(AdvancedData data) {
         refereeTimeout.setSelected(data.refereeTimeout);
         refereeTimeout.setEnabled(ActionBoard.refereeTimeout.isLegal(data));
     }
@@ -1103,7 +1114,7 @@ public class GUI extends JFrame implements GCGUI
      * 
      * @param data     The current data (model) the GUI should view.
      */
-    private void updateGlobalStuck(AdvancedData data)
+    protected void updateGlobalStuck(AdvancedData data)
     {
         for (int i=0; i<2; i++) {
             if (data.gameState == GameControlData.STATE_PLAYING
@@ -1123,7 +1134,7 @@ public class GUI extends JFrame implements GCGUI
      * 
      * @param data     The current data (model) the GUI should view.
      */
-    private void updateDropBall(AdvancedData data)
+    protected void updateDropBall(AdvancedData data)
     {
         dropBall.setEnabled(ActionBoard.dropBall.isLegal(data));
     }
@@ -1133,7 +1144,7 @@ public class GUI extends JFrame implements GCGUI
      * 
      * @param data     The current data (model) the GUI should view.
      */
-    private void updateOut(AdvancedData data)
+    protected void updateOut(AdvancedData data)
     {
         for (int i=0; i<2; i++) {
             out[i].setEnabled(ActionBoard.out[i].isLegal(data));
@@ -1145,7 +1156,7 @@ public class GUI extends JFrame implements GCGUI
      * 
      * @param data     The current data (model) the GUI should view.
      */
-    private void updatePenaltiesSPL(AdvancedData data)
+    protected void updatePenaltiesSPL(AdvancedData data)
     {
         pen[0].setEnabled(ActionBoard.pushing.isLegal(data));
         pen[1].setEnabled(ActionBoard.leaving.isLegal(data));
@@ -1197,7 +1208,7 @@ public class GUI extends JFrame implements GCGUI
      * 
      * @param data     The current data (model) the GUI should view.
      */
-    private void updatePenaltiesHL(AdvancedData data)
+    protected void updatePenaltiesHL(AdvancedData data)
     {
         pen[0].setEnabled(ActionBoard.ballManipulation.isLegal(data));
         pen[1].setEnabled(ActionBoard.pushing.isLegal(data));
@@ -1222,7 +1233,7 @@ public class GUI extends JFrame implements GCGUI
      * 
      * @param data     The current data (model) the GUI should view.
      */
-    private void updateUndo(AdvancedData data)
+    protected void updateUndo(AdvancedData data)
     {
         GCAction highlightEvent = EventHandler.getInstance().lastUIEvent;
         String[] undos = Log.getLast(ActionBoard.MAX_NUM_UNDOS_AT_ONCE);
@@ -1244,7 +1255,7 @@ public class GUI extends JFrame implements GCGUI
         cancelUndo.setVisible(undoFromHere);
     }
     
-    private void updateFonts()
+    protected void updateFonts()
     {
         double size = Math.min((getWidth()/(double)WINDOW_WIDTH), (getHeight()/(double)WINDOW_HEIGHT));
         
@@ -1314,7 +1325,7 @@ public class GUI extends JFrame implements GCGUI
      * @param button        The button to highlight.
      * @param highlight     If the button should be highlighted.
      */
-    private void highlight(AbstractButton button, boolean highlight)
+    protected void highlight(AbstractButton button, boolean highlight)
     {
         button.setBackground(highlight ? COLOR_HIGHLIGHT : COLOR_STANDARD);
         if (IS_OSX) {
@@ -1323,7 +1334,7 @@ public class GUI extends JFrame implements GCGUI
         }
     }
 
-    private String formatTime(int seconds) {
+    protected String formatTime(int seconds) {
         int displaySeconds = Math.abs(seconds) % 60;
         int displayMinutes = Math.abs(seconds) / 60;
         return (seconds < 0 ? "-" : "") + String.format("%02d:%02d", displayMinutes, displaySeconds);

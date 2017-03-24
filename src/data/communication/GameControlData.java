@@ -3,6 +3,7 @@ package data.communication;
 import data.states.AdvancedData;
 import data.Rules;
 import data.TeamInfo;
+import data.states.SecondaryState;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;
@@ -26,7 +27,7 @@ public class GameControlData implements Serializable
     public static final int GAMECONTROLLER_GAMEDATA_PORT= 3838; // port to send game state packets to
 
     public static final String GAMECONTROLLER_STRUCT_HEADER = "RGme";
-    public static final byte GAMECONTROLLER_STRUCT_VERSION = 10;
+    public static final byte GAMECONTROLLER_STRUCT_VERSION = 11;
     public static final byte TEAM_BLUE = 0;
     public static final byte TEAM_RED = 1;
     public static final byte TEAM_YELLOW = 2;
@@ -53,7 +54,7 @@ public class GameControlData implements Serializable
     public static final byte STATE2_PENALTYSHOOT = 1;
     public static final byte STATE2_OVERTIME = 2;
     public static final byte STATE2_TIMEOUT = 3;             
-    
+
     public static final byte C_FALSE = 0;
     public static final byte C_TRUE = 1;
     
@@ -69,6 +70,7 @@ public class GameControlData implements Serializable
             1 + // firstHalf
             1 + // kickOffTeam
             1 + // secGameState
+            4 + // secGameStateInfo
             1 + // dropInTeam
             2 + // dropInTime
             2 + // secsRemaining
@@ -98,7 +100,11 @@ public class GameControlData implements Serializable
     public byte gameState = STATE_INITIAL;                      // state of the game (STATE_READY, STATE_PLAYING, etc)
     public byte firstHalf = C_TRUE;                             // 1 = game in first half, 0 otherwise
     public byte kickOffTeam;                                    // the next team to kick off
+
     public byte secGameState = STATE2_NORMAL;                   // Extra state information - (STATE2_NORMAL, STATE2_PENALTYSHOOT, etc)
+    public SecondaryState secGameStateInfo = new SecondaryState();
+    // Extra state information - (STATE2_NORMAL, STATE2_PENALTYSHOOT, etc)
+
     public byte dropInTeam;                                     // team that caused last drop in
     protected short dropInTime = -1;                            // number of seconds passed since the last drop in. -1 before first dropin
     public short secsRemaining = (short) Rules.league.halfTime; // estimate of number of seconds remaining in the half
@@ -141,6 +147,7 @@ public class GameControlData implements Serializable
         buffer.put(firstHalf);
         buffer.put(kickOffTeam);
         buffer.put(secGameState);
+        buffer.put(secGameStateInfo.toByteArray());
         buffer.put(dropInTeam);
         buffer.putShort(dropInTime);
         buffer.putShort(secsRemaining);
@@ -148,6 +155,7 @@ public class GameControlData implements Serializable
         for (TeamInfo aTeam : team) {
             buffer.put(aTeam.toByteArray());
         }
+        System.out.println(secGameStateInfo.toByteArray()[0]);
        
         return buffer;
     }
@@ -194,6 +202,9 @@ public class GameControlData implements Serializable
      */
     public boolean fromByteArray(ByteBuffer buffer)
     {
+        // Move to position zero to have a fresh start
+        buffer.position(0);
+
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         byte[] header = new byte[4];
         buffer.get(header, 0, 4);
@@ -207,6 +218,12 @@ public class GameControlData implements Serializable
         firstHalf = buffer.get();
         kickOffTeam = buffer.get();
         secGameState = buffer.get();
+
+        // Read the additional ste information for the sub state
+        byte[] additional_game_state_info = new byte[4];
+        buffer.get(additional_game_state_info, 0, 4);
+        secGameStateInfo.fromByteArray(additional_game_state_info);
+
         dropInTeam = buffer.get();
         dropInTime = buffer.getShort();
         secsRemaining = buffer.getShort();

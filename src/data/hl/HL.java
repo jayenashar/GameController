@@ -91,7 +91,7 @@ public class HL extends Rules
         /** Allowed to compensate for lost time? */
         lostTime = false;
         /** Whether compatibility mode (version 7) is supported */
-        compatibilityToVersion7 = true;
+        compatibilityToVersion7 = false;
         /** If true, the drop-in player competition is active */
         dropInPlayerMode = false;
         /** If true, the game controller should drop broadcast-messages */
@@ -107,5 +107,11 @@ public class HL extends Rules
                         "robot_right_red.png",
                 }
         };
+
+        /** The time a team has to prepare for the free kick **/
+        free_kick_preparation_time = 15;
+
+        /** The time a team has to prepare for the penalty kick **/
+        penalty_kick_preparation_time = 15;
     }
 }

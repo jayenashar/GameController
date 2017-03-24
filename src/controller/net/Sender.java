@@ -6,6 +6,7 @@ import data.communication.GameControlData;
 import data.Rules;
 import data.Teams;
 
+import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.io.IOException;
 import java.net.*;
 
