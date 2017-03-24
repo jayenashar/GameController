@@ -6,13 +6,17 @@ import controller.action.ActionBoard;
 import controller.net.GameControlReturnDataReceiver;
 import controller.net.SPLCoachMessageReceiver;
 import controller.net.Sender;
+import controller.ui.gameplay.DebugUI;
 import controller.ui.gameplay.GUI;
 import controller.ui.KeyboardListener;
+import controller.ui.gameplay.HL_GUI;
 import controller.ui.setup.StartInput;
 import data.*;
 import data.communication.GameControlData;
+import data.spl.SPL;
 import data.states.AdvancedData;
 import data.states.GamePreparationData;
+import org.junit.Rule;
 
 import java.io.File;
 import java.io.IOException;
@@ -286,7 +290,18 @@ public class GameController {
                 + " (" + Rules.league.teamColorName[data.team[0].teamColor]
                 + ") vs " + Teams.getNames(false)[data.team[1].teamNumber]
                 + " (" + Rules.league.teamColorName[data.team[1].teamColor] + ")");
-        GUI gui = new GUI(gpd.getFullScreen(), data);
+
+        GUI gui;
+        if (Rules.league instanceof SPL) {
+            gui = new GUI(gpd.getFullScreen(), data);
+        } else {
+            gui = new HL_GUI(gpd.getFullScreen(), data);
+        }
+
+
+        DebugUI debug_ui = new DebugUI(data);
+
+
         new KeyboardListener();
         EventHandler.getInstance().setGUI(gui);
         gui.update(data);
@@ -296,6 +311,7 @@ public class GameController {
 
         //clock runs until window is closed
         Clock.getInstance().start();
+
 
         // shutdown
         Log.toFile("Shutdown GameController");

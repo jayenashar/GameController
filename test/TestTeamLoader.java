@@ -16,6 +16,8 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestTeamLoader {
 
+    public TestTeamLoader(){}
+
     @BeforeClass
     public static void setUp(){
         System.setProperty("CONFIG_ROOT", "test_resources/");

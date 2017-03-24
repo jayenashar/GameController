@@ -2,22 +2,7 @@ package controller.action;
 
 import controller.action.clock.ClockTick;
 import controller.action.net.Manual;
-import controller.action.ui.CancelUndo;
-import controller.action.ui.ClockPause;
-import controller.action.ui.ClockReset;
-import controller.action.ui.DropBall;
-import controller.action.ui.GlobalStuck;
-import controller.action.ui.Goal;
-import controller.action.ui.IncGameClock;
-import controller.action.ui.KickOff;
-import controller.action.ui.Out;
-import controller.action.ui.Quit;
-import controller.action.ui.RefereeTimeout;
-import controller.action.ui.Robot;
-import controller.action.ui.TeammatePushing;
-import controller.action.ui.Testmode;
-import controller.action.ui.TimeOut;
-import controller.action.ui.Undo;
+import controller.action.ui.*;
 import controller.action.ui.half.FirstHalf;
 import controller.action.ui.half.FirstHalfOvertime;
 import controller.action.ui.half.PenaltyShoot;
@@ -107,6 +92,8 @@ public class ActionBoard
     public static TeammatePushing teammatePushing;
     public static Substitute substitute;
     public static DropBall dropBall;
+    public static FreeKick[] freeKick = new FreeKick[2];
+    public static PenaltyKick[] penaltyKick = new PenaltyKick[2];
 
     public static Manual[][] manualPen = Rules.league.isCoachAvailable ? new Manual[2][Rules.league.teamSize+1] : new Manual[2][Rules.league.teamSize];
     public static Manual[][] manualUnpen = Rules.league.isCoachAvailable ? new Manual[2][Rules.league.teamSize+1] : new Manual[2][Rules.league.teamSize];
@@ -144,6 +131,8 @@ public class ActionBoard
             timeOut[i] = new TimeOut(i);
             stuck[i] = new GlobalStuck(i);
             out[i] = new Out(i);
+            freeKick[i] = new FreeKick(i);
+            penaltyKick[i] = new PenaltyKick(i);
         }
         
         clockReset = new ClockReset();
