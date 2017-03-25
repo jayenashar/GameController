@@ -1,9 +1,10 @@
 package teamcomm.gui.drawings.common;
 
 import com.jogamp.opengl.GL2;
-import data.communication.GameControlData;
-import data.PlayerInfo;
+import data.Helper;
 import data.spl.SPLStandardMessage;
+import data.values.Penalties;
+import data.values.TeamColors;
 import teamcomm.data.GameState;
 import teamcomm.data.RobotState;
 import teamcomm.gui.Camera;
@@ -18,29 +19,12 @@ import teamcomm.gui.drawings.RoSi2Loader;
 public class Player extends PerPlayer {
 
     private static String getModelName(final int color) {
-        switch (color) {
-            case GameControlData.TEAM_BLUE:
-                return "robotBlue";
-            case GameControlData.TEAM_RED:
-                return "robotRed";
-            case GameControlData.TEAM_BLACK:
-                return "robotBlack";
-            case GameControlData.TEAM_YELLOW:
-                return "robotYellow";
-            case GameControlData.TEAM_WHITE:
-                return "robotWhite";
-            case GameControlData.TEAM_GREEN:
-                return "robotGreen";
-            case GameControlData.TEAM_ORANGE:
-                return "robotOrange";
-            case GameControlData.TEAM_PURPLE:
-                return "robotPurple";
-            case GameControlData.TEAM_BROWN:
-                return "robotBrown";
-            case GameControlData.TEAM_GRAY:
-                return "robotGray";
-        }
 
+        TeamColors teamcolor = TeamColors.fromValue((byte) color);
+
+        if (teamcolor != null){
+            return "robot" + Helper.capitalize(teamcolor.toString());
+        }
         return "robotWhite";
     }
 
@@ -55,7 +39,7 @@ public class Player extends PerPlayer {
         if (msg != null && msg.poseValid) {
             gl.glPushMatrix();
 
-            if (player.getPenalty() != PlayerInfo.PENALTY_NONE) {
+            if (player.getPenalty() != Penalties.NONE) {
                 gl.glTranslatef(-msg.playerNum, -3.5f, 0);
                 gl.glRotatef(-90, 0, 0, 1);
             } else {

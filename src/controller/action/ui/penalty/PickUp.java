@@ -4,7 +4,7 @@ import common.Log;
 
 import data.states.AdvancedData;
 import data.PlayerInfo;
-import data.Rules;
+import data.values.Penalties;
 
 /**
  * @author Michel Bartsch
@@ -24,13 +24,13 @@ public class PickUp extends Penalty
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
-        if (player.penalty == PlayerInfo.PENALTY_NONE) {
+        if (player.penalty == Penalties.NONE) {
             data.whenPenalized[side][number] = data.getTime();
             data.robotPenaltyCount[side][number] = 0;
         }
         
-        player.penalty = PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP;
-        Log.state(data, "Request for PickUp "+ Rules.league.teamColorName[data.team[side].teamColor]+ " " + (number+1));
+        player.penalty = Penalties.SPL_REQUEST_FOR_PICKUP;
+        Log.state(data, "Request for PickUp " + data.team[side].teamColor + " " + (number+1));
     }
     
     /**

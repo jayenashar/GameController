@@ -6,6 +6,8 @@ import controller.action.GCAction;
 import data.states.AdvancedData;
 import data.communication.GameControlData;
 import data.Rules;
+import data.values.GameStates;
+import data.values.SecondaryGameStates;
 
 
 /**
@@ -32,13 +34,13 @@ public class SecondHalf extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if (data.firstHalf != GameControlData.C_FALSE || data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
+        if (data.firstHalf != GameControlData.C_FALSE || data.secGameState == SecondaryGameStates.PENALTYSHOOT) {
             data.firstHalf = GameControlData.C_FALSE;
-            data.secGameState = GameControlData.STATE2_NORMAL;
+            data.secGameState = SecondaryGameStates.NORMAL;
             FirstHalf.changeSide(data);
             data.kickOffTeam = (data.leftSideKickoff ? data.team[0].teamNumber : data.team[1].teamNumber);
             data.kickOffReason = AdvancedData.KICKOFF_HALF;
-            data.gameState = GameControlData.STATE_INITIAL;
+            data.gameState = GameStates.INITIAL;
             // Don't set data.whenCurrentGameStateBegan, because it's used to count the pause
             Log.state(data, "2nd Half");
         }
@@ -55,9 +57,9 @@ public class SecondHalf extends GCAction
     {
         return (!Rules.league.dropInPlayerMode
                 && (((data.firstHalf != GameControlData.C_TRUE)
-                        && (data.secGameState == GameControlData.STATE2_NORMAL))
-                   || ((data.secGameState == GameControlData.STATE2_NORMAL)
-                        && (data.gameState == GameControlData.STATE_FINISHED))))
+                        && (data.secGameState == SecondaryGameStates.NORMAL))
+                   || ((data.secGameState == SecondaryGameStates.NORMAL)
+                        && (data.gameState == GameStates.FINISHED))))
                 || data.testmode;
     }
 }

@@ -3,9 +3,8 @@ package actions;
 import common.Log;
 import controller.action.ActionBoard;
 import controller.action.ui.FreeKick;
-import data.communication.GameControlData;
 import data.states.AdvancedData;
-import data.states.SecondaryState;
+import data.values.SecondaryGameStates;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -41,13 +40,13 @@ public class TestFreeKickAction {
         // Perform the action and expect the state change
         fk.perform(data);
 
-        assertEquals(SecondaryState.SECONDARY_STATE_FREEKICK, data.secGameState);
+        assertEquals(SecondaryGameStates.FREEKICK, data.secGameState);
         assertEquals(14, data.secGameStateInfo.toByteArray()[0]);
 
         // Perform it again and expect the state change back
         fk.perform(data);
 
-        assertNotSame(SecondaryState.SECONDARY_STATE_FREEKICK, data.secGameState);
+        assertNotSame(SecondaryGameStates.FREEKICK, data.secGameState);
         assertEquals(0, data.secGameStateInfo.toByteArray()[0]);
 
     }

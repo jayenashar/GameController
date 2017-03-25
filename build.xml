@@ -22,7 +22,7 @@
         <delete dir="${classes.dir}" quiet="true" />
         <mkdir dir="${classes.dir}"/>
         <!-- debug flags: debug="true" debuglevel="lines,vars,source" -->
-        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false" source="1.7" target="1.7" encoding="utf-8">
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false" source="1.8" target="1.8" encoding="utf-8">
             <compilerarg value="-Xlint:-options"/> <!-- ignore nagging about missing bootstrap class path -->
             <compilerarg value="-Xlint:unchecked"/>
             <classpath>
@@ -32,7 +32,7 @@
                 </fileset>
             </classpath>
         </javac>
-        <javac srcdir="${test.dir}" destdir="${classes.dir}" includeantruntime="false" source="1.7" target="1.7" encoding="utf-8">
+        <javac srcdir="${test.dir}" destdir="${classes.dir}" includeantruntime="false" source="1.8" target="1.8" encoding="utf-8">
             <compilerarg value="-Xlint:-options"/> <!-- ignore nagging about missing bootstrap class path -->
             <compilerarg value="-Xlint:unchecked"/>
             <classpath>
@@ -50,6 +50,12 @@
             <manifest>
                 <attribute name="Main-Class" value="controller.GameController"/>
                 <attribute name="Author" value="Michel Bartsch, Marcel Steinbeck, Thomas Roefer" />
+            </manifest>
+        </jar>
+        <jar destfile="${jar.dir}/ProtocolHelper.jar" basedir="${classes.dir}" includes="${common_classes} controller/ teamcomm/net/">
+            <manifest>
+                <attribute name="Main-Class" value="data.values.ProtocolHelper"/>
+                <attribute name="Author" value="Robert Kessler" />
             </manifest>
         </jar>
         <jar destfile="${jar.dir}/LogAnalyzer.jar" basedir="${classes.dir}" includes="${common_classes} analyzer/">
@@ -98,6 +104,10 @@
 
     <target name="run" depends="jar">
         <java jar="${jar.dir}/GameController.jar" dir="${jar.dir}" fork="true"/>
+    </target>
+
+    <target name="protocol" depends="jar">
+        <java jar="${jar.dir}/ProtocolHelper.jar" dir="${jar.dir}" fork="true"/>
     </target>
 
     <target name="run_analyzer" depends="jar">

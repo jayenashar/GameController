@@ -5,7 +5,7 @@ from construct import *
 from construct.formats.filesystem.ext2 import Short
 
 RobotInfo = Struct("robot_info",
-                   # define PENALTY_NONE                        0
+                   # define NONE                        0
                    # define PENALTY_HL_KID_BALL_MANIPULATION    1
                    # define PENALTY_HL_KID_PHYSICAL_CONTACT     2
                    # define PENALTY_HL_KID_ILLEGAL_ATTACK       3
@@ -13,7 +13,7 @@ RobotInfo = Struct("robot_info",
                    # define PENALTY_HL_KID_REQUEST_FOR_PICKUP   5
                    # define PENALTY_HL_KID_REQUEST_FOR_SERVICE  6
                    # define PENALTY_HL_KID_REQUEST_FOR_PICKUP_2_SERVICE 7
-                   # define PENALTY_MANUAL                      15
+                   # define MANUAL                      15
                    Byte("penalty"),
                    Byte("secs_till_unpenalised")
                    )

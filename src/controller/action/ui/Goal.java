@@ -5,8 +5,8 @@ import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.states.AdvancedData;
-import data.communication.GameControlData;
-import data.Rules;
+import data.values.GameStates;
+import data.values.SecondaryGameStates;
 
 
 /**
@@ -46,10 +46,10 @@ public class Goal extends GCAction
     {
         data.team[side].score += set;
         if (set == 1) {
-            if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
+            if (data.secGameState != SecondaryGameStates.PENALTYSHOOT) {
                 data.kickOffTeam = data.team[1 - side].teamNumber;
                 data.kickOffReason = AdvancedData.KICKOFF_GOAL;
-                Log.setNextMessage("Goal for "+Rules.league.teamColorName[data.team[side].teamColor]);
+                Log.setNextMessage("Goal for " + data.team[side].teamColor);
                 if(data.team[side].score >= data.team[1-side].score + 10) {
                     // mercy rule
                     ActionBoard.secondHalf.perform(data);
@@ -60,11 +60,11 @@ public class Goal extends GCAction
             } else {
                 data.team[side].singleShots += (1<<(data.team[side].penaltyShot-1));
                 data.kickOffReason = AdvancedData.KICKOFF_PENALTYSHOOT;
-                Log.setNextMessage("Goal for "+Rules.league.teamColorName[data.team[side].teamColor]);
+                Log.setNextMessage("Goal for " + data.team[side].teamColor);
                 ActionBoard.finish.perform(data);
             }
         } else {
-            Log.state(data, "Goal decrease for "+Rules.league.teamColorName[data.team[side].teamColor]);
+            Log.state(data, "Goal decrease for " + data.team[side].teamColor);
         }
     }
     
@@ -78,8 +78,8 @@ public class Goal extends GCAction
     public boolean isLegal(AdvancedData data)
     {
         return ((set == 1)
-              && (data.gameState == GameControlData.STATE_PLAYING)
-              && ( (data.secGameState != GameControlData.STATE2_PENALTYSHOOT)
+              && (data.gameState == GameStates.PLAYING)
+              && ( (data.secGameState != SecondaryGameStates.PENALTYSHOOT)
                 || (data.kickOffTeam == data.team[side].teamNumber)) )
             || data.testmode;
     }

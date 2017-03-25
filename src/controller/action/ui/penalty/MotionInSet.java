@@ -2,9 +2,10 @@ package controller.action.ui.penalty;
 
 import common.Log;
 import data.states.AdvancedData;
-import data.communication.GameControlData;
 import data.PlayerInfo;
-import data.Rules;
+import data.values.GameStates;
+import data.values.Penalties;
+import data.values.SecondaryGameStates;
 
 /**
  * @author Michel Bartsch
@@ -24,12 +25,10 @@ public class MotionInSet extends Penalty
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
-        player.penalty = PlayerInfo.PENALTY_SPL_ILLEGAL_MOTION_IN_SET;
+        player.penalty = Penalties.SPL_ILLEGAL_MOTION_IN_SET;
         handleRepeatedPenalty(data, player, side, number);
         data.whenPenalized[side][number] = data.getTime();
-        Log.state(data, "Illegal Motion in Set "+
-                Rules.league.teamColorName[data.team[side].teamColor]
-                + " " + (number+1));
+        Log.state(data, "Illegal Motion in Set " + data.team[side].teamColor + " " + (number+1));
     }
     
     /**
@@ -41,8 +40,8 @@ public class MotionInSet extends Penalty
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (data.secGameState == GameControlData.STATE2_NORMAL
-                && data.gameState == GameControlData.STATE_SET)
+        return (data.secGameState == SecondaryGameStates.NORMAL
+                && data.gameState == GameStates.SET)
                 || data.testmode;
     }
 }

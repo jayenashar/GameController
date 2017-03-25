@@ -5,9 +5,9 @@ import controller.EventHandler;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.states.AdvancedData;
-import data.communication.GameControlData;
 import data.PlayerInfo;
 import data.Rules;
+import data.values.GameStates;
 
 public class TeammatePushing extends GCAction {
     
@@ -17,16 +17,14 @@ public class TeammatePushing extends GCAction {
 
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number) {
-        Log.state(data, "Teammate Pushing  "+
-                Rules.league.teamColorName[data.team[side].teamColor]
-                + " " + (number+1));
+        Log.state(data, "Teammate Pushing " + data.team[side].teamColor + " " + (number+1));
     }
 
     @Override
     public boolean isLegal(AdvancedData data) {
         return Rules.league.dropInPlayerMode
-               && (data.gameState == GameControlData.STATE_READY
-                || data.gameState == GameControlData.STATE_PLAYING)
+               && (data.gameState == GameStates.READY
+                || data.gameState == GameStates.PLAYING)
                || data.testmode;
     }
 

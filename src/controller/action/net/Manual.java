@@ -4,9 +4,8 @@ import common.Log;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.states.AdvancedData;
-import data.communication.GameControlData;
-import data.PlayerInfo;
-import data.Rules;
+import data.values.GameStates;
+import data.values.Penalties;
 
 /**
  * @author Michel Bartsch
@@ -49,21 +48,17 @@ public class Manual extends GCAction
     public void perform(AdvancedData data)
     {
         if (!unpen) {
-            data.team[side].player[number].penalty = PlayerInfo.PENALTY_MANUAL;
+            data.team[side].player[number].penalty = Penalties.MANUAL;
             data.whenPenalized[side][number] = data.getTime();
-            if((data.gameState != GameControlData.STATE_INITIAL) 
-                    && (data.gameState != GameControlData.STATE_FINISHED)){
-                Log.state(data, "Manually Penalised "+
-                        Rules.league.teamColorName[data.team[side].teamColor]
-                        + " " + (number+1));
+            if((data.gameState != GameStates.INITIAL)
+                    && (data.gameState != GameStates.FINISHED)){
+                Log.state(data, "Manually Penalised " + data.team[side].teamColor + " " + (number+1));
             }
         } else {
-            data.team[side].player[number].penalty = PlayerInfo.PENALTY_NONE;
-            if((data.gameState != GameControlData.STATE_INITIAL) 
-                    && (data.gameState != GameControlData.STATE_FINISHED)){
-                Log.state(data, "Manually Unpenalised "+
-                       Rules.league.teamColorName[data.team[side].teamColor]
-                       + " " + (number+1));    
+            data.team[side].player[number].penalty = Penalties.NONE;
+            if((data.gameState != GameStates.INITIAL)
+                    && (data.gameState != GameStates.FINISHED)){
+                Log.state(data, "Manually Unpenalised " + data.team[side].teamColor + " " + (number+1));
             }
         }
     }

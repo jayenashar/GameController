@@ -1,7 +1,7 @@
 package data.hl;
 
-import data.PlayerInfo;
 import data.Rules;
+import data.values.Penalties;
 
 import java.awt.Color;
 
@@ -64,8 +64,6 @@ public class HL extends Rules
         numberOfPenaltyShotsShort = 5;
         /** Number of penalty-shoots for each team after full 10minutes playing. */
         numberOfPenaltyShotsLong = 5;
-        /** Time in seconds for each kind of penalty. */
-        penaltyTime = new int[] {-1, 30, 30, 30, 30, 30, 60};
         /** Time in seconds to increment penalties. */
         penaltyIncreaseTime = 0;
         /** Whether the penalty count is reset on halftime */
@@ -75,7 +73,7 @@ public class HL extends Rules
         /** Whether penalties can be removed before the penalty time has passed. */
         allowEarlyPenaltyRemoval = true;
         /** Penalty that players get when they substitute another player. */
-        substitutePenalty = PlayerInfo.PENALTY_NONE;
+        substitutePenalty = Penalties.NONE;
         /** if robots should return from penalties when the game state changes. */
         returnRobotsInGameStoppages = false;
         /** Time in seconds one team has as timeOut. */
@@ -92,8 +90,6 @@ public class HL extends Rules
         isCoachAvailable = false;
         /** Allowed to compensate for lost time? */
         lostTime = false;
-        /** Whether compatibility mode (version 7) is supported */
-        compatibilityToVersion7 = false;
         /** If true, the drop-in player competition is active */
         dropInPlayerMode = false;
         /** If true, the game controller should drop broadcast-messages */

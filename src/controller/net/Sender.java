@@ -3,10 +3,10 @@ package controller.net;
 import common.Log;
 import data.states.AdvancedData;
 import data.communication.GameControlData;
-import data.Rules;
 import data.Teams;
+import data.values.GameStates;
+import data.values.GameTypes;
 
-import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.io.IOException;
 import java.net.*;
 
@@ -20,7 +20,6 @@ import java.net.*;
  * To prevent race-conditions (the sender is executed in its thread-context),
  * the sender will hold a deep copy of {@link GameControlData} (have a closer
  * look to the copy-constructor
- * {@link GameControlData#GameControlData(GameControlData)}).
  *
  * This class is a singleton!
  */
@@ -98,19 +97,18 @@ public class Sender extends Thread {
     /**
      * Sets the current game-state to send. Creates a deep copy of data to
      * prevent race-conditions. Have a closer look to
-     * {@link GameControlData#GameControlData(GameControlData)}
      *
      * @param data the current game-state to send to all robots
      */
     public void send(AdvancedData data) {
         // Adjust name of the current teamcomm logfile
         if (this.data == null
-                || (data.gameState == GameControlData.STATE_READY && this.data.gameState == GameControlData.STATE_INITIAL)
-                || (data.gameState == GameControlData.STATE_INITIAL && this.data.gameState != GameControlData.STATE_INITIAL)
-                || (data.gameState == GameControlData.STATE_FINISHED && this.data.gameState != GameControlData.STATE_FINISHED)) {
+                || (data.gameState == GameStates.READY && this.data.gameState == GameStates.INITIAL)
+                || (data.gameState == GameStates.INITIAL && this.data.gameState != GameStates.INITIAL)
+                || (data.gameState == GameStates.FINISHED && this.data.gameState != GameStates.FINISHED)) {
             final StringBuilder logfileName;
             final String[] teamNames = Teams.getNames(false);
-            if (data.gameType == GameControlData.GAME_DROPIN) {
+            if (data.gameType == GameTypes.DROPIN) {
                 logfileName = new StringBuilder("Drop-in_");
                 if (data.firstHalf == GameControlData.C_TRUE) {
                     logfileName.append("1st");
@@ -126,11 +124,11 @@ public class Sender extends Thread {
                 }
                 logfileName.append("Half");
             }
-            if (data.gameState == GameControlData.STATE_READY && (this.data == null || this.data.gameState == GameControlData.STATE_INITIAL)) {
+            if (data.gameState == GameStates.READY && (this.data == null || this.data.gameState == GameStates.INITIAL)) {
                 teamcomm.net.logging.Logger.getInstance().createLogfile(logfileName.toString());
-            } else if (data.gameState == GameControlData.STATE_INITIAL && (this.data == null || this.data.gameState != GameControlData.STATE_INITIAL)) {
+            } else if (data.gameState == GameStates.INITIAL && (this.data == null || this.data.gameState != GameStates.INITIAL)) {
                 teamcomm.net.logging.Logger.getInstance().createLogfile(logfileName.append("_initial").toString());
-            } else if (data.gameState == GameControlData.STATE_FINISHED && (this.data == null || this.data.gameState != GameControlData.STATE_FINISHED)) {
+            } else if (data.gameState == GameStates.FINISHED && (this.data == null || this.data.gameState != GameStates.FINISHED)) {
                 teamcomm.net.logging.Logger.getInstance().createLogfile(logfileName.append("_finished").toString());
             }
         }
@@ -155,20 +153,6 @@ public class Sender extends Thread {
                 } catch (IOException e) {
                     Log.error("Error while sending");
                     e.printStackTrace();
-                }
-            }
-
-            if (data != null) {
-                if (Rules.league.compatibilityToVersion7) {
-                    byte[] arr = data.toByteArray7().array();
-                    DatagramPacket packet = new DatagramPacket(arr, arr.length, group, GameControlData.GAMECONTROLLER_GAMEDATA_PORT);
-
-                    try {
-                        datagramSocket.send(packet);
-                    } catch (IOException e) {
-                        Log.error("Error while sending");
-                        e.printStackTrace();
-                    }
                 }
             }
 

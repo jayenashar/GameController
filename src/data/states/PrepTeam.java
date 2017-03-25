@@ -2,6 +2,7 @@ package data.states;
 
 import data.communication.GameControlData;
 import data.teams.TeamLoadInfo;
+import data.values.TeamColors;
 
 /**
  * Created by rkessler on 2017-02-11.
@@ -34,9 +35,9 @@ public class PrepTeam {
         return teamColor;
     }
 
-    public byte getTeamColorAsByte() {
-        // TODO fix the color constants
-        return GameControlData.fromColorName(teamColor.toLowerCase());
+    public TeamColors getTeamColorAsByte() {
+        // TODO Go all the way and implement the TeamColor Enum here as well
+        return TeamColors.fromColorName(teamColor.toLowerCase());
     }
 
     public void setTeamColor(String teamColorString) {

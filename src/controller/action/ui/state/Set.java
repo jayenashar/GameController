@@ -5,8 +5,10 @@ import controller.action.ActionType;
 import controller.action.GCAction;
 import controller.action.ui.half.FirstHalf;
 import data.states.AdvancedData;
-import data.communication.GameControlData;
 import data.Rules;
+import data.values.GameStates;
+import data.values.GameTypes;
+import data.values.SecondaryGameStates;
 
 /**
  * @author Michel Bartsch
@@ -29,28 +31,28 @@ public class Set extends GCAction {
      */
     @Override
     public void perform(AdvancedData data) {
-        if (data.gameState == GameControlData.STATE_SET) {
+        if (data.gameState == GameStates.SET) {
             return;
         }
         if (Rules.league.returnRobotsInGameStoppages) {
             data.resetPenaltyTimes();
         }
-        if ((data.gameType != GameControlData.GAME_PLAYOFF) && data.timeBeforeCurrentGameState != 0) {
+        if ((data.gameType != GameTypes.PLAYOFF) && data.timeBeforeCurrentGameState != 0) {
             data.addTimeInCurrentState();
         }
         data.whenCurrentGameStateBegan = data.getTime();
 
-        if (data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
+        if (data.secGameState == SecondaryGameStates.PENALTYSHOOT) {
             data.timeBeforeCurrentGameState = 0;
-            if (data.gameState != GameControlData.STATE_INITIAL) {
+            if (data.gameState != GameStates.INITIAL) {
                 data.kickOffTeam = data.team[data.kickOffTeam == data.team[0].teamNumber ? 1 : 0].teamNumber;
                 FirstHalf.changeSide(data);
             }
-            if (data.gameState != GameControlData.STATE_PLAYING) {
+            if (data.gameState != GameStates.PLAYING) {
                 data.team[data.team[0].teamNumber == data.kickOffTeam ? 0 : 1].penaltyShot++;
             }
         }
-        data.gameState = GameControlData.STATE_SET;
+        data.gameState = GameStates.SET;
         Log.state(data, "Set");
     }
 
@@ -62,10 +64,10 @@ public class Set extends GCAction {
      */
     @Override
     public boolean isLegal(AdvancedData data) {
-        return (data.gameState == GameControlData.STATE_READY)
-                || (data.gameState == GameControlData.STATE_SET)
-                || ((data.secGameState == GameControlData.STATE2_PENALTYSHOOT)
-                && ((data.gameState != GameControlData.STATE_PLAYING)
+        return (data.gameState == GameStates.READY)
+                || (data.gameState == GameStates.SET)
+                || ((data.secGameState == SecondaryGameStates.PENALTYSHOOT)
+                && ((data.gameState != GameStates.PLAYING)
                 || (Rules.league.penaltyShotRetries))
                 && !data.timeOutActive[0]
                 && !data.timeOutActive[1]

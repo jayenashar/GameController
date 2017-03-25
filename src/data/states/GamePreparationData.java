@@ -50,7 +50,6 @@ public class GamePreparationData {
         assert Helper.isValidRule(_new_rules) : "Can not switch to this rules. Not active!";
         _active_rules = _new_rules;
         refreshTeams();
-        System.out.println("Switching ruleset");
     }
 
     public String canStart(){

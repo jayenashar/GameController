@@ -5,9 +5,9 @@ import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.Rules;
-import data.communication.GameControlData;
 import data.states.AdvancedData;
-import data.states.SecondaryState;
+import data.values.GameStates;
+import data.values.SecondaryGameStates;
 
 /**
  * @author Robert Kessler
@@ -32,23 +32,21 @@ public class FreeKick extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        System.out.println("Attempting to perform FreeKick action");
         if (!data.freeKickActive[side]) {
             data.previousSecGameState = data.secGameState;
-            data.secGameState = SecondaryState.SECONDARY_STATE_FREEKICK;
-            System.out.println("Switching to freekick for team with team number " + data.team[side].teamNumber);
+            data.secGameState = SecondaryGameStates.FREEKICK;
             data.secGameStateInfo.switchToFreeKick(data.team[side].teamNumber);
             data.whenFreeKick = data.getTime();
             data.freeKickActive[side] = true;
             data.gameClock.setSecondaryClock(Rules.league.free_kick_preparation_time);
-            Log.setNextMessage("FreeKick " + Rules.league.teamColorName[data.team[side].teamColor]);
+            Log.setNextMessage("FreeKick " + data.team[side].teamColor.toString());
             ActionBoard.clockPause.perform(data);
         } else {
             data.secGameState = data.previousSecGameState;
-            data.previousSecGameState = SecondaryState.SECONDARY_STATE_FREEKICK;
+            data.previousSecGameState = SecondaryGameStates.FREEKICK;
             data.secGameStateInfo.reset();
             data.freeKickActive[side] = false;
-            Log.setNextMessage("End FreeKick " + Rules.league.teamColorName[data.team[side].teamColor]);
+            Log.setNextMessage("End FreeKick " + data.team[side].teamColor.toString());
             ActionBoard.clockPause.perform(data);
         }
     }
@@ -56,6 +54,6 @@ public class FreeKick extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-      return data.gameState == GameControlData.STATE_PLAYING && !data.freeKickActive[1-side];
+      return data.gameState == GameStates.PLAYING && !data.freeKickActive[1-side];
     }
 }

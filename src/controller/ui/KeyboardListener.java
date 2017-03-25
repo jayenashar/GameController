@@ -3,10 +3,11 @@ package controller.ui;
 import controller.EventHandler;
 import controller.action.ActionBoard;
 import controller.action.GCAction;
-import data.communication.GameControlData;
 import data.hl.HL;
 import data.Rules;
 import data.spl.SPL;
+import data.values.TeamColors;
+
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
@@ -78,28 +79,28 @@ public class KeyboardListener implements KeyEventDispatcher
                         // TODO: This Key-Mappings do not work properly with 10 Colors
                         case KeyEvent.VK_B:
                             for (int i = 0; i < ActionBoard.out.length; ++i) {
-                                if (EventHandler.getInstance().data.team[i].teamColor == GameControlData.TEAM_BLUE) {
+                                if (EventHandler.getInstance().data.team[i].teamColor == TeamColors.BLUE) {
                                     event = ActionBoard.out[i];
                                 }
                             }
                             break;
                         case KeyEvent.VK_R:
                             for (int i = 0; i < ActionBoard.out.length; ++i) {
-                                if (EventHandler.getInstance().data.team[i].teamColor == GameControlData.TEAM_RED) {
+                                if (EventHandler.getInstance().data.team[i].teamColor == TeamColors.RED) {
                                     event = ActionBoard.out[i];
                                 }
                             }
                             break;
                         case KeyEvent.VK_Y:
                             for (int i = 0; i < ActionBoard.out.length; ++i) {
-                                if (EventHandler.getInstance().data.team[i].teamColor == GameControlData.TEAM_YELLOW) {
+                                if (EventHandler.getInstance().data.team[i].teamColor == TeamColors.YELLOW) {
                                     event = ActionBoard.out[i];
                                 }
                             }
                             break;
                         case KeyEvent.VK_K:
                             for (int i = 0; i < ActionBoard.out.length; ++i) {
-                                if (EventHandler.getInstance().data.team[i].teamColor == GameControlData.TEAM_BLACK) {
+                                if (EventHandler.getInstance().data.team[i].teamColor == TeamColors.BLACK) {
                                     event = ActionBoard.out[i];
                                 }
                             }
@@ -118,8 +119,8 @@ public class KeyboardListener implements KeyEventDispatcher
                     }
                 } else if (Rules.league instanceof HL) {
                     switch (key) {
-                        case KeyEvent.VK_B: event = ActionBoard.out[EventHandler.getInstance().data.team[0].teamColor == GameControlData.TEAM_BLUE ? 0 : 1]; break;
-                        case KeyEvent.VK_R: event = ActionBoard.out[EventHandler.getInstance().data.team[0].teamColor == GameControlData.TEAM_RED ? 0 : 1]; break;
+                        case KeyEvent.VK_B: event = ActionBoard.out[EventHandler.getInstance().data.team[0].teamColor == TeamColors.BLUE ? 0 : 1]; break;
+                        case KeyEvent.VK_R: event = ActionBoard.out[EventHandler.getInstance().data.team[0].teamColor == TeamColors.RED ? 0 : 1]; break;
 
                         case KeyEvent.VK_P: event = ActionBoard.pushing; break;
                         case KeyEvent.VK_D: event = ActionBoard.defense; break;

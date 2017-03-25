@@ -4,8 +4,9 @@ import common.Log;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.states.AdvancedData;
-import data.communication.GameControlData;
 import data.Rules;
+import data.values.GameStates;
+import data.values.SecondaryGameStates;
 
 
 /**
@@ -32,17 +33,17 @@ public class Ready extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if (data.gameState == GameControlData.STATE_READY) {
+        if (data.gameState == GameStates.READY) {
             return;
         }
         if (Rules.league.returnRobotsInGameStoppages) {
             data.resetPenaltyTimes();
         }
-        if (data.gameState == GameControlData.STATE_PLAYING) {
+        if (data.gameState == GameStates.PLAYING) {
             data.addTimeInCurrentState();
         }
         data.whenCurrentGameStateBegan = data.getTime();
-        data.gameState = GameControlData.STATE_READY;
+        data.gameState = GameStates.READY;
         Log.state(data, "Ready");
     }
     
@@ -55,12 +56,12 @@ public class Ready extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return ((data.gameState == GameControlData.STATE_INITIAL)
+        return ((data.gameState == GameStates.INITIAL)
               && !data.timeOutActive[0] 
               && !data.timeOutActive[1]
               && !data.refereeTimeout
-              && (data.secGameState != GameControlData.STATE2_PENALTYSHOOT))
-            || (data.gameState == GameControlData.STATE_READY)
+              && (data.secGameState != SecondaryGameStates.PENALTYSHOOT))
+            || (data.gameState == GameStates.READY)
             || data.testmode;
     }
 }

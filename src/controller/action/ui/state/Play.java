@@ -4,7 +4,8 @@ import common.Log;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.states.AdvancedData;
-import data.communication.GameControlData;
+import data.values.GameStates;
+import data.values.GameTypes;
 
 
 /**
@@ -31,14 +32,14 @@ public class Play extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if (data.gameState == GameControlData.STATE_PLAYING) {
+        if (data.gameState == GameStates.PLAYING) {
             return;
         }
-        if ((data.gameType != GameControlData.GAME_PLAYOFF) && data.timeBeforeCurrentGameState != 0) {
+        if ((data.gameType != GameTypes.PLAYOFF) && data.timeBeforeCurrentGameState != 0) {
             data.addTimeInCurrentState();
         }
         data.whenCurrentGameStateBegan = data.getTime();
-        data.gameState = GameControlData.STATE_PLAYING;
+        data.gameState = GameStates.PLAYING;
         Log.state(data, "Playing");
     }
     
@@ -51,8 +52,8 @@ public class Play extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (data.gameState == GameControlData.STATE_SET)
-            || (data.gameState == GameControlData.STATE_PLAYING)
+        return (data.gameState == GameStates.SET)
+            || (data.gameState == GameStates.PLAYING)
             || data.testmode;
     }
 }

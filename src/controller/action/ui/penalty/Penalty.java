@@ -5,6 +5,7 @@ import controller.action.ActionType;
 import controller.action.GCAction;
 import data.states.AdvancedData;
 import data.PlayerInfo;
+import data.values.GameStates;
 
 /**
  *
@@ -44,7 +45,7 @@ public abstract class Penalty extends GCAction
      * @param number    The player`s number, beginning with 0!
      */
     protected void handleRepeatedPenalty(final AdvancedData data, final PlayerInfo player,
-            final int side, final int number, final int... states) {
+            final int side, final int number, final GameStates... states) {
         data.robotPenaltyCount[side][number] = 0;
         if (containsState(states, data.gameState)) {
             data.robotPenaltyCount[side][number] = data.penaltyCount[side];
@@ -52,11 +53,11 @@ public abstract class Penalty extends GCAction
         }
     }
 
-    private boolean containsState(final int[] states, final int state) {
+    private boolean containsState(final GameStates[] states, final GameStates state) {
         if (states == null || states.length == 0) {
             return false;
         }
-        for (final int s : states) {
+        for (final GameStates s : states) {
             if (s == state) {
                 return true;
             }

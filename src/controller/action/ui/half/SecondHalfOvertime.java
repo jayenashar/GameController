@@ -5,6 +5,8 @@ import controller.action.ActionType;
 import controller.action.GCAction;
 import data.states.AdvancedData;
 import data.communication.GameControlData;
+import data.values.GameStates;
+import data.values.SecondaryGameStates;
 
 
 /**
@@ -31,12 +33,12 @@ public class SecondHalfOvertime extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if (data.firstHalf != GameControlData.C_FALSE || data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
+        if (data.firstHalf != GameControlData.C_FALSE || data.secGameState == SecondaryGameStates.PENALTYSHOOT) {
             data.firstHalf = GameControlData.C_FALSE;
-            data.secGameState = GameControlData.STATE2_OVERTIME;
+            data.secGameState = SecondaryGameStates.OVERTIME;
             FirstHalf.changeSide(data);
             data.kickOffTeam = (data.leftSideKickoff ? data.team[0].teamNumber : data.team[1].teamNumber);
-            data.gameState = GameControlData.STATE_INITIAL;
+            data.gameState = GameStates.INITIAL;
             Log.state(data, "2nd Half Extra Time");
         }
     }
@@ -51,9 +53,9 @@ public class SecondHalfOvertime extends GCAction
     public boolean isLegal(AdvancedData data)
     {
         return ((data.firstHalf != GameControlData.C_TRUE)
-              && (data.secGameState == GameControlData.STATE2_OVERTIME))
-            || ((data.secGameState == GameControlData.STATE2_OVERTIME)
-              && (data.gameState == GameControlData.STATE_FINISHED))
+              && (data.secGameState == SecondaryGameStates.OVERTIME))
+            || ((data.secGameState == SecondaryGameStates.OVERTIME)
+              && (data.gameState == GameStates.FINISHED))
             || (data.testmode);
     }
 }

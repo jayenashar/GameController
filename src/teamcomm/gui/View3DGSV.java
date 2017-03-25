@@ -18,16 +18,20 @@ import com.jogamp.opengl.glu.GLUquadric;
 import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.AnimatorBase;
 import com.jogamp.opengl.util.awt.TextRenderer;
-import data.states.AdvancedData;
 import data.communication.GameControlData;
 import data.Rules;
 import data.Teams;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import data.values.GameStates;
+import data.values.SecondaryGameStates;
+import data.values.TeamColors;
 import teamcomm.TeamCommunicationMonitor;
 import teamcomm.data.GameState;
 import teamcomm.gui.drawings.Drawing;
@@ -270,35 +274,31 @@ public class View3DGSV extends View3D {
 
             // Secondary state
             String state;
-            switch (data.secGameState) {
-                case GameControlData.STATE2_NORMAL:
-                    if (Rules.league.dropInPlayerMode) {
-                        state = "";
-                    } else if (data.firstHalf == GameControlData.C_TRUE) {
-                        if (data.gameState == GameControlData.STATE_FINISHED) {
-                            state = "Half Time";
-                        } else {
-                            state = "First Half";
-                        }
-                    } else {
-                        if (data.gameState == GameControlData.STATE_INITIAL) {
-                            state = "Half Time";
-                        } else {
-                            state = "Second Half";
-                        }
-                    }
-                    break;
-                case GameControlData.STATE2_OVERTIME:
-                    state = "Overtime";
-                    break;
-                case GameControlData.STATE2_PENALTYSHOOT:
-                    state = "Penalty Shootout";
-                    break;
-                case GameControlData.STATE2_TIMEOUT:
-                    state = "Time Out";
-                    break;
-                default:
+            if (data.secGameState == SecondaryGameStates.NORMAL) {
+                if (Rules.league.dropInPlayerMode) {
                     state = "";
+                } else if (data.firstHalf == GameControlData.C_TRUE) {
+                    if (data.gameState == GameStates.FINISHED) {
+                        state = "Half Time";
+                    } else {
+                        state = "First Half";
+                    }
+                } else {
+                    if (data.gameState == GameStates.INITIAL) {
+                        state = "Half Time";
+                    } else {
+                        state = "Second Half";
+                    }
+                }
+            } else if (data.secGameState == SecondaryGameStates.OVERTIME) {
+                state = "Overtime";
+            } else if (data.secGameState == SecondaryGameStates.PENALTYSHOOT) {
+                state = "Penalty Shootout";
+            } else if (data.secGameState == SecondaryGameStates.TIMEOUT) {
+                state = "Time Out";
+            } else {
+
+                state = "";
             }
             textRenderers[RENDERER_SECSTATE].beginRendering(window.getWidth(), window.getHeight());
             drawTextCenter(textRenderers[RENDERER_SECSTATE], state, window.getHeight() - textRendererSizes[RENDERER_SECSTATE], Color.black);
@@ -309,26 +309,8 @@ public class View3DGSV extends View3D {
             drawText(textRenderers[RENDERER_TIME], formatTime((int) data.secsRemaining), (int) Math.round((window.getWidth() - textRenderers[RENDERER_TIME].getBounds("00:00").getWidth()) / 2 - (data.secsRemaining < 0 ? textRenderers[RENDERER_TIME].getCharWidth('-') : 0)), window.getHeight() - textRendererSizes[RENDERER_SECSTATE] - textRendererSizes[RENDERER_TIME], Color.black);
             textRenderers[RENDERER_TIME].endRendering();
 
-            // State
-            switch (data.gameState) {
-                case GameControlData.STATE_INITIAL:
-                    state = "Initial";
-                    break;
-                case GameControlData.STATE_READY:
-                    state = "Ready";
-                    break;
-                case GameControlData.STATE_SET:
-                    state = "Set";
-                    break;
-                case GameControlData.STATE_PLAYING:
-                    state = "Playing";
-                    break;
-                case GameControlData.STATE_FINISHED:
-                    state = "Finished";
-                    break;
-                default:
-                    state = "";
-            }
+            state = data.gameState.toString();
+
             textRenderers[RENDERER_STATE].beginRendering(window.getWidth(), window.getHeight());
             drawTextCenter(textRenderers[RENDERER_STATE], state, window.getHeight() - textRendererSizes[RENDERER_SECSTATE] - textRendererSizes[RENDERER_TIME] - window.getHeight() * 15 / 1080 - textRendererSizes[RENDERER_STATE], Color.black);
 
@@ -340,8 +322,8 @@ public class View3DGSV extends View3D {
 
             // Score
             textRenderers[RENDERER_SCORE].beginRendering(window.getWidth(), window.getHeight());
-            drawText(textRenderers[RENDERER_SCORE], "" + data.team[1].score, window.getWidth() / 6 + 40 * window.getWidth() / 1920, window.getHeight() - 20 * window.getWidth() / 1920 - (textRendererSizes[RENDERER_SCORE] + (int) textRenderers[RENDERER_SCORE].getBounds("0").getHeight()) / 2, Rules.league.teamColor[data.team[1].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[1].teamColor]);
-            drawText(textRenderers[RENDERER_SCORE], "" + data.team[0].score, window.getWidth() - window.getWidth() / 6 - 40 * window.getWidth() / 1920 - (int) Math.max(textRenderers[RENDERER_SCORE].getBounds("" + data.team[0].score).getWidth(), textRenderers[RENDERER_SCORE].getCharWidth('0')), window.getHeight() - 20 * window.getWidth() / 1920 - (textRendererSizes[RENDERER_SCORE] + (int) textRenderers[RENDERER_SCORE].getBounds("0").getHeight()) / 2, Rules.league.teamColor[data.team[0].teamColor == AdvancedData.TEAM_WHITE ? AdvancedData.TEAM_BLACK : data.team[0].teamColor]);
+            drawText(textRenderers[RENDERER_SCORE], "" + data.team[1].score, window.getWidth() / 6 + 40 * window.getWidth() / 1920, window.getHeight() - 20 * window.getWidth() / 1920 - (textRendererSizes[RENDERER_SCORE] + (int) textRenderers[RENDERER_SCORE].getBounds("0").getHeight()) / 2, Rules.league.teamColor[data.team[1].teamColor == TeamColors.WHITE ? TeamColors.BLACK.value() : data.team[1].teamColor.value()]);
+            drawText(textRenderers[RENDERER_SCORE], "" + data.team[0].score, window.getWidth() - window.getWidth() / 6 - 40 * window.getWidth() / 1920 - (int) Math.max(textRenderers[RENDERER_SCORE].getBounds("" + data.team[0].score).getWidth(), textRenderers[RENDERER_SCORE].getCharWidth('0')), window.getHeight() - 20 * window.getWidth() / 1920 - (textRendererSizes[RENDERER_SCORE] + (int) textRenderers[RENDERER_SCORE].getBounds("0").getHeight()) / 2, Rules.league.teamColor[data.team[0].teamColor == TeamColors.WHITE ? TeamColors.BLACK.value() : data.team[0].teamColor.value()]);
             textRenderers[RENDERER_SCORE].endRendering();
 
             // Penalty shots
@@ -350,7 +332,7 @@ public class View3DGSV extends View3D {
                 final GLU glu = GLU.createGLU(gl);
                 final GLUquadric q = glu.gluNewQuadric();
                 for (int i = 0; i < 2; i++) {
-                    gl.glColor4fv(Rules.league.teamColor[data.team[i].teamColor].getComponents(new float[4]), 0);
+                    gl.glColor4fv(data.team[i].teamColor.colorValue().getComponents(new float[4]), 0);
                     if (i == 0) {
                         gl.glPushMatrix();
                         gl.glTranslatef(window.getWidth() * 11 / 12, window.getWidth() / 6 + window.getHeight() * 20 / 1080, 0);
@@ -411,7 +393,6 @@ public class View3DGSV extends View3D {
      * string.
      *
      * @param seconds Time to format in seconds.
-     *
      * @return Time formated.
      */
     private String formatTime(final int seconds) {

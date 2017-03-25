@@ -4,8 +4,8 @@ import common.Log;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.states.AdvancedData;
-import data.communication.GameControlData;
 import data.Rules;
+import data.values.GameStates;
 
 
 /**
@@ -32,7 +32,7 @@ public class Finish extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if (data.gameState == GameControlData.STATE_FINISHED) {
+        if (data.gameState == GameStates.FINISHED) {
             return;
         }
         if (Rules.league.returnRobotsInGameStoppages) {
@@ -40,7 +40,7 @@ public class Finish extends GCAction
         }
         data.addTimeInCurrentState();
         data.whenCurrentGameStateBegan = data.getTime();
-        data.gameState = GameControlData.STATE_FINISHED;
+        data.gameState = GameStates.FINISHED;
         Log.state(data, "Finished");
     }
     
@@ -53,10 +53,10 @@ public class Finish extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (data.gameState == GameControlData.STATE_READY)
-            || (data.gameState == GameControlData.STATE_SET)
-            || (data.gameState == GameControlData.STATE_PLAYING)
-            || (data.gameState == GameControlData.STATE_FINISHED)
+        return (data.gameState == GameStates.READY)
+            || (data.gameState == GameStates.SET)
+            || (data.gameState == GameStates.PLAYING)
+            || (data.gameState == GameStates.FINISHED)
             || data.testmode;
     }
 }

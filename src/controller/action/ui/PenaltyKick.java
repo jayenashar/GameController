@@ -5,9 +5,9 @@ import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.Rules;
-import data.communication.GameControlData;
 import data.states.AdvancedData;
-import data.states.SecondaryState;
+import data.values.GameStates;
+import data.values.SecondaryGameStates;
 
 /**
  * @author Michel Bartsch
@@ -39,23 +39,21 @@ public class PenaltyKick extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        System.out.println("Attempting to perform PenaltyKick action");
         if (!data.penaltyKickActive[side]) {
             data.previousSecGameState = data.secGameState;
-            data.secGameState = SecondaryState.SECONDARY_STATE_PENALTYKICK;
-            System.out.println("Switching to penalty kick for team with team number " + data.team[side].teamNumber);
+            data.secGameState = SecondaryGameStates.PENALTYKICK;
             data.secGameStateInfo.switchToPenaltyKick(data.team[side].teamNumber);
             data.whenPenaltyKick = data.getTime();
             data.penaltyKickActive[side] = true;
             data.gameClock.setSecondaryClock(Rules.league.penalty_kick_preparation_time);
-            Log.setNextMessage("PenaltyKick " + Rules.league.teamColorName[data.team[side].teamColor]);
+            Log.setNextMessage("PenaltyKick " + data.team[side].teamColor);
             ActionBoard.clockPause.perform(data);
         } else {
             data.secGameState = data.previousSecGameState;
-            data.previousSecGameState = SecondaryState.SECONDARY_STATE_PENALTYKICK;
+            data.previousSecGameState = SecondaryGameStates.PENALTYKICK;
             data.secGameStateInfo.reset();
             data.penaltyKickActive[side] = false;
-            Log.setNextMessage("End PenaltyKick " + Rules.league.teamColorName[data.team[side].teamColor]);
+            Log.setNextMessage("End PenaltyKick " + data.team[side].teamColor);
             ActionBoard.clockPause.perform(data);
         }
     }
@@ -69,6 +67,6 @@ public class PenaltyKick extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-      return data.gameState == GameControlData.STATE_PLAYING && !data.penaltyKickActive[1-side];
+      return data.gameState == GameStates.PLAYING && !data.penaltyKickActive[1-side];
     }
 }

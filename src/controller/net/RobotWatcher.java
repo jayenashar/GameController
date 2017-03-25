@@ -3,8 +3,9 @@ package controller.net;
 import controller.EventHandler;
 import controller.action.ActionBoard;
 import data.communication.GameControlReturnData;
-import data.PlayerInfo;
 import data.Rules;
+import data.values.Penalties;
+import data.values.PlayerResponses;
 
 /**
  * @author Marcel Steinbeck, Michel Bartsch
@@ -22,7 +23,7 @@ public class RobotWatcher
     private long [][] robotsLastAnswer = Rules.league.isCoachAvailable ? new long[2][Rules.league.teamSize+1] : new long[2][Rules.league.teamSize];
     /** Last message reeived from each robot.
      *  Look at GameControlReturnData for information about messages */
-    private int [][] robotsLastMessage = Rules.league.isCoachAvailable ? new int[2][Rules.league.teamSize+1] : new int[2][Rules.league.teamSize];
+    private PlayerResponses[][] robotsLastMessage = Rules.league.isCoachAvailable ? new PlayerResponses[2][Rules.league.teamSize+1] : new PlayerResponses[2][Rules.league.teamSize];
     /** The calculated information about the online-status. */
     private RobotOnlineStatus [][] status = Rules.league.isCoachAvailable ? new RobotOnlineStatus[2][Rules.league.teamSize+1] : new RobotOnlineStatus[2][Rules.league.teamSize];
 
@@ -37,7 +38,7 @@ public class RobotWatcher
     {
         for (int i  = 0; i < 2; i++) {
             for (int j = 0; j < Rules.league.teamSize; j++) {
-                robotsLastMessage[i][j] = PlayerInfo.PENALTY_NONE;
+                robotsLastMessage[i][j] = PlayerResponses.MAN_PENALISE;
                 status[i][j] = RobotOnlineStatus.UNKNOWN;
             }
             if (Rules.league.isCoachAvailable) {
@@ -69,11 +70,11 @@ public class RobotWatcher
         instance.robotsLastAnswer[team][number-1] = System.currentTimeMillis();
         if (instance.robotsLastMessage[team][number-1] != gameControlReturnData.message) {
             instance.robotsLastMessage[team][number-1] = gameControlReturnData.message;
-            if ((gameControlReturnData.message == GameControlReturnData.GAMECONTROLLER_RETURN_MSG_MAN_PENALISE)
-                    && (EventHandler.getInstance().data.team[team].player[number-1].penalty == PlayerInfo.PENALTY_NONE)) {
+            if ((gameControlReturnData.message == PlayerResponses.MAN_PENALISE)
+                    && (EventHandler.getInstance().data.team[team].player[number-1].penalty == Penalties.NONE)) {
                 ActionBoard.manualPen[team][number-1].actionPerformed(null);
-            } else if ((gameControlReturnData.message == GameControlReturnData.GAMECONTROLLER_RETURN_MSG_MAN_UNPENALISE)
-                    && (EventHandler.getInstance().data.team[team].player[number-1].penalty != PlayerInfo.PENALTY_NONE)) {
+            } else if ((gameControlReturnData.message == PlayerResponses.MAN_UNPENALISE)
+                    && (EventHandler.getInstance().data.team[team].player[number-1].penalty != Penalties.NONE)) {
                 ActionBoard.manualUnpen[team][number-1].actionPerformed(null);
             }
         }

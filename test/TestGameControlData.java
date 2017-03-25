@@ -1,10 +1,6 @@
-import controller.action.ActionBoard;
-import controller.action.ui.FreeKick;
-import data.TeamInfo;
-import data.communication.GameControlData;
 import data.states.AdvancedData;
-import data.states.GamePreparationData;
-import data.states.SecondaryState;
+import data.values.SecondaryGameStates;
+import data.values.TeamColors;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -27,8 +23,8 @@ public class TestGameControlData {
     public void test_secondary_game_state_send_correctly() {
         AdvancedData data = new AdvancedData();
 
-        data.secGameState = SecondaryState.SECONDARY_STATE_FREEKICK;
-        data.dropInTeam = GameControlData.TEAM_BLACK;
+        data.secGameState = SecondaryGameStates.FREEKICK;
+        data.dropInTeam = TeamColors.BLACK.value();
 
         ByteBuffer byteBuffer = data.toByteArray();
         byteBuffer.position(0);

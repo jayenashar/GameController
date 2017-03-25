@@ -3,7 +3,8 @@ package teamcomm.gui.drawings.common;
 import com.jogamp.opengl.GL2;
 import data.communication.GameControlData;
 import data.Rules;
-import data.TeamInfo;
+import data.communication.TeamInfo;
+import data.values.SecondaryGameStates;
 import teamcomm.data.GameState;
 import teamcomm.gui.Camera;
 import teamcomm.gui.drawings.Static;
@@ -35,25 +36,20 @@ public class GameControllerInfo extends Static {
                 half = "Drop-in Game";
             } else {
                 if (data.firstHalf == GameControlData.C_TRUE) {
-                    if (data.secGameState == GameControlData.STATE2_TIMEOUT) {
+                    if (data.secGameState == SecondaryGameStates.TIMEOUT) {
                         half = "Timeout";
                     } else {
                         half = "1st half";
                     }
                 } else {
-                    switch (data.secGameState) {
-                        case GameControlData.STATE2_NORMAL:
-                        case GameControlData.STATE2_OVERTIME:
-                            half = "2nd half";
-                            break;
-                        case GameControlData.STATE2_TIMEOUT:
-                            half = "Timeout";
-                            break;
-                        case GameControlData.STATE2_PENALTYSHOOT:
-                            half = "Penalty Shootout";
-                            break;
-                        default:
-                            half = "";
+                    if (data.secGameState == SecondaryGameStates.NORMAL || data.secGameState == SecondaryGameStates.OVERTIME) {
+                        half = "2nd half";
+                    } else if (data.secGameState == SecondaryGameStates.TIMEOUT) {
+                        half = "Timeout";
+                    } else if (data.secGameState == SecondaryGameStates.PENALTYSHOOT) {
+                        half = "Penalty Shootout";
+                    } else {
+                        half = "";
                     }
                 }
             }
@@ -64,35 +60,15 @@ public class GameControllerInfo extends Static {
             Text.drawText((data.secsRemaining < 0 ? "-" : "") + (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds, 0, 0.6f, 0.3f);
 
             // Display game state
-            final String state;
-            switch (data.gameState) {
-                case GameControlData.STATE_INITIAL:
-                    state = "Initial";
-                    break;
-                case GameControlData.STATE_READY:
-                    state = "Ready";
-                    break;
-                case GameControlData.STATE_SET:
-                    state = "Set";
-                    break;
-                case GameControlData.STATE_PLAYING:
-                    state = "Playing";
-                    break;
-                case GameControlData.STATE_FINISHED:
-                    state = "Finished";
-                    break;
-                default:
-                    state = "";
-                    break;
-            }
+            final String state = data.gameState.toString();
             Text.drawText(state, 0, 0.3f, 0.3f);
 
             // Display scores
             final TeamInfo teamLeft = data.team[GameState.getInstance().isMirrored() ? 1 : 0];
             final TeamInfo teamRight = data.team[GameState.getInstance().isMirrored() ? 0 : 1];
-            Text.drawText("" + teamLeft.score, -0.3f, 0, 0.3f, getColor(teamLeft.teamColor));
+            Text.drawText("" + teamLeft.score, -0.3f, 0, 0.3f, getColor(teamLeft.teamColor.value()));
             Text.drawText(":", 0, 0, 0.3f);
-            Text.drawText("" + teamRight.score, 0.3f, 0, 0.3f, getColor(teamRight.teamColor));
+            Text.drawText("" + teamRight.score, 0.3f, 0, 0.3f, getColor(teamRight.teamColor.value()));
             gl.glPopMatrix();
         }
     }

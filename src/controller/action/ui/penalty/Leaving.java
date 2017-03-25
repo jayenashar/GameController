@@ -2,9 +2,9 @@ package controller.action.ui.penalty;
 
 import common.Log;
 import data.states.AdvancedData;
-import data.communication.GameControlData;
 import data.PlayerInfo;
-import data.Rules;
+import data.values.GameStates;
+import data.values.Penalties;
 
 /**
  * @author Michel Bartsch
@@ -24,12 +24,10 @@ public class Leaving extends Penalty
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
-        player.penalty = PlayerInfo.PENALTY_SPL_LEAVING_THE_FIELD;
-        handleRepeatedPenalty(data, player, side, number, AdvancedData.STATE_PLAYING);
+        player.penalty = Penalties.SPL_LEAVING_THE_FIELD;
+        handleRepeatedPenalty(data, player, side, number, GameStates.PLAYING);
         data.whenPenalized[side][number] = data.getTime();
-        Log.state(data, "Leaving the Field "+
-                Rules.league.teamColorName[data.team[side].teamColor]
-                + " " + (number+1));
+        Log.state(data, "Leaving the Field " + data.team[side].teamColor + " " + (number+1));
     }
     
     /**
@@ -41,8 +39,8 @@ public class Leaving extends Penalty
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (data.gameState == GameControlData.STATE_READY)
-            || (data.gameState == GameControlData.STATE_PLAYING)
+        return (data.gameState == GameStates.READY)
+            || (data.gameState == GameStates.PLAYING)
             || (data.testmode);
     }
 }

@@ -1,9 +1,8 @@
-import data.communication.GameControlData;
 import data.hl.HL;
 import data.states.GamePreparationData;
 
-import data.states.PrepTeam;
 import data.teams.TeamLoadInfo;
+import data.values.TeamColors;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -27,8 +26,8 @@ public class TestGamePreparationData {
         assertEquals(0, gpd.getFirstTeam().getTeamInfo().identifier);
         assertEquals(0, gpd.getSecondTeam().getTeamInfo().identifier);
 
-        assertEquals(GameControlData.TEAM_BLUE, gpd.getFirstTeam().getTeamColorAsByte());
-        assertEquals(GameControlData.TEAM_BLUE, gpd.getSecondTeam().getTeamColorAsByte());
+        assertEquals(TeamColors.BLUE, gpd.getFirstTeam().getTeamColorAsByte());
+        assertEquals(TeamColors.BLUE, gpd.getSecondTeam().getTeamColorAsByte());
     }
 
     @Test

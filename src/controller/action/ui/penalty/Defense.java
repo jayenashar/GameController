@@ -2,9 +2,9 @@ package controller.action.ui.penalty;
 
 import common.Log;
 import data.states.AdvancedData;
-import data.communication.GameControlData;
 import data.PlayerInfo;
-import data.Rules;
+import data.values.GameStates;
+import data.values.Penalties;
 
 /**
  *
@@ -23,12 +23,10 @@ public class Defense extends Penalty
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
-        player.penalty = PlayerInfo.PENALTY_HL_ILLEGAL_DEFENSE;
+        player.penalty = Penalties.HL_ILLEGAL_DEFENSE;
         handleRepeatedPenalty(data, player, side, number);
         data.whenPenalized[side][number] = data.getTime();
-        Log.state(data, "Illegal Defense "+
-                Rules.league.teamColorName[data.team[side].teamColor]
-                + " " + (number+1));
+        Log.state(data, "Illegal Defense " + data.team[side].teamColor + " " + (number+1));
     }
     
     /**
@@ -40,6 +38,6 @@ public class Defense extends Penalty
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (data.gameState == GameControlData.STATE_PLAYING) || data.testmode;
+        return (data.gameState == GameStates.PLAYING) || data.testmode;
     }
 }
