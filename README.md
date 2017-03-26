@@ -2,25 +2,32 @@
 
 # RoboCup SPL and Humanoid League GameController
 
-This is the GameController developed by team B-Human for the RoboCup SPL and
-Humanoid League.
+This is the GameController further developed by the Humanoid League based
+ on the GameController from the SPL Team B-Human
 
-If there are any questions, please contact
-[fthielke@uni-bremen.de](fthielke@uni-bremen.de). Please make sure that your
-questions are not already answered in this README or the README file of the
-[TCM](TCM.md).
+If there are any questions, please contact [sheepsy90@gmail.com](sheepsy90@gmail.de).
+Please read this README carefully to avoid questions that are already answered within the document
+or the [TCM](TCM.md). 
 
-Follow @BHumanOpenSrc on Twitter to get notifications about recent activity.
+For questions regarding the protocol please check the [Wiki](https://github.com/RoboCup-Humanoid-TC/GameController/wiki).
 
 The sources mentioned in some sections of this document are available at
-[https://github.com/bhuman/GameController](https://github.com/bhuman/GameController).
+[https://github.com/RoboCup-Humanoid-TC/GameController](https://github.com/RoboCup-Humanoid-TC/GameController).
+
+### Latest Changes
+* Removed support for Protocol Version 7
+* Updated Protocol 
+  * Added SECONDARY_STATE: FREE_KICK
+  * Added SECONDARY_STATE: PENALTY_KICK
+  * Added 4 bytes with SECONDARY_STATE_INFO for details on the SECONDARY_STATE 
+
+_See [CHANGELOG](CHANGELOG.md) for more details._
 
 
 ### Acknowledgement
 
 The development was partially supported by the RoboCup Federation within the
 calls for Support for Projects for League Developments for 2013, 2015 and 2017.
-
 
 ## 1. Building from Source
 
