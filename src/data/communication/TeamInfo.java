@@ -1,7 +1,8 @@
-package data;
+package data.communication;
 
-import data.communication.GameControlData;
+import data.PlayerInfo;
 import data.spl.SPLCoachMessage;
+import data.values.TeamColors;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;
@@ -37,17 +38,9 @@ public class TeamInfo implements Serializable
             SPLCoachMessage.SPL_COACH_MESSAGE_SIZE + // coach's message
             (MAX_NUM_PLAYERS + 1) * PlayerInfo.SIZE; // +1 for the coach
 
-    /** The size in bytes this class has packed for version 7. */
-    public static final int SIZE7 =
-            1 + // teamNumber
-            1 + // teamColor
-            1 + // goal color
-            1 + // score
-            (MAX_NUM_PLAYERS) * PlayerInfo.SIZE7;
-
     //this is streamed
     public byte teamNumber;                                         // unique team number
-    public byte teamColor;                                          // colour of the team
+    public TeamColors teamColor;                                    // colour of the team
     public byte score;                                              // team's score
     public byte penaltyShot = 0;                                    // penalty shot counter
     public short singleShots = 0;                                   // bits represent penalty shot success
@@ -75,7 +68,7 @@ public class TeamInfo implements Serializable
         ByteBuffer buffer = ByteBuffer.allocate(SIZE);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.put(teamNumber);
-        buffer.put(teamColor);
+        buffer.put(teamColor.value());
         buffer.put(score);
         buffer.put(penaltyShot);
         buffer.putShort(singleShots);
@@ -84,26 +77,6 @@ public class TeamInfo implements Serializable
         buffer.put(coach.toByteArray());
         for (int i=0; i<MAX_NUM_PLAYERS; i++) {
             buffer.put(player[i].toByteArray());
-        }
-
-        return buffer.array();
-    }
-
-    /**
-     * Packing this Java class to the C-structure to be send, using version 7
-     * of the protocol.
-     * @return Byte array representing the C-structure.
-     */
-    public byte[] toByteArray7()
-    {
-        ByteBuffer buffer = ByteBuffer.allocate(SIZE7);
-        buffer.order(ByteOrder.LITTLE_ENDIAN);
-        buffer.put(teamNumber);
-        buffer.put(teamColor);
-        buffer.put((byte) 1); // goal color is always yellow
-        buffer.put(score);
-        for (int i=0; i<MAX_NUM_PLAYERS; i++) {
-            buffer.put(player[i].toByteArray7());
         }
 
         return buffer.array();
@@ -118,7 +91,7 @@ public class TeamInfo implements Serializable
     {
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         teamNumber = buffer.get();
-        teamColor = buffer.get();
+        teamColor = TeamColors.fromValue(buffer.get());
         score = buffer.get();
         penaltyShot = buffer.get();
         singleShots = buffer.getShort();
@@ -134,23 +107,8 @@ public class TeamInfo implements Serializable
     public String toString()
     {
         String out = "--------------------------------------\n";
-        String temp;
-        
         out += "         teamNumber: "+teamNumber+"\n";
-        switch (teamColor) {
-            case GameControlData.TEAM_BLUE: temp = "blue"; break;
-            case GameControlData.TEAM_RED:  temp = "red";  break;
-            case GameControlData.TEAM_YELLOW: temp = "yellow"; break;
-            case GameControlData.TEAM_BLACK:  temp = "black";  break;
-            case GameControlData.TEAM_WHITE:  temp = "white";  break;
-            case GameControlData.TEAM_GREEN:  temp = "green";  break;
-            case GameControlData.TEAM_ORANGE:  temp = "orange";  break;
-            case GameControlData.TEAM_PURPLE:  temp = "purple";  break;
-            case GameControlData.TEAM_BROWN:  temp = "brown";  break;
-            case GameControlData.TEAM_GRAY:  temp = "gray";  break;
-            default: temp = "undefinied("+teamColor+")";
-        }
-        out += "          teamColor: "+temp+"\n";
+        out += "          teamColor: "+teamColor.toString()+"\n";
         out += "              score: "+score+"\n";
         out += "        penaltyShot: "+penaltyShot+"\n";
         out += "        singleShots: "+Integer.toBinaryString(singleShots)+"\n";

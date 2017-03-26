@@ -25,7 +25,7 @@ public class Helper {
         return result;
     }
 
-    private static String capitalize(final String line) {
+    public static String capitalize(final String line) {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1);
     }
 

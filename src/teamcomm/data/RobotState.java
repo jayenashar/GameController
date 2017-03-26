@@ -5,6 +5,8 @@ import data.spl.SPLStandardMessage;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import javax.swing.event.EventListenerList;
+
+import data.values.Penalties;
 import teamcomm.data.event.RobotStateEvent;
 import teamcomm.data.event.RobotStateEventListener;
 
@@ -39,7 +41,7 @@ public class RobotState {
     private int illegalMessageCount = 0;
     private final int teamNumber;
     private Integer playerNumber = null;
-    private byte penalty = PlayerInfo.PENALTY_NONE;
+    private Penalties penalty = Penalties.NONE;
     private ConnectionStatus lastConnectionStatus = ConnectionStatus.ONLINE;
 
     private final EventListenerList listeners = new EventListenerList();
@@ -201,7 +203,7 @@ public class RobotState {
      * @return penalty
      * @see PlayerInfo#penalty
      */
-    public byte getPenalty() {
+    public Penalties getPenalty() {
         return penalty;
     }
 
@@ -211,7 +213,7 @@ public class RobotState {
      * @param penalty penalty
      * @see PlayerInfo#penalty
      */
-    public void setPenalty(final byte penalty) {
+    public void setPenalty(final Penalties penalty) {
         this.penalty = penalty;
     }
 

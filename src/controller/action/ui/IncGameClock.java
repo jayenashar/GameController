@@ -5,7 +5,7 @@ import common.Log;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.states.AdvancedData;
-import data.communication.GameControlData;
+import data.values.GameStates;
 
 public class IncGameClock extends GCAction
 {
@@ -24,7 +24,7 @@ public class IncGameClock extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return data.gameState != GameControlData.STATE_PLAYING
+        return data.gameState != GameStates.PLAYING
                 && data.timeBeforeCurrentGameState >= 1000*60
                 || data.testmode;
     }

@@ -6,6 +6,9 @@ import controller.action.GCAction;
 import data.states.AdvancedData;
 import data.communication.GameControlData;
 import data.Rules;
+import data.values.GameStates;
+import data.values.GameTypes;
+import data.values.SecondaryGameStates;
 
 
 /**
@@ -32,10 +35,10 @@ public class PenaltyShoot extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
-            data.secGameState = GameControlData.STATE2_PENALTYSHOOT;
+        if (data.secGameState != SecondaryGameStates.PENALTYSHOOT) {
+            data.secGameState = SecondaryGameStates.PENALTYSHOOT;
             // Don't set data.whenCurrentGameStateBegan, because it's used to count the pause
-            data.gameState = GameControlData.STATE_INITIAL;
+            data.gameState = GameStates.INITIAL;
             data.timeBeforeCurrentGameState = 0;
             data.kickOffReason = AdvancedData.KICKOFF_PENALTYSHOOT;
             data.resetPenalties();
@@ -55,13 +58,13 @@ public class PenaltyShoot extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (data.secGameState == GameControlData.STATE2_PENALTYSHOOT)
-          || (data.previousSecGameState == GameControlData.STATE2_PENALTYSHOOT)      
+        return (data.secGameState == SecondaryGameStates.PENALTYSHOOT)
+          || (data.previousSecGameState == SecondaryGameStates.PENALTYSHOOT)
           || ((data.firstHalf != GameControlData.C_TRUE)
-            && (data.gameState == GameControlData.STATE_FINISHED)
+            && (data.gameState == GameStates.FINISHED)
             && !(Rules.league.overtime
-                && (data.gameType == GameControlData.GAME_PLAYOFF)
-                && (data.secGameState == GameControlData.STATE2_NORMAL)
+                && (data.gameType == GameTypes.PLAYOFF)
+                && (data.secGameState == SecondaryGameStates.NORMAL)
                 && (data.team[0].score == data.team[1].score)
                 && (data.team[0].score > 0)) )
           || (data.testmode);

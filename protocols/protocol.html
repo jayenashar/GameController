@@ -1,0 +1,407 @@
+
+<h2>General Notes</h2>
+
+This explains the GameController protocol. If there is an reference to a Java Class
+it is referenced as @package.ClassName which can be used to check the allowed values for this field.<br>
+You will find the byte values for the refered classes in the <a href="#appendix">Appendix</a>.
+The game controller send out packages on the GAMECONTROLLER_DATA_PORT=3838 and expects the
+response from players who are connected to the GameController on the GAMECONTROLLER_RETURN_PORT=3939.<br><br>
+
+You will need to interpret a package <a href="#game_control_data">Game Control Data</a> and respond
+with a package <a href="#game_control_return_data">Game Control Return Data</a>.
+<br><br>
+
+
+The rows are highlighted based on the following categorization.
+
+<ul>
+    <div>
+        <div style="display: inline-block; width: 14px; height:14px; background-color:lightgoldenrodyellow"></div>
+        A single byte indicating a specific field
+    </div>
+    <div>
+        <div style="display: inline-block; width: 14px; height:14px; background-color:palegoldenrod"></div>
+        A set of bytes but not a complex object yet
+    </div>
+    <div>
+        <div style="display: inline-block; width: 14px; height:14px; background-color:lightblue"></div>
+        Complex Objects consisting of a byte array themselves
+    </div>
+</ul>
+
+<h2 id="game_control_data">Game Control Data</h2>
+
+<style>
+    .struct {
+        background-color: lightblue;
+    }
+    .byte {
+        background-color: lightgoldenrodyellow;
+    }
+    .bytes {
+        background-color: palegoldenrod;
+    }
+    .java {
+        font-weight: 700;
+        font-style: italic;
+        color: darkblue;
+    }
+    table tr td {
+        text-align: center;
+    }
+</style>
+
+<table border="1" width="100%">
+    <tr>
+        <th>Number of Bytes/<br>Occurrences</th>
+        <th>Identifier</th>
+        <th>Explanation</th>
+    </tr>
+
+    <tr class="bytes">
+        <td>4</td>
+        <td>Header</td>
+        <td>A String that is considered the Header 'RGme'</td>
+    </tr>
+    <tr class="byte">
+        <td>1</td>
+        <td>Protocol Version</td>
+        <td>Identifying the Version of the Protocol</td>
+    </tr>
+    <tr class="byte">
+        <td>1</td>
+        <td>packetNumber</td>
+        <td>A counter for the package that is raised by the GameController</td>
+    </tr>
+    <tr class="byte">
+        <td>1</td>
+        <td>playersPerTeam</td>
+        <td>The numbers of Players per Team</td>
+    </tr>
+    <tr class="byte">
+        <td>1</td>
+        <td>gameType</td>
+        <td>
+            The type of the game that is played.<br>
+            See <span class="java">@data.values.GameTypes</span> for allowed values
+        </td>
+    </tr>
+    <tr class="byte">
+        <td>1</td>
+        <td>state</td>
+        <td>
+            The state that the game is currently in.<br>
+            See <span class="java">@data.values.GameStates</span> for allowed values
+        </td>
+    </tr>
+    <tr class="byte">
+        <td>1</td>
+        <td>firstHalf</td>
+        <td>Whether the game is in the first half (value=1) otherwise (value=0)</td>
+    </tr>
+    <tr class="byte">
+        <td>1</td>
+        <td>kickOffTeam</td>
+        <td>The team number of the next team to kick off or DROPBALL</td>
+    </tr>
+    <tr class="byte">
+        <td>1</td>
+        <td>secondaryState</td>
+        <td>
+            The SecondaryState of the game.<br>
+            See <span class="java">@data.values.SecondaryGameStates</span> for allowed values
+        </td>
+    </tr>
+    <tr class="bytes">
+        <td>4</td>
+        <td>secondaryStateInfo</td>
+        <td>The secondary state information giving information about the state.<br>
+            See <a href="#secondary_state_info">below</a> or <span class="java">@data.states.SecondaryStateInfo</span> for allowed values.
+        </td>
+    </tr>
+
+    <tr class="byte">
+        <td>1</td>
+        <td>dropInTeam</td>
+        <td>number of team that caused last drop in</td>
+    </tr>
+
+    <tr class="byte">
+        <td>1</td>
+        <td>dropInTime</td>
+        <td>number of seconds passed since the last drop in. -1 (0xffff) before first dropin</td>
+    </tr>
+
+    <tr class="byte">
+        <td>1</td>
+        <td>secsRemaining</td>
+        <td>estimate of number of seconds remaining in the half</td>
+    </tr>
+
+    <tr class="byte">
+        <td>1</td>
+        <td>secondaryTime</td>
+        <td>number of seconds shown as secondary time (remaining ready, until free ball, etc)</td>
+    </tr>
+    <tr class="struct">
+        <td>2</td>
+        <td>TeamInfo</td>
+        <td>The information about both teams and their players</td>
+    </tr>
+</table>
+
+<h2>TeamInfo</h2>
+
+The TeamInfo Struct describes how a team looks like.
+
+
+<table border="1" width="100%">
+    <tr>
+        <th>Number of Bytes/<br>Occurrences</th>
+        <th>Identifier</th>
+        <th>Explanation</th>
+    </tr>
+
+    <tr class="byte">
+        <td>1</td>
+        <td>team_number</td>
+        <td>The unique team number</td>
+    </tr>
+
+    <tr class="byte">
+        <td>1</td>
+        <td>team_color</td>
+        <td>The color of the team.<br>
+            See <span class="java">@data.values.TeamColors</span> for allowed values
+        </td>
+    </tr>
+
+
+    <tr class="byte">
+        <td>1</td>
+        <td>score</td>
+        <td>The score of the team.</td>
+    </tr>
+
+    <tr class="byte">
+        <td>1</td>
+        <td>penaltyShot</td>
+        <td>Number of penalty shots</td>
+    </tr>
+
+    <tr class="byte">
+        <td>1</td>
+        <td>singleShots</td>
+        <td>Number of successful penalty shots</td>
+    </tr>
+
+    <tr class="byte">
+        <td>1</td>
+        <td>coachSequence</td>
+        <td>The sequence number of the last coach message</td>
+    </tr>
+
+    <tr class="bytes">
+        <td>253</td>
+        <td>coachSequence</td>
+        <td>The coach message
+            See below or <span class="java">@data.spl.SPLCoachMessage</span> for more information.
+        </td>
+    </tr>
+    <tr class="struct">
+        <td>1</td>
+        <td>PlayerInfo (coach)</td>
+        <td>The PlayerInfo complex object which specifies the coach
+        </td>
+    </tr>
+    <tr class="struct">
+        <td>11</td>
+        <td>PlayerInfo (players)</td>
+        <td>The PlayerInfo complex object which specifies all the players</td>
+    </tr>
+</table>
+
+
+<h2>PlayerInfo</h2>
+
+The TeamInfo Struct describes how a specific player looks like.
+
+<table border="1" width="100%">
+    <tr>
+        <th>Number of Bytes/<br>Occurrences</th>
+        <th>Identifier</th>
+        <th>Explanation</th>
+    </tr>
+
+    <tr class="byte">
+        <td>1</td>
+        <td>penalty</td>
+        <td>
+            The id of the penalty the robot currently has. No penalty is 0.<br>
+            See <span class="java">@data.values.Penalties</span> for allowed values.
+        </td>
+    </tr>
+
+    <tr class="byte">
+        <td>1</td>
+        <td>seconds_till_unpenalized</td>
+        <td>
+            The number of seconds until the robot is unpenalized again.
+        </td>
+    </tr>
+</table>
+
+
+<h2 id="secondary_state_info">Secondary States</h2>
+
+The concept of secondary states allows to move during a main state to a secondary state and with the detailed
+secondary state information convey additional information within that sub state.
+
+You can look at <span class="java">@data.states.SecondaryGameStates</span> for the implementation.
+The below table shows which is the meaning for the additional bytes. Only Secondary Game States and
+respective byte positions which convey information are listed. The others can be ignored.<br><br>
+
+<table border="1" width="100%">
+    <tr>
+        <th>Secondary Game State</th>
+        <th>Byte Position</th>
+        <th>Information</th>
+    </tr>
+    <tr class="byte">
+        <td>FREE_KICK</td>
+        <td>0</td>
+        <td>Team Number of the team performing the free kick</td>
+
+    </tr>
+    <tr class="byte">
+        <td>PENALTY_KICK</td>
+        <td>0</td>
+        <td>Team Number of the team performing the penalty kick</td>
+    </tr>
+</table>
+
+
+
+<h2 id="game_control_return_data">Game Control Return Data</h2>
+
+This is the package that needs to be send by the robot to show up in the Game Controller.<br><br>
+
+<table border="1" width="100%">
+    <tr>
+        <th>Number of Bytes/<br>Occurrences</th>
+        <th>Identifier</th>
+        <th>Explanation</th>
+    </tr>
+
+    <tr class="bytes">
+        <td>4</td>
+        <td>header</td>
+        <td>The header flag for the package. In this case = 'RGrt'.</td>
+    </tr>
+
+    <tr class="byte">
+        <td>1</td>
+        <td>version</td>
+        <td>The version of the return protocol. Currently version 2.
+        </td>
+    </tr>
+    <tr class="byte">
+        <td>1</td>
+        <td>team</td>
+        <td>The unique team number of the player</td>
+    </tr>
+
+    <tr class="byte">
+        <td>1</td>
+        <td>player</td>
+        <td>The unique player number of the player</td>
+    </tr>
+    <tr class="byte">
+        <td>1</td>
+        <td>message</td>
+        <td>What the player can say. <br>
+            See <span class="java">@data.values.PlayerResponses</span> for allowed values.
+        </td>
+    </tr>
+</table>
+
+<h2 id="appendix">Appendix</h2>
+
+<h3>GameStates</h3>
+<table border='1'>
+    <tr><th>Identifier</th><th>Byte Value</th></tr>
+    <tr><td style='text-align:left; width: 30%;'>IMPOSSIBLE</td><td style='text-align:center; width: 20%;'>-1</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>INITIAL</td><td style='text-align:center; width: 20%;'>0</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>READY</td><td style='text-align:center; width: 20%;'>1</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>SET</td><td style='text-align:center; width: 20%;'>2</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>PLAYING</td><td style='text-align:center; width: 20%;'>3</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>FINISHED</td><td style='text-align:center; width: 20%;'>4</td></tr>
+</table>
+
+<h3>GameTypes</h3>
+<table border='1'>
+    <tr><th>Identifier</th><th>Byte Value</th></tr>
+    <tr><td style='text-align:left; width: 30%;'>ROUNDROBIN</td><td style='text-align:center; width: 20%;'>0</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>PLAYOFF</td><td style='text-align:center; width: 20%;'>1</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>DROPIN</td><td style='text-align:center; width: 20%;'>2</td></tr>
+</table>
+
+<h3>Penalties</h3>
+<table border='1'>
+    <tr><th>Identifier</th><th>Byte Value</th></tr>
+    <tr><td style='text-align:left; width: 30%;'>UNKNOWN</td><td style='text-align:center; width: 20%;'>-1</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>NONE</td><td style='text-align:center; width: 20%;'>0</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>SPL_ILLEGAL_BALL_CONTACT</td><td style='text-align:center; width: 20%;'>1</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>SPL_PLAYER_PUSHING</td><td style='text-align:center; width: 20%;'>2</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>SPL_ILLEGAL_MOTION_IN_SET</td><td style='text-align:center; width: 20%;'>3</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>SPL_INACTIVE_PLAYER</td><td style='text-align:center; width: 20%;'>4</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>SPL_ILLEGAL_DEFENDER</td><td style='text-align:center; width: 20%;'>5</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>SPL_LEAVING_THE_FIELD</td><td style='text-align:center; width: 20%;'>6</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>SPL_KICK_OFF_GOAL</td><td style='text-align:center; width: 20%;'>7</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>SPL_REQUEST_FOR_PICKUP</td><td style='text-align:center; width: 20%;'>8</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>SPL_COACH_MOTION</td><td style='text-align:center; width: 20%;'>9</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>SUBSTITUTE</td><td style='text-align:center; width: 20%;'>14</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>MANUAL</td><td style='text-align:center; width: 20%;'>15</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>HL_BALL_MANIPULATION</td><td style='text-align:center; width: 20%;'>30</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>HL_PHYSICAL_CONTACT</td><td style='text-align:center; width: 20%;'>31</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>HL_ILLEGAL_ATTACK</td><td style='text-align:center; width: 20%;'>32</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>HL_ILLEGAL_DEFENSE</td><td style='text-align:center; width: 20%;'>33</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>HL_PICKUP_OR_INCAPABLE</td><td style='text-align:center; width: 20%;'>34</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>HL_SERVICE</td><td style='text-align:center; width: 20%;'>35</td></tr>
+</table>
+
+<h3>PlayerResponses</h3>
+<table border='1'>
+    <tr><th>Identifier</th><th>Byte Value</th></tr>
+    <tr><td style='text-align:left; width: 30%;'>MAN_PENALISE</td><td style='text-align:center; width: 20%;'>0</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>MAN_UNPENALISE</td><td style='text-align:center; width: 20%;'>1</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>ALIVE</td><td style='text-align:center; width: 20%;'>2</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>UNKNOWN</td><td style='text-align:center; width: 20%;'>-1</td></tr>
+</table>
+
+<h3>SecondaryGameStates</h3>
+<table border='1'>
+    <tr><th>Identifier</th><th>Byte Value</th></tr>
+    <tr><td style='text-align:left; width: 30%;'>NORMAL</td><td style='text-align:center; width: 20%;'>0</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>PENALTYSHOOT</td><td style='text-align:center; width: 20%;'>1</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>OVERTIME</td><td style='text-align:center; width: 20%;'>2</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>TIMEOUT</td><td style='text-align:center; width: 20%;'>3</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>FREEKICK</td><td style='text-align:center; width: 20%;'>4</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>PENALTYKICK</td><td style='text-align:center; width: 20%;'>5</td></tr>
+</table>
+
+<h3>TeamColors</h3>
+<table border='1'>
+    <tr><th>Identifier</th><th>Byte Value</th></tr>
+    <tr><td style='text-align:left; width: 30%;'>BLUE</td><td style='text-align:center; width: 20%;'>0</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>RED</td><td style='text-align:center; width: 20%;'>1</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>YELLOW</td><td style='text-align:center; width: 20%;'>2</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>BLACK</td><td style='text-align:center; width: 20%;'>3</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>WHITE</td><td style='text-align:center; width: 20%;'>4</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>GREEN</td><td style='text-align:center; width: 20%;'>5</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>ORANGE</td><td style='text-align:center; width: 20%;'>6</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>PURPLE</td><td style='text-align:center; width: 20%;'>7</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>BROWN</td><td style='text-align:center; width: 20%;'>8</td></tr>
+    <tr><td style='text-align:left; width: 30%;'>GRAY</td><td style='text-align:center; width: 20%;'>9</td></tr>
+</table>
+

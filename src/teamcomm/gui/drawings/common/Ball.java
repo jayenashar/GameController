@@ -4,8 +4,8 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
-import data.PlayerInfo;
 import data.spl.SPLStandardMessage;
+import data.values.Penalties;
 import teamcomm.data.RobotState;
 import teamcomm.gui.Camera;
 import teamcomm.gui.drawings.RoSi2Loader;
@@ -31,7 +31,7 @@ public class Ball extends PerPlayer {
     @Override
     public void draw(final GL2 gl, final RobotState player, final Camera camera) {
         final SPLStandardMessage msg = player.getLastMessage();
-        if (msg != null && msg.poseValid && msg.ballValid && msg.ballAge > -1 && msg.ballAge < MAX_BALLAGE && player.getPenalty() == PlayerInfo.PENALTY_NONE) {
+        if (msg != null && msg.poseValid && msg.ballValid && msg.ballAge > -1 && msg.ballAge < MAX_BALLAGE && player.getPenalty() == Penalties.NONE) {
             final float[] ball = {msg.ball[0] / 1000.f, msg.ball[1] / 1000.f};
 
             gl.glPushMatrix();

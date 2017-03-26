@@ -4,8 +4,8 @@ import controller.action.ActionType;
 import controller.action.GCAction;
 import controller.net.RobotWatcher;
 import data.states.AdvancedData;
-import data.PlayerInfo;
 import data.spl.SPLCoachMessage;
+import data.values.Penalties;
 
 public class SPLCoachMessageReceived extends GCAction
 {
@@ -23,7 +23,7 @@ public class SPLCoachMessageReceived extends GCAction
         byte team = (data.team[0].teamNumber == message.team)? (byte)0 : (byte)1;
         RobotWatcher.updateCoach(team);
         if ((System.currentTimeMillis() - data.timestampCoachPackage[team] >= SPLCoachMessage.SPL_COACH_MESSAGE_RECEIVE_INTERVALL)
-                && (data.team[team].coach.penalty != PlayerInfo.PENALTY_SPL_COACH_MOTION)) {
+                && (data.team[team].coach.penalty != Penalties.SPL_COACH_MOTION)) {
             data.timestampCoachPackage[team] = System.currentTimeMillis();
             data.splCoachMessageQueue.add(message);
         }

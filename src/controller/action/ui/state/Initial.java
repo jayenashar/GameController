@@ -4,8 +4,8 @@ import common.Log;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.states.AdvancedData;
-import data.communication.GameControlData;
 import data.Rules;
+import data.values.GameStates;
 
 /**
  * @author Michel Bartsch
@@ -31,14 +31,14 @@ public class Initial extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if (data.gameState == GameControlData.STATE_INITIAL) {
+        if (data.gameState == GameStates.INITIAL) {
             return;
         }
         if (Rules.league.returnRobotsInGameStoppages) {
             data.resetPenaltyTimes();
         }
         data.whenCurrentGameStateBegan = data.getTime();
-        data.gameState = GameControlData.STATE_INITIAL;
+        data.gameState = GameStates.INITIAL;
         Log.state(data, "Initial");
     }
     
@@ -51,7 +51,7 @@ public class Initial extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (data.gameState == GameControlData.STATE_INITIAL)
+        return (data.gameState == GameStates.INITIAL)
             || data.testmode;
     }
 }

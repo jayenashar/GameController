@@ -2,9 +2,9 @@ package controller.action.ui.penalty;
 
 import common.Log;
 import data.states.AdvancedData;
-import data.communication.GameControlData;
 import data.PlayerInfo;
-import data.Rules;
+import data.values.GameStates;
+import data.values.Penalties;
 
 /**
  * This action means that the player pushing penalty has been selected.
@@ -24,14 +24,12 @@ public class Pushing extends Penalty
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
-        player.penalty = PlayerInfo.PENALTY_SPL_PLAYER_PUSHING;
+        player.penalty = Penalties.SPL_PLAYER_PUSHING;
         data.pushes[side]++;
-        handleRepeatedPenalty(data, player, side, number, AdvancedData.STATE_PLAYING);
+        handleRepeatedPenalty(data, player, side, number, GameStates.PLAYING);
         data.whenPenalized[side][number] = data.getTime();
         
-        Log.state(data, "Player Pushing "+
-                    Rules.league.teamColorName[data.team[side].teamColor]
-                    + " " + (number+1));
+        Log.state(data, "Player Pushing " + data.team[side].teamColor + " " + (number+1));
     }
     
     /**
@@ -43,8 +41,8 @@ public class Pushing extends Penalty
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (data.gameState == GameControlData.STATE_READY)
-            || (data.gameState == GameControlData.STATE_PLAYING) 
+        return (data.gameState == GameStates.READY)
+            || (data.gameState == GameStates.PLAYING)
             || (data.testmode);
     }
 }

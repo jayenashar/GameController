@@ -2,13 +2,15 @@ package data.communication;
 
 import data.states.AdvancedData;
 import data.Rules;
-import data.TeamInfo;
-import data.states.SecondaryState;
+import data.states.SecondaryStateInfo;
+import data.values.GameStates;
+import data.values.GameTypes;
+import data.values.SecondaryGameStates;
+import data.values.TeamColors;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.ArrayList;
 
 
 /**
@@ -28,32 +30,8 @@ public class GameControlData implements Serializable
 
     public static final String GAMECONTROLLER_STRUCT_HEADER = "RGme";
     public static final byte GAMECONTROLLER_STRUCT_VERSION = 11;
-    public static final byte TEAM_BLUE = 0;
-    public static final byte TEAM_RED = 1;
-    public static final byte TEAM_YELLOW = 2;
-    public static final byte TEAM_BLACK = 3;
-    public static final byte TEAM_WHITE = 4;
-    public static final byte TEAM_GREEN = 5;
-    public static final byte TEAM_ORANGE = 6;
-    public static final byte TEAM_PURPLE = 7;
-    public static final byte TEAM_BROWN = 8;
-    public static final byte TEAM_GRAY = 9;
     public static final byte DROPBALL = -128;
-    
-    public static final byte GAME_ROUNDROBIN = 0;
-    public static final byte GAME_PLAYOFF = 1;
-    public static final byte GAME_DROPIN = 2;
 
-    public static final byte STATE_INITIAL = 0;
-    public static final byte STATE_READY = 1;
-    public static final byte STATE_SET = 2;
-    public static final byte STATE_PLAYING = 3;
-    public static final byte STATE_FINISHED = 4;
-
-    public static final byte STATE2_NORMAL = 0;
-    public static final byte STATE2_PENALTYSHOOT = 1;
-    public static final byte STATE2_OVERTIME = 2;
-    public static final byte STATE2_TIMEOUT = 3;             
 
     public static final byte C_FALSE = 0;
     public static final byte C_TRUE = 1;
@@ -76,34 +54,21 @@ public class GameControlData implements Serializable
             2 + // secsRemaining
             2 + // secondaryTime
             2 * TeamInfo.SIZE;
-    
-    /** The size in bytes this class has packed for protocol version 7. */
-    public static final int SIZE7 =
-            4 + // header
-            4 + // version
-            1 + // numPlayers
-            1 + // gameState
-            1 + // firstHalf
-            1 + // kickOffTeam
-            1 + // secGameState
-            1 + // dropInTeam
-            2 + // dropInTime
-            4 + // secsRemaining
-            2 * TeamInfo.SIZE7;
 
     //this is streamed
     // GAMECONTROLLER_STRUCT_HEADER                             // header to identify the structure
     // GAMECONTROLLER_STRUCT_VERSION                            // version of the data structure
     public byte packetNumber = 0;
-    public byte playersPerTeam = (byte) Rules.league.teamSize;   // The number of players on a team
-    public byte gameType = GAME_ROUNDROBIN;                     // type of the game (GAME_ROUNDROBIN, GAME_PLAYOFF, GAME_DROPIN)
-    public byte gameState = STATE_INITIAL;                      // state of the game (STATE_READY, STATE_PLAYING, etc)
+    public byte playersPerTeam = (byte) Rules.league.teamSize;  // The number of players on a team
+    public GameTypes gameType = GameTypes.ROUNDROBIN;           // type of the game (GAME_ROUNDROBIN, GAME_PLAYOFF, GAME_DROPIN)
+    public GameStates gameState = GameStates.INITIAL;     // state of the game (READY, PLAYING, etc)
     public byte firstHalf = C_TRUE;                             // 1 = game in first half, 0 otherwise
     public byte kickOffTeam;                                    // the next team to kick off
 
-    public byte secGameState = STATE2_NORMAL;                   // Extra state information - (STATE2_NORMAL, STATE2_PENALTYSHOOT, etc)
-    public SecondaryState secGameStateInfo = new SecondaryState();
-    // Extra state information - (STATE2_NORMAL, STATE2_PENALTYSHOOT, etc)
+    public SecondaryGameStates secGameState = SecondaryGameStates.NORMAL;
+    // Extra state information - (NORMAL, PENALTYSHOOT, etc)
+    public SecondaryStateInfo secGameStateInfo = new SecondaryStateInfo();
+    // Extra information on the specific state
 
     public byte dropInTeam;                                     // team that caused last drop in
     protected short dropInTime = -1;                            // number of seconds passed since the last drop in. -1 before first dropin
@@ -119,8 +84,8 @@ public class GameControlData implements Serializable
         for (int i=0; i<team.length; i++) {
             team[i] = new TeamInfo();
         }
-        team[0].teamColor = TEAM_BLUE;
-        team[1].teamColor = TEAM_RED;
+        team[0].teamColor = TeamColors.BLUE;
+        team[1].teamColor = TeamColors.RED;
     }
     
     /**
@@ -137,16 +102,16 @@ public class GameControlData implements Serializable
         buffer.putShort(GAMECONTROLLER_STRUCT_VERSION);
         buffer.put(packetNumber);
         buffer.put(playersPerTeam);
-        buffer.put(gameType);
-    	if (secGameState == STATE2_NORMAL && gameState == STATE_PLAYING
+        buffer.put(gameType.value());
+    	if (secGameState == SecondaryGameStates.NORMAL && gameState == GameStates.PLAYING
                 && data.getSecondsSince(data.whenCurrentGameStateBegan) < Rules.league.delayedSwitchToPlaying) {
-            buffer.put(STATE_SET);
+            buffer.put(GameStates.SET.value());
     	} else {
-            buffer.put(gameState);
+            buffer.put(gameState.value());
     	}
         buffer.put(firstHalf);
         buffer.put(kickOffTeam);
-        buffer.put(secGameState);
+        buffer.put(secGameState.value());
         buffer.put(secGameStateInfo.toByteArray());
         buffer.put(dropInTeam);
         buffer.putShort(dropInTime);
@@ -154,40 +119,6 @@ public class GameControlData implements Serializable
         buffer.putShort(secondaryTime);
         for (TeamInfo aTeam : team) {
             buffer.put(aTeam.toByteArray());
-        }
-        System.out.println(secGameStateInfo.toByteArray()[0]);
-       
-        return buffer;
-    }
-
-    /**
-     * Returns the corresponding byte-stream of the state of this object in
-     * the format of protocol version 7.
-     *
-     * @return  the corresponding byte-stream of the state of this object
-     */
-    public ByteBuffer toByteArray7()
-    {
-        ByteBuffer buffer = ByteBuffer.allocate(SIZE7);
-        buffer.order(ByteOrder.LITTLE_ENDIAN);
-        buffer.put(GAMECONTROLLER_STRUCT_HEADER.getBytes(), 0, 4);
-        buffer.putInt(7); // version = 7
-        buffer.put(playersPerTeam);
-        buffer.put(gameState);
-        buffer.put(firstHalf);
-        buffer.put(kickOffTeam == DROPBALL ? 2 : team[kickOffTeam == team[0].teamNumber ? 0 : 1].teamColor);
-        buffer.put(secGameState);
-        buffer.put(dropInTeam == -1 ? -1 : team[dropInTeam == team[0].teamNumber ? 0 : 1].teamColor);
-        buffer.putShort(dropInTime);
-        buffer.putInt(secsRemaining);
-
-        // in version 7, the broadcasted team data was sorted by team color
-        if (team[0].teamColor == TEAM_BLUE) {
-            buffer.put(team[0].toByteArray7());
-            buffer.put(team[1].toByteArray7());
-        } else {
-            buffer.put(team[1].toByteArray7());
-            buffer.put(team[0].toByteArray7());
         }
 
         return buffer;
@@ -213,11 +144,11 @@ public class GameControlData implements Serializable
         }
         packetNumber = buffer.get(); 
         playersPerTeam = buffer.get();
-        gameType = buffer.get();
-        gameState = buffer.get();
+        gameType = GameTypes.fromValue(buffer.get());
+        gameState = GameStates.fromValue(buffer.get());
         firstHalf = buffer.get();
         kickOffTeam = buffer.get();
-        secGameState = buffer.get();
+        secGameState = SecondaryGameStates.fromValue(buffer.get());
 
         // Read the additional ste information for the sub state
         byte[] additional_game_state_info = new byte[4];
@@ -245,22 +176,8 @@ public class GameControlData implements Serializable
         out += "            Version: "+GAMECONTROLLER_STRUCT_VERSION+"\n";
         out += "      Packet Number: "+(packetNumber & 0xFF)+"\n";
         out += "   Players per Team: "+playersPerTeam+"\n";
-        switch (gameType) {
-            case GAME_ROUNDROBIN: temp = "round robin"; break;
-            case GAME_PLAYOFF:    temp = "playoff";   break;
-            case GAME_DROPIN:    temp = "drop-in";   break;
-            default: temp = "undefinied("+gameType+")";
-        }
-        out += "           gameType: "+temp+"\n";
-        switch (gameState) {
-            case STATE_INITIAL:  temp = "initial"; break;
-            case STATE_READY:    temp = "ready";   break;
-            case STATE_SET:      temp = "set";     break;
-            case STATE_PLAYING:  temp = "playing"; break;
-            case STATE_FINISHED: temp = "finish";  break;
-            default: temp = "undefinied("+gameState+")";
-        }
-        out += "          gameState: "+temp+"\n";
+        out += "           gameType: "+ gameType +"\n";
+        out += "          gameState: "+gameState.toString()+"\n";
         switch (firstHalf) {
             case C_TRUE:  temp = "true";  break;
             case C_FALSE: temp = "false"; break;
@@ -268,58 +185,11 @@ public class GameControlData implements Serializable
         }
         out += "          firstHalf: "+temp+"\n";
         out += "        kickOffTeam: "+kickOffTeam+"\n";
-        switch (secGameState) {
-            case STATE2_NORMAL:       temp = "normal"; break;
-            case STATE2_PENALTYSHOOT: temp = "penaltyshoot";  break;
-            case STATE2_OVERTIME:     temp = "overtime";  break;
-            case STATE2_TIMEOUT:     temp = "timeout";  break;
-            default: temp = "undefinied("+secGameState+")";
-        }
-        out += "       secGameState: "+temp+"\n";
+        out += "       secGameState: "+secGameState+"\n";
         out += "         dropInTeam: "+dropInTeam+"\n";
         out += "         dropInTime: "+dropInTime+"\n";
         out += "      secsRemaining: "+secsRemaining+"\n";
         out += "      secondaryTime: "+secondaryTime+"\n";
         return out;
-    }
-
-    public static ArrayList<Byte> colorConstants = new ArrayList<>();
-
-    static {
-        colorConstants.add(TEAM_BLUE);
-        colorConstants.add(TEAM_RED);
-        colorConstants.add(TEAM_YELLOW);
-        colorConstants.add(TEAM_BLACK);
-        colorConstants.add(TEAM_GREEN);
-        colorConstants.add(TEAM_ORANGE);
-        colorConstants.add(TEAM_PURPLE);
-        colorConstants.add(TEAM_BROWN);
-        colorConstants.add(TEAM_GRAY);
-        colorConstants.add(TEAM_WHITE);
-    }
-
-    public static byte fromColorName(final String colorName) {
-        switch (colorName) {
-            case "blue":
-                return GameControlData.TEAM_BLUE;
-            case "red":
-                return GameControlData.TEAM_RED;
-            case "yellow":
-                return GameControlData.TEAM_YELLOW;
-            case "black":
-                return GameControlData.TEAM_BLACK;
-            case "green":
-                return GameControlData.TEAM_GREEN;
-            case "orange":
-                return GameControlData.TEAM_ORANGE;
-            case "purple":
-                return GameControlData.TEAM_PURPLE;
-            case "brown":
-                return GameControlData.TEAM_BROWN;
-            case "gray":
-                return GameControlData.TEAM_GRAY;
-            default:
-                return GameControlData.TEAM_WHITE;
-        }
     }
 }

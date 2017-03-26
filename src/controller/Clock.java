@@ -45,7 +45,6 @@ public class Clock
         while (!thread.isInterrupted())
         {
             ActionBoard.clock.actionPerformed(null);
-            System.out.println("System clock performs action event");
             try {
                 Thread.sleep(HEARTBEAT);
             } catch (InterruptedException e) {

@@ -5,22 +5,11 @@ import java.io.Serializable;
 /**
  * Created by rkessler on 2017-03-24.
  */
-public class SecondaryState implements Serializable {
-
-    /** If the secondary state is free kick the additional info on the secondary state
-     * will include as a first byte the team who should perform the free kick
-     */
-    public static final byte SECONDARY_STATE_FREEKICK = 4;
-
-    /** If the secondary state is the penalty kick the additional info on the secondary
-     * state will include as a first byte the team who should perform the penalty kick
-     */
-    public static final byte SECONDARY_STATE_PENALTYKICK = 5;
-
+public class SecondaryStateInfo implements Serializable {
 
     private byte[] secondaryStateInfo;
 
-    public SecondaryState(){
+    public SecondaryStateInfo(){
         secondaryStateInfo = new byte[]{0, 0, 0, 0};
     }
 

@@ -6,7 +6,10 @@ import controller.action.GCAction;
 import data.states.AdvancedData;
 import data.communication.GameControlData;
 import data.Rules;
-import data.TeamInfo;
+import data.communication.TeamInfo;
+import data.values.GameStates;
+import data.values.SecondaryGameStates;
+import data.values.TeamColors;
 
 /**
  * @author Michel Bartsch
@@ -32,13 +35,13 @@ public class FirstHalf extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if (data.firstHalf != GameControlData.C_TRUE || data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
+        if (data.firstHalf != GameControlData.C_TRUE || data.secGameState == SecondaryGameStates.PENALTYSHOOT) {
             data.firstHalf = GameControlData.C_TRUE;
-            data.secGameState = GameControlData.STATE2_NORMAL;
+            data.secGameState = SecondaryGameStates.NORMAL;
             changeSide(data);
             data.kickOffTeam = (data.leftSideKickoff ? data.team[0].teamNumber : data.team[1].teamNumber);
             data.kickOffReason = AdvancedData.KICKOFF_HALF;
-            data.gameState = GameControlData.STATE_INITIAL;
+            data.gameState = GameStates.INITIAL;
             // Don't set data.whenCurrentGameStateBegan, because it's used to count the pause
             Log.state(data, "1st Half");
         }
@@ -54,7 +57,7 @@ public class FirstHalf extends GCAction
     public boolean isLegal(AdvancedData data)
     {
         return ((data.firstHalf == GameControlData.C_TRUE)
-                && (data.secGameState == GameControlData.STATE2_NORMAL))
+                && (data.secGameState == SecondaryGameStates.NORMAL))
                 || (data.testmode);
     }
     
@@ -73,14 +76,14 @@ public class FirstHalf extends GCAction
         data.ejected[0] = data.ejected[1];
         data.ejected[1] = ejected;
         // if necessary, swap back team colors
-        if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT 
+        if (data.secGameState != SecondaryGameStates.PENALTYSHOOT
                 && data.colorChangeAuto) {
-            byte color = data.team[0].teamColor;
+            TeamColors color = data.team[0].teamColor;
             data.team[0].teamColor = data.team[1].teamColor;
             data.team[1].teamColor = color;
         }
         
-        if (Rules.league.timeOutPerHalf && (data.secGameState != GameControlData.STATE2_PENALTYSHOOT)) {
+        if (Rules.league.timeOutPerHalf && (data.secGameState != SecondaryGameStates.PENALTYSHOOT)) {
             data.timeOutTaken = new boolean[] {false, false};
         } else {
             boolean timeOutTaken = data.timeOutTaken[0];
@@ -90,7 +93,7 @@ public class FirstHalf extends GCAction
         
         data.timeBeforeCurrentGameState = 0;
         data.whenDropIn = 0;
-        if(data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
+        if(data.secGameState != SecondaryGameStates.PENALTYSHOOT) {
             data.resetPenalties();
         }
     }

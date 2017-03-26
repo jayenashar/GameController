@@ -6,7 +6,6 @@ import controller.action.ActionBoard;
 import controller.net.GameControlReturnDataReceiver;
 import controller.net.SPLCoachMessageReceiver;
 import controller.net.Sender;
-import controller.ui.gameplay.DebugUI;
 import controller.ui.gameplay.GUI;
 import controller.ui.KeyboardListener;
 import controller.ui.gameplay.HL_GUI;
@@ -16,7 +15,7 @@ import data.communication.GameControlData;
 import data.spl.SPL;
 import data.states.AdvancedData;
 import data.states.GamePreparationData;
-import org.junit.Rule;
+import data.values.GameTypes;
 
 import java.io.File;
 import java.io.IOException;
@@ -219,9 +218,6 @@ public class GameController {
 
         AdvancedData data = new AdvancedData();
 
-        System.out.println("Team 1: " + gpd.getFirstTeam() + " color " + gpd.getFirstTeam().getTeamColor() + "as byte" + gpd.getFirstTeam().getTeamColorAsByte());
-        System.out.println("Team 1: " + gpd.getSecondTeam() + " color " + gpd.getSecondTeam().getTeamColor() + "as byte" + gpd.getSecondTeam().getTeamColorAsByte());
-
         data.team[0].teamNumber = (byte) gpd.getFirstTeam().getTeamInfo().identifier;
         data.team[1].teamNumber = (byte) gpd.getSecondTeam().getTeamInfo().identifier;
 
@@ -232,8 +228,8 @@ public class GameController {
         data.colorChangeAuto = gpd.isAutoColorChange();
 
 
-        data.gameType = Rules.league.dropInPlayerMode ? GameControlData.GAME_DROPIN
-                : gpd.isFullTimeGame() ? GameControlData.GAME_PLAYOFF : GameControlData.GAME_ROUNDROBIN;
+        data.gameType = Rules.league.dropInPlayerMode ? GameTypes.DROPIN
+                : gpd.isFullTimeGame() ? GameTypes.PLAYOFF: GameTypes.ROUNDROBIN;
         if (testMode) {
             Rules.league.delayedSwitchToPlaying = 0;
         }
@@ -278,8 +274,7 @@ public class GameController {
             Log.init(logFile.getPath());
         }
         Log.toFile("League = " + Rules.league.leagueName);
-        Log.toFile("Game type = " + (data.gameType == GameControlData.GAME_ROUNDROBIN ? "round robin"
-                : data.gameType == GameControlData.GAME_PLAYOFF ? "play-off" : "drop-in"));
+        Log.toFile("Game type = " + data.gameType);
         Log.toFile("Auto color change = " + data.colorChangeAuto);
         Log.toFile("Using broadcast address " + (localAddress.getBroadcast() == null ? localAddress.getAddress() : localAddress.getBroadcast()));
         Log.toFile("Listening on address " + (Rules.league.dropBroadcastMessages ? localAddress.getAddress() : "0.0.0.0"));
@@ -287,9 +282,9 @@ public class GameController {
         //ui
         ActionBoard.init();
         Log.state(data, Teams.getNames(false)[data.team[0].teamNumber]
-                + " (" + Rules.league.teamColorName[data.team[0].teamColor]
+                + " (" + data.team[0].teamColor
                 + ") vs " + Teams.getNames(false)[data.team[1].teamNumber]
-                + " (" + Rules.league.teamColorName[data.team[1].teamColor] + ")");
+                + " (" + data.team[1].teamColor + ")");
 
         GUI gui;
         if (Rules.league instanceof SPL) {
@@ -297,10 +292,6 @@ public class GameController {
         } else {
             gui = new HL_GUI(gpd.getFullScreen(), data);
         }
-
-
-        DebugUI debug_ui = new DebugUI(data);
-
 
         new KeyboardListener();
         EventHandler.getInstance().setGUI(gui);

@@ -1,6 +1,6 @@
 package data.communication;
 
-import data.Rules;
+import data.values.PlayerResponses;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -19,13 +19,7 @@ public class GameControlReturnData
     public static final String GAMECONTROLLER_RETURN_STRUCT_HEADER = "RGrt";
     /** The version of the data structure. */
     public static final byte GAMECONTROLLER_RETURN_STRUCT_VERSION = 2;
-    public static final byte GAMECONTROLLER_RETURN_STRUCT_VERSION1 = 1;
 
-    /** What a player may say. */
-    public static final byte GAMECONTROLLER_RETURN_MSG_MAN_PENALISE = 0;
-    public static final byte GAMECONTROLLER_RETURN_MSG_MAN_UNPENALISE = 1;
-    public static final byte GAMECONTROLLER_RETURN_MSG_ALIVE = 2;
-    
     
     /** The size in bytes this class has packed. */
     public static final int SIZE =
@@ -34,23 +28,14 @@ public class GameControlReturnData
             1 + // team
             1 + // player
             1; // message
-    
-    /** The size in bytes this class has packed for version 1 */
-    public static final int SIZE1 =
-            4 + // header
-            4 + // version
-            2 + // team
-            2 + // player
-            4; // message
 
     //this is streamed
     String header;          // header to identify the structure
     byte version;            // version of the data structure
     public byte team;      // unique team number
     public byte player;    // player number
-    public byte message;     // what the player says
-    
-    
+    public PlayerResponses message;     // what the player says
+
     /**
      * Packing this Java class to the C-structure to be send.
      * @return Byte array representing the C-structure.
@@ -64,7 +49,7 @@ public class GameControlReturnData
         buffer.put(version);
         buffer.put(team);
         buffer.put(player);
-        buffer.put(message);
+        buffer.put(message.value());
         return buffer.array();
     }
 
@@ -90,20 +75,8 @@ public class GameControlReturnData
                 case GAMECONTROLLER_RETURN_STRUCT_VERSION:
                     team = buffer.get();
                     player = buffer.get();
-                    message = buffer.get();
+                    message = PlayerResponses.fromValue(buffer.get());
                     return true;
-
-                case GAMECONTROLLER_RETURN_STRUCT_VERSION1:
-                    if (   Rules.league.compatibilityToVersion7
-                        && buffer.get() == 0
-                        && buffer.getShort() == 0)
-                    {
-                        team = (byte)buffer.getShort();
-                        player = (byte)buffer.getShort();
-                        message = (byte)buffer.getInt();
-                        return true;
-                    }
-                    break;
 
                 default:
                     break;

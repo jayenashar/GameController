@@ -6,6 +6,7 @@ import controller.action.ActionType;
 import controller.action.GCAction;
 import data.states.AdvancedData;
 import data.communication.GameControlData;
+import data.values.GameStates;
 
 
 /**
@@ -46,6 +47,6 @@ public class DropBall extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (data.gameState == GameControlData.STATE_PLAYING) || data.testmode;
+        return (data.gameState == GameStates.PLAYING) || data.testmode;
     }
 }

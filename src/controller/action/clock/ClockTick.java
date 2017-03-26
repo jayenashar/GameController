@@ -6,6 +6,8 @@ import controller.action.GCAction;
 import data.states.AdvancedData;
 import data.communication.GameControlData;
 import data.Rules;
+import data.values.GameStates;
+import data.values.GameTypes;
 
 
 /**
@@ -32,10 +34,10 @@ public class ClockTick extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if (data.gameState == GameControlData.STATE_READY
+        if (data.gameState == GameStates.READY
                && data.getSecondsSince(data.whenCurrentGameStateBegan) >= Rules.league.readyTime) {
             ActionBoard.set.perform(data);
-        } else if (data.gameState == GameControlData.STATE_FINISHED) {
+        } else if (data.gameState == GameStates.FINISHED) {
             Integer remainingPauseTime = data.getRemainingPauseTime();
             if (remainingPauseTime != null) {
                 if (data.firstHalf == GameControlData.C_TRUE && remainingPauseTime <= Rules.league.pauseTime / 2) {
@@ -63,13 +65,13 @@ public class ClockTick extends GCAction
     
     public boolean isClockRunning(AdvancedData data)
     {
-        boolean halfNotStarted = data.timeBeforeCurrentGameState == 0 && data.gameState != GameControlData.STATE_PLAYING;
-        return !((data.gameState == GameControlData.STATE_INITIAL)
-         || (data.gameState == GameControlData.STATE_FINISHED)
+        boolean halfNotStarted = data.timeBeforeCurrentGameState == 0 && data.gameState != GameStates.PLAYING;
+        return !((data.gameState == GameStates.INITIAL)
+         || (data.gameState == GameStates.FINISHED)
          || (
-                ((data.gameState == GameControlData.STATE_READY)
-               || (data.gameState == GameControlData.STATE_SET))
-                && (((data.gameType == GameControlData.GAME_PLAYOFF) && Rules.league.playOffTimeStop) || halfNotStarted)
+                ((data.gameState == GameStates.READY)
+               || (data.gameState == GameStates.SET))
+                && (((data.gameType == GameTypes.PLAYOFF) && Rules.league.playOffTimeStop) || halfNotStarted)
                 )
          || data.manPause)
          || data.manPlay;

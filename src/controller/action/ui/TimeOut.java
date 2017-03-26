@@ -5,8 +5,8 @@ import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.states.AdvancedData;
-import data.communication.GameControlData;
-import data.Rules;
+import data.values.GameStates;
+import data.values.SecondaryGameStates;
 
 /**
  * @author Michel Bartsch
@@ -40,24 +40,24 @@ public class TimeOut extends GCAction
     {
         if (!data.timeOutActive[side]) {
             data.previousSecGameState = data.secGameState;
-            data.secGameState = GameControlData.STATE2_TIMEOUT;
+            data.secGameState = SecondaryGameStates.TIMEOUT;
             data.timeOutActive[side] = true;
             data.timeOutTaken[side] = true;
-            if (data.previousSecGameState != GameControlData.STATE2_PENALTYSHOOT) {
+            if (data.previousSecGameState != SecondaryGameStates.PENALTYSHOOT) {
                 data.kickOffTeam = data.team[1 - side].teamNumber;
-            } else if (data.gameState == GameControlData.STATE_SET) {
+            } else if (data.gameState == GameStates.SET) {
                 data.team[data.kickOffTeam == data.team[0].teamNumber ? 0 : 1].penaltyShot--;
             }
-            Log.setNextMessage("Timeout "+Rules.league.teamColorName[data.team[side].teamColor]);
-            data.gameState = -1; // something impossible to force execution of next call
+            Log.setNextMessage("Timeout " + data.team[side].teamColor);
+            data.gameState = GameStates.IMPOSSIBLE; // something impossible to force execution of next call
             ActionBoard.initial.perform(data);
         } else {
             data.secGameState = data.previousSecGameState;
-            data.previousSecGameState = GameControlData.STATE2_TIMEOUT;
+            data.previousSecGameState = SecondaryGameStates.TIMEOUT;
             data.timeOutActive[side] = false;
             data.kickOffReason = AdvancedData.KICKOFF_TIMEOUT;
-            Log.setNextMessage("End of Timeout "+Rules.league.teamColorName[data.team[side].teamColor]);
-            if (data.secGameState != GameControlData.STATE2_PENALTYSHOOT) {
+            Log.setNextMessage("End of Timeout " + data.team[side].teamColor);
+            if (data.secGameState != SecondaryGameStates.PENALTYSHOOT) {
                 ActionBoard.ready.perform(data);
             }
         }
@@ -73,12 +73,12 @@ public class TimeOut extends GCAction
     public boolean isLegal(AdvancedData data)
     {
       return data.timeOutActive[side]
-            || ((data.gameState == GameControlData.STATE_INITIAL ||
-                  data.gameState == GameControlData.STATE_READY ||
-                  data.gameState == GameControlData.STATE_SET)
+            || ((data.gameState == GameStates.INITIAL ||
+                  data.gameState == GameStates.READY ||
+                  data.gameState == GameStates.SET)
                 && !data.timeOutTaken[side]
                 && !data.timeOutActive[side == 0 ? 1 : 0]
-                && !(data.secGameState == GameControlData.STATE2_TIMEOUT))
+                && !(data.secGameState == SecondaryGameStates.TIMEOUT))
             || data.testmode;
     }
 }

@@ -2,18 +2,26 @@
 
 # RoboCup SPL and Humanoid League GameController
 
-This is the GameController developed by team B-Human for the RoboCup SPL and
-Humanoid League.
+This is the GameController further developed by the Humanoid League based
+ on the GameController from the SPL Team B-Human
 
-If there are any questions, please contact
-[fthielke@uni-bremen.de](fthielke@uni-bremen.de). Please make sure that your
-questions are not already answered in this README or the README file of the
-[TCM](TCM.md).
+If there are any questions, please contact [sheepsy90@gmail.com](sheepsy90@gmail.de).
+Please read this README carefully to avoid questions that are already answered within the document
+or the [TCM](TCM.md). 
 
-Follow @BHumanOpenSrc on Twitter to get notifications about recent activity.
+For questions regarding the protocol please check the [Wiki](https://github.com/RoboCup-Humanoid-TC/GameController/wiki).
 
 The sources mentioned in some sections of this document are available at
-[https://github.com/bhuman/GameController](https://github.com/bhuman/GameController).
+[https://github.com/RoboCup-Humanoid-TC/GameController](https://github.com/RoboCup-Humanoid-TC/GameController).
+
+### Latest Changes
+* Removed support for Protocol Version 7
+* Updated Protocol 
+  * Added SECONDARY_STATE: FREE_KICK
+  * Added SECONDARY_STATE: PENALTY_KICK
+  * Added 4 bytes with SECONDARY_STATE_INFO for details on the SECONDARY_STATE 
+
+_See [CHANGELOG](CHANGELOG.md) for more details._
 
 
 ### Acknowledgement
@@ -21,13 +29,12 @@ The sources mentioned in some sections of this document are available at
 The development was partially supported by the RoboCup Federation within the
 calls for Support for Projects for League Developments for 2013, 2015 and 2017.
 
-
 ## 1. Building from Source
 
 To build it from the source code you may use Apache Ant.
 Just call "ant" in the main directory.
 
-Building the source code requires the JDK 1.7 or newer.
+Building the source code requires the JDK 1.8 or newer.
 
 
 ## 2. GameController
@@ -288,26 +295,9 @@ The GameStateVisualizer also displays the coach messages.
 Please note that the field "team" now contains the team number, not the color.
 
 
-## 7. Misc
+## 7. Protocol
 
-The format of the packets the GameController broadcasts at port
-GAMECONTROLLER\_DATA\_PORT and receives at port GAMECONTROLLER\_RETURN\_PORT
-is defined in the file RoboCupGameControlData.h. It differs from the version used
-in 2014 in several ways:
-
-- Inside the messages, teams are now identified by their number rather than their 
-  color (e.g. kickOffTeam, dropInTeam).
-
-- SPLCoachMessage as well as TeamInfo now have a sequence number of 1 byte which
-  is set by the coach.
-
-- Coach messages now have a data packet size of 81 bytes instead of 40. 
-
-- RoboCupGameControlData now has the gameType flag, which indicates whether the
-  current game is a round-robin game (time does not stop), a drop-in player game
-  (the same, but only one half), or a play-off game, i.e. a (quarter / semi)
-  final (time is stopped).
-
+For questions regarding the protocol please check the [Wiki](https://github.com/RoboCup-Humanoid-TC/GameController/wiki).
 
 ## 8. Known Issues
 

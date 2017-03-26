@@ -4,7 +4,7 @@ import common.ApplicationLock;
 import data.communication.GameControlData;
 import data.Rules;
 import data.spl.SPLStandardMessage;
-import data.TeamInfo;
+import data.communication.TeamInfo;
 import data.Teams;
 import java.io.IOException;
 import java.util.Collection;
@@ -20,6 +20,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import javax.swing.event.EventListenerList;
+
+import data.values.GameStates;
+import data.values.TeamColors;
 import teamcomm.PluginLoader;
 import teamcomm.data.event.TeamEvent;
 import teamcomm.data.event.TeamEventListener;
@@ -217,8 +220,8 @@ public class GameState {
                 }
             }
 
-            teamColors.put((int) data.team[0].teamNumber, (int) data.team[0].teamColor);
-            teamColors.put((int) data.team[1].teamNumber, (int) data.team[1].teamColor);
+            teamColors.put((int) data.team[0].teamNumber, (int) data.team[0].teamColor.value());
+            teamColors.put((int) data.team[1].teamNumber, (int) data.team[1].teamColor.value());
 
             // Update penalties
             for (final TeamInfo team : data.team) {
@@ -251,11 +254,11 @@ public class GameState {
                 }
                 logfileName.append("Half");
             }
-            if (data.gameState == GameControlData.STATE_READY && (lastGameControlData == null || lastGameControlData.gameState == GameControlData.STATE_INITIAL)) {
+            if (data.gameState == GameStates.READY && (lastGameControlData == null || lastGameControlData.gameState == GameStates.INITIAL)) {
                 Logger.getInstance().createLogfile(logfileName.toString());
-            } else if (data.gameState == GameControlData.STATE_INITIAL && (lastGameControlData == null || lastGameControlData.gameState != GameControlData.STATE_INITIAL)) {
+            } else if (data.gameState == GameStates.INITIAL && (lastGameControlData == null || lastGameControlData.gameState != GameStates.INITIAL)) {
                 Logger.getInstance().createLogfile(logfileName.append("_initial").toString());
-            } else if (data.gameState == GameControlData.STATE_FINISHED && (lastGameControlData == null || lastGameControlData.gameState != GameControlData.STATE_FINISHED)) {
+            } else if (data.gameState == GameStates.FINISHED && (lastGameControlData == null || lastGameControlData.gameState != GameStates.FINISHED)) {
                 Logger.getInstance().createLogfile(logfileName.append("_finished").toString());
             }
 
@@ -423,6 +426,7 @@ public class GameState {
      * @see TeamInfo#teamColor
      */
     public int getTeamColor(final int teamNumber) {
+        // TODO - Implement that the real TeamColor enum is used
         Integer color = teamColors.get(teamNumber);
         if (color == null) {
             String[] colorStrings = null;
@@ -437,30 +441,30 @@ public class GameState {
             }
             if (colorStrings == null || colorStrings.length < 1) {
                 if (teamNumber == teamNumbers[TEAM_RIGHT]) {
-                    return GameControlData.TEAM_RED;
+                    return TeamColors.RED.value();
                 } else {
-                    return GameControlData.TEAM_BLUE;
+                    return TeamColors.BLUE.value();
                 }
             } else if (colorStrings[0].equals("blue")) {
-                return GameControlData.TEAM_BLUE;
+                return TeamColors.BLUE.value();
             } else if (colorStrings[0].equals("red")) {
-                return GameControlData.TEAM_RED;
+                return TeamColors.RED.value();
             } else if (colorStrings[0].equals("yellow")) {
-                return GameControlData.TEAM_YELLOW;
+                return TeamColors.YELLOW.value();
             } else if (colorStrings[0].equals("black")) {
-                return GameControlData.TEAM_BLACK;
+                return TeamColors.BLACK.value();
             } else if (colorStrings[0].equals("green")) {
-                return GameControlData.TEAM_GREEN;
+                return TeamColors.GREEN.value();
             } else if (colorStrings[0].equals("orange")) {
-                return GameControlData.TEAM_ORANGE;
+                return TeamColors.ORANGE.value();
             } else if (colorStrings[0].equals("purple")) {
-                return GameControlData.TEAM_PURPLE;
+                return TeamColors.PURPLE.value();
             } else if (colorStrings[0].equals("brown")) {
-                return GameControlData.TEAM_BROWN;
+                return TeamColors.BROWN.value();
             } else if (colorStrings[0].equals("gray")) {
-                return GameControlData.TEAM_GRAY;
+                return TeamColors.GRAY.value();
             } else {
-                return GameControlData.TEAM_WHITE;
+                return TeamColors.WHITE.value();
             }
         }
 

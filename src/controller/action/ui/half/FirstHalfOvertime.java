@@ -6,6 +6,9 @@ import controller.action.GCAction;
 import data.states.AdvancedData;
 import data.communication.GameControlData;
 import data.Rules;
+import data.values.GameStates;
+import data.values.GameTypes;
+import data.values.SecondaryGameStates;
 
 
 /**
@@ -32,12 +35,12 @@ public class FirstHalfOvertime extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if (data.firstHalf != GameControlData.C_TRUE || data.secGameState == GameControlData.STATE2_PENALTYSHOOT) {
+        if (data.firstHalf != GameControlData.C_TRUE || data.secGameState == SecondaryGameStates.PENALTYSHOOT) {
             data.firstHalf = GameControlData.C_TRUE;
-            data.secGameState = GameControlData.STATE2_OVERTIME;
+            data.secGameState = SecondaryGameStates.OVERTIME;
             FirstHalf.changeSide(data);
             data.kickOffTeam = (data.leftSideKickoff ? data.team[0].teamNumber : data.team[1].teamNumber);
-            data.gameState = GameControlData.STATE_INITIAL;
+            data.gameState = GameStates.INITIAL;
             Log.state(data, "1st Half Extra Time");
         }
     }
@@ -52,11 +55,11 @@ public class FirstHalfOvertime extends GCAction
     public boolean isLegal(AdvancedData data)
     {
         return ((data.firstHalf == GameControlData.C_TRUE)
-                && (data.secGameState == GameControlData.STATE2_OVERTIME))
+                && (data.secGameState == SecondaryGameStates.OVERTIME))
                 || ((Rules.league.overtime)
-                    && (data.gameType == GameControlData.GAME_PLAYOFF)
-                    && (data.secGameState == GameControlData.STATE2_NORMAL)
-                    && (data.gameState == GameControlData.STATE_FINISHED)
+                    && (data.gameType == GameTypes.PLAYOFF)
+                    && (data.secGameState == SecondaryGameStates.NORMAL)
+                    && (data.gameState == GameStates.FINISHED)
                     && (data.firstHalf  != GameControlData.C_TRUE)
                     && (data.team[0].score == data.team[1].score)
                     && (data.team[0].score > 0))

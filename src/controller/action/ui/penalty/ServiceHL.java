@@ -3,7 +3,7 @@ package controller.action.ui.penalty;
 import common.Log;
 import data.states.AdvancedData;
 import data.PlayerInfo;
-import data.Rules;
+import data.values.Penalties;
 
 /**
  *
@@ -22,19 +22,15 @@ public class ServiceHL extends PickUp
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
-        if (player.penalty == PlayerInfo.PENALTY_NONE) {
+        if (player.penalty == Penalties.NONE) {
             data.whenPenalized[side][number] = data.getTime();
-            player.penalty = PlayerInfo.PENALTY_HL_SERVICE;
+            player.penalty = Penalties.HL_SERVICE;
             handleRepeatedPenalty(data, player, side, number);
-            Log.state(data, "Request for Service " +
-                    Rules.league.teamColorName[data.team[side].teamColor]
-                    + " " + (number+1));
+            Log.state(data, "Request for Service " + data.team[side].teamColor + " " + (number+1));
         } else {
-            player.penalty = PlayerInfo.PENALTY_HL_SERVICE;
+            player.penalty = Penalties.HL_SERVICE;
             handleRepeatedPenalty(data, player, side, number);
-            Log.state(data, "Additional Request for Service " +
-                    Rules.league.teamColorName[data.team[side].teamColor]
-                    + " " + (number+1));
+            Log.state(data, "Additional Request for Service " + data.team[side].teamColor + " " + (number+1));
         }
     }
 }

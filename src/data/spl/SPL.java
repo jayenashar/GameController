@@ -1,7 +1,7 @@
 package data.spl;
 
-import data.PlayerInfo;
 import data.Rules;
+import data.values.Penalties;
 
 import java.awt.Color;
 
@@ -64,8 +64,6 @@ public class SPL extends Rules
         numberOfPenaltyShotsShort = 3;
         /** Number of penalty-shoots for each team after full 10minutes playing. */
         numberOfPenaltyShotsLong = 5;
-        /** Time in seconds for each kind of penalty (-1 = should not be used). */
-        penaltyTime = new int[] {-1, 45, 45, 0, 45, 45, 45, 45, 45, 2 * halfTime};
         /** Time in seconds to increment penalties. */
         penaltyIncreaseTime = 5;
         /** Whether the penalty count is reset on halftime */
@@ -75,7 +73,7 @@ public class SPL extends Rules
         /** Whether penalties can be removed before the penalty time has passed. */
         allowEarlyPenaltyRemoval = false;
         /** Penalty that players get when they substitute another player. */
-        substitutePenalty = PlayerInfo.PENALTY_SPL_REQUEST_FOR_PICKUP;
+        substitutePenalty = Penalties.SPL_REQUEST_FOR_PICKUP;
         /** if robots should return from penalties when the game state changes. */
         returnRobotsInGameStoppages = true;
         /** Time in seconds one team has as timeOut. */
@@ -92,8 +90,6 @@ public class SPL extends Rules
         isCoachAvailable = true;
         /** Allowed to compensate for lost time? */
         lostTime = true;
-        /** Whether compatibility mode (version 7) is supported */
-        compatibilityToVersion7 = false;
         /** If true, the drop-in player competition is active */
         dropInPlayerMode = false;
         /** If true, the game controller should drop broadcast-messages */

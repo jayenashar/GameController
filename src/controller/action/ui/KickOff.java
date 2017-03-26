@@ -6,6 +6,8 @@ import controller.action.GCAction;
 import data.states.AdvancedData;
 import data.communication.GameControlData;
 import data.Rules;
+import data.values.GameStates;
+import data.values.SecondaryGameStates;
 
 
 /**
@@ -44,13 +46,12 @@ public class KickOff extends GCAction
         }
         data.kickOffTeam = data.team[side].teamNumber;
         if ((Rules.league.kickoffChoice)
-                && (data.secGameState == GameControlData.STATE2_NORMAL)
+                && (data.secGameState == SecondaryGameStates.NORMAL)
                 && (data.firstHalf == GameControlData.C_TRUE)
-                && (data.gameState == GameControlData.STATE_INITIAL)) {
+                && (data.gameState == GameStates.INITIAL)) {
             data.leftSideKickoff = (side == 0);
         }
-        Log.state(data, "Kickoff "+
-                Rules.league.teamColorName[data.team[side].teamColor]);
+        Log.state(data, "Kickoff " + data.team[side].teamColor);
     }
     
     /**
@@ -64,9 +65,9 @@ public class KickOff extends GCAction
     {
         return (data.kickOffTeam == data.team[side].teamNumber)
                 || ((Rules.league.kickoffChoice)
-                    && (data.secGameState == GameControlData.STATE2_NORMAL)
+                    && (data.secGameState == SecondaryGameStates.NORMAL)
                     && (data.firstHalf == GameControlData.C_TRUE)
-                    && (data.gameState == GameControlData.STATE_INITIAL))
+                    && (data.gameState == GameStates.INITIAL))
                 || data.testmode;
     }
 }

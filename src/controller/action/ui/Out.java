@@ -4,8 +4,7 @@ import common.Log;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.states.AdvancedData;
-import data.communication.GameControlData;
-import data.Rules;
+import data.values.GameStates;
 
 
 /**
@@ -41,7 +40,7 @@ public class Out extends GCAction
     {
         data.whenDropIn = data.getTime();
         data.dropInTeam = data.team[side].teamNumber;
-        Log.state(data, "Out by "+Rules.league.teamColorName[data.team[side].teamColor]);
+        Log.state(data, "Out by " + data.team[side].teamColor);
     }
     
     /**
@@ -53,6 +52,6 @@ public class Out extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (data.gameState == GameControlData.STATE_PLAYING) || (data.testmode);
+        return (data.gameState == GameStates.PLAYING) || (data.testmode);
     }
 }

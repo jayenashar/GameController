@@ -3,7 +3,7 @@ package controller.action.ui.penalty;
 import common.Log;
 import data.states.AdvancedData;
 import data.PlayerInfo;
-import data.Rules;
+import data.values.Penalties;
 
 /**
  *
@@ -22,13 +22,13 @@ public class PickUpHL extends Penalty
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
-        if (player.penalty == PlayerInfo.PENALTY_NONE) {
+        if (player.penalty == Penalties.NONE) {
             data.whenPenalized[side][number] = data.getTime();
         }
 
-        player.penalty = PlayerInfo.PENALTY_HL_PICKUP_OR_INCAPABLE;
+        player.penalty = Penalties.HL_PICKUP_OR_INCAPABLE;
         handleRepeatedPenalty(data, player, side, number);
-        Log.state(data, "Request for PickUp / Incapable Player "+ Rules.league.teamColorName[data.team[side].teamColor]+ " " + (number+1));
+        Log.state(data, "Request for PickUp / Incapable Player " + data.team[side].teamColor + " " + (number+1));
     }
 
     /**

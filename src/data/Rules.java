@@ -5,6 +5,7 @@ import data.hl.HLAdult;
 import data.hl.HLTeen;
 import data.spl.SPL;
 import data.spl.SPLDropIn;
+import data.values.Penalties;
 
 import java.awt.Color;
 
@@ -85,8 +86,6 @@ public abstract class Rules
     public int numberOfPenaltyShotsShort;
     /** Number of penalty-shots for each team after full 10minutes playing. */
     public int numberOfPenaltyShotsLong;
-    /** Time in seconds for each kind of penalty. */
-    public int[] penaltyTime;
     /** Time in seconds to increment penalties. */
     public int penaltyIncreaseTime; 
     /** Whether the penalty count is reset on halftime */
@@ -96,7 +95,7 @@ public abstract class Rules
     /** Whether penalties can be removed before the penalty time has passed. */
     public boolean allowEarlyPenaltyRemoval;
     /** Penalty that players get when they substitute another player. */
-    public byte substitutePenalty;
+    public Penalties substitutePenalty;
     /** if robots should return from penalties when the game state changes. */
     public boolean returnRobotsInGameStoppages;
     /** Time in seconds one team has as timeOut. */
@@ -113,8 +112,6 @@ public abstract class Rules
     public boolean isCoachAvailable;
     /** Allowed to compensate for lost time? */
     public boolean lostTime;
-    /** Whether compatibility mode (version 7) is supported */
-    public boolean compatibilityToVersion7;
     /** If true, the drop-in player competition is active */
     public boolean dropInPlayerMode;
     /** If true, the game controller should drop broadcast-messages */

@@ -4,6 +4,7 @@ import common.Log;
 import data.states.AdvancedData;
 import data.PlayerInfo;
 import data.Rules;
+import data.values.Penalties;
 
 /**
  * @author Michel Bartsch
@@ -23,16 +24,14 @@ public class Substitute extends Penalty
     @Override
     public void performOn(AdvancedData data, PlayerInfo player, int side, int number)
     {
-        if (player.penalty != PlayerInfo.PENALTY_NONE) {
+        if (player.penalty != Penalties.NONE) {
             data.addToPenaltyQueue(side, data.whenPenalized[side][number], player.penalty, data.robotPenaltyCount[side][number]);
         }
         
-        player.penalty = PlayerInfo.PENALTY_SUBSTITUTE;
+        player.penalty = Penalties.SUBSTITUTE;
         data.robotPenaltyCount[side][number] = 0;
         data.whenPenalized[side][number] = data.getTime();
-        Log.state(data, "Leaving Player "+
-                Rules.league.teamColorName[data.team[side].teamColor]
-                + " " + (number+1));
+        Log.state(data, "Leaving Player " + data.team[side].teamColor + " " + (number+1));
     }
     
     /**

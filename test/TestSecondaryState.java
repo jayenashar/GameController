@@ -1,4 +1,4 @@
-import data.states.SecondaryState;
+import data.states.SecondaryStateInfo;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -16,7 +16,7 @@ public class TestSecondaryState {
 
     @Test
     public void test_secondary_state_buffer_works() {
-        SecondaryState secState = new SecondaryState();
+        SecondaryStateInfo secState = new SecondaryStateInfo();
         secState.switchToFreeKick((byte) 14);
 
         byte[] result = secState.toByteArray();
