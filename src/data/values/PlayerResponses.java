@@ -3,7 +3,7 @@ package data.values;
 /**
  * Created by rkessler on 2017-03-25.
  */
-public enum PlayerResponses implements DocumentableHtml {
+public enum PlayerResponses implements DocumentingMarkdown {
 
     /** What a player may say. */
     MAN_PENALISE(0, "Manual Penalized"),
@@ -30,7 +30,7 @@ public enum PlayerResponses implements DocumentableHtml {
                 return playerResponse;
             }
         }
-        System.out.println("This should never happen! Could not resolve PlayerResponse byte.");
+        System.out.println("Warning: Could not resolve PlayerResponse byte.");
         return UNKNOWN;
     }
 

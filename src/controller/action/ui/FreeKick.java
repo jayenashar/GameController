@@ -54,6 +54,8 @@ public class FreeKick extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-      return data.gameState == GameStates.PLAYING && !data.freeKickActive[1-side];
+      return data.gameState == GameStates.PLAYING
+              && !data.freeKickActive[1-side]
+              && data.secGameState != SecondaryGameStates.PENALTYKICK;
     }
 }

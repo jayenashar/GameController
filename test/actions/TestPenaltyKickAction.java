@@ -2,6 +2,7 @@ package actions;
 
 import common.Log;
 import controller.action.ActionBoard;
+import controller.action.ui.FreeKick;
 import controller.action.ui.PenaltyKick;
 import data.states.AdvancedData;
 import data.values.SecondaryGameStates;
@@ -9,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotSame;
 
 /**
@@ -48,6 +50,20 @@ public class TestPenaltyKickAction {
 
         assertNotSame(SecondaryGameStates.PENALTYKICK, data.secGameState);
         assertEquals(0, data.secGameStateInfo.toByteArray()[0]);
+    }
 
+    @Test
+    public void testPenaltyKickNotPossibleWhileFreeKickSecondaryGameState(){
+        ActionBoard.init(); // TODO - get rid of this stupid static thing
+
+        /// Create a free kick action
+        PenaltyKick fk = new PenaltyKick(0);
+
+        // Create an advanced data object to perform it on
+        AdvancedData data = new AdvancedData();
+        data.secGameState = SecondaryGameStates.FREEKICK;
+
+        // Assert that it is not possible to execute a FreeKickAction during a PenaltyKick
+        assertFalse(fk.isLegal(data));
     }
 }

@@ -3,8 +3,9 @@ package data.values;
 /**
  * Created by rkessler on 2017-03-25.
  */
-public enum GameTypes implements DocumentableHtml {
+public enum GameTypes implements DocumentingMarkdown {
 
+    UNKNOWN(-1, "unknown"),
     ROUNDROBIN(0, "round robin"),
     PLAYOFF(1, "playoff"),
     DROPIN(2, "drop-in");
@@ -28,15 +29,12 @@ public enum GameTypes implements DocumentableHtml {
                 return gameType;
             }
         }
-        System.out.println("This should never happen! Could not resolve GameType byte.");
-        return null;
+        System.out.println("Warning: Could not resolve GameType byte.");
+        return UNKNOWN;
     }
 
     public String toString(){
         return this.humanReadable;
     }
 
-    public String toDocumentation(){
-        return String.format("<tr><td>%s</td><td>%s</td></tr>\n", this.humanReadable, this.byte_value);
-    }
 }
