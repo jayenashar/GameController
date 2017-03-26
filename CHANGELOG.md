@@ -7,6 +7,7 @@ tag they are considered working. An item will be listed in the form:
 
 
 ### 2017
+- [x] Updated Game Controller to Java 1.8 (2017.1)
 - [x] Remove support for Protocol Version 7 (2017.1)
 - [x] Updated Penalty bytes for Humanoid League (2017.1)
 - [x] Penalty Kick during the Game (2017.1)

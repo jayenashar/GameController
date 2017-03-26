@@ -34,7 +34,7 @@ calls for Support for Projects for League Developments for 2013, 2015 and 2017.
 To build it from the source code you may use Apache Ant.
 Just call "ant" in the main directory.
 
-Building the source code requires the JDK 1.7 or newer.
+Building the source code requires the JDK 1.8 or newer.
 
 
 ## 2. GameController
@@ -295,26 +295,9 @@ The GameStateVisualizer also displays the coach messages.
 Please note that the field "team" now contains the team number, not the color.
 
 
-## 7. Misc
+## 7. Protocol
 
-The format of the packets the GameController broadcasts at port
-GAMECONTROLLER\_DATA\_PORT and receives at port GAMECONTROLLER\_RETURN\_PORT
-is defined in the file RoboCupGameControlData.h. It differs from the version used
-in 2014 in several ways:
-
-- Inside the messages, teams are now identified by their number rather than their 
-  color (e.g. kickOffTeam, dropInTeam).
-
-- SPLCoachMessage as well as TeamInfo now have a sequence number of 1 byte which
-  is set by the coach.
-
-- Coach messages now have a data packet size of 81 bytes instead of 40. 
-
-- RoboCupGameControlData now has the gameType flag, which indicates whether the
-  current game is a round-robin game (time does not stop), a drop-in player game
-  (the same, but only one half), or a play-off game, i.e. a (quarter / semi)
-  final (time is stopped).
-
+For questions regarding the protocol please check the [Wiki](https://github.com/RoboCup-Humanoid-TC/GameController/wiki).
 
 ## 8. Known Issues
 
