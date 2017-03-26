@@ -14,14 +14,22 @@ For questions regarding the protocol please check the [Wiki](https://github.com/
 The sources mentioned in some sections of this document are available at
 [https://github.com/RoboCup-Humanoid-TC/GameController](https://github.com/RoboCup-Humanoid-TC/GameController).
 
-### Latest Changes
-* Removed support for Protocol Version 7
-* Updated Protocol 
-  * Added SECONDARY_STATE: FREE_KICK
-  * Added SECONDARY_STATE: PENALTY_KICK
-  * Added 4 bytes with SECONDARY_STATE_INFO for details on the SECONDARY_STATE 
+### Latest Changes (2017)
 
-_See [CHANGELOG](CHANGELOG.md) for more details._
+### 2017
+- [x] Updated Game Controller to Java 1.8 (2017.1)
+- [x] Remove support for Protocol Version 7 (2017.1)
+- [x] Updated Penalty bytes for Humanoid League (2017.1)
+- [x] Moved to Protocol Version 11 (2017.1)
+  - Added Secondary State FREE_KICK
+  - Added Secondary State PENALTY_KICK
+  - Added Secondary State Information to the protocol (4 bytes describing details about the secondary state)
+- [x] Penalty Kick during the Game (2017.1)
+- [x] Free Kick during the Game (2017.1)
+- [x] Referee Timeout (2017.1)
+- [x] Align Adult League (2017.1)
+
+_See [CHANGELOG](CHANGELOG.md) for more details and history._
 
 
 ### Acknowledgement

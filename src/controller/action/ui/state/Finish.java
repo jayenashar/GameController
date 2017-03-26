@@ -6,6 +6,7 @@ import controller.action.GCAction;
 import data.states.AdvancedData;
 import data.Rules;
 import data.values.GameStates;
+import data.values.SecondaryGameStates;
 
 
 /**
@@ -53,10 +54,20 @@ public class Finish extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
+        // Can always click it when in test mode
+        if (data.testmode){
+            return true;
+        }
+
+        // Cannot move to finish when we are in a penalty or free kick
+        if ( data.secGameState == SecondaryGameStates.PENALTYKICK || data.secGameState == SecondaryGameStates.FREEKICK){
+            return false;
+        }
+
+        // Otherwise we just make sure that we are not in initial
         return (data.gameState == GameStates.READY)
             || (data.gameState == GameStates.SET)
             || (data.gameState == GameStates.PLAYING)
-            || (data.gameState == GameStates.FINISHED)
-            || data.testmode;
+            || (data.gameState == GameStates.FINISHED);
     }
 }

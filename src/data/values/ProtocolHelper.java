@@ -5,12 +5,12 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+
 import java.util.List;
 
 /**
- * Created by rkessler on 2017-03-25.
+ * This class helps to generate the file that can be added to the Wiki such that a team doesn't need to look
+ * into the Java code to see the allowed values for specific data types defined in Enums
  */
 public class ProtocolHelper {
 
@@ -33,15 +33,14 @@ public class ProtocolHelper {
             Method row = c.getMethod("row");
             Method header = c.getMethod("header");
             StringBuilder sb = new StringBuilder();
-            sb.append("<h3>");
+            sb.append("###");
             sb.append(c.getSimpleName());
-            sb.append("</h3>\n");
-            sb.append("<table border='1'>\n");
+            sb.append("\n");
             sb.append(header.invoke(c.getEnumConstants()[0]));
             for(Object o : c.getEnumConstants()){
                 sb.append(row.invoke(o));
             }
-            sb.append("</table>\n\n");
+            sb.append("\n\n");
             fw.append(sb.toString());
         }
 

@@ -9,6 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotSame;
 
 /**
@@ -48,6 +49,20 @@ public class TestFreeKickAction {
 
         assertNotSame(SecondaryGameStates.FREEKICK, data.secGameState);
         assertEquals(0, data.secGameStateInfo.toByteArray()[0]);
+    }
 
+    @Test
+    public void testFreeKickNotPossibleWhilePenaltyKickSecondaryGameState(){
+        ActionBoard.init(); // TODO - get rid of this stupid static thing
+
+        /// Create a free kick action
+        FreeKick fk = new FreeKick(0);
+
+        // Create an advanced data object to perform it on
+        AdvancedData data = new AdvancedData();
+        data.secGameState = SecondaryGameStates.PENALTYKICK;
+
+        // Assert that it is not possible to execute a FreeKickAction during a PenaltyKick
+        assertFalse(fk.isLegal(data));
     }
 }

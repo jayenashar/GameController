@@ -3,7 +3,9 @@ package data.values;
 /**
  * Created by rkessler on 2017-03-25.
  */
-public enum SecondaryGameStates implements DocumentableHtml {
+public enum SecondaryGameStates implements DocumentingMarkdown {
+
+    UNKNOWN(255, "Unknown"),
 
     NORMAL(0, "Normal"),
     PENALTYSHOOT(1, "Penalty Shoot"),
@@ -31,8 +33,8 @@ public enum SecondaryGameStates implements DocumentableHtml {
                 return secGameState;
             }
         }
-        System.out.println("This should never happen! Could not resolve SecondaryGameState byte.");
-        return null;
+        System.out.println("Warning: Could not resolve SecondaryGameState byte.");
+        return UNKNOWN;
     }
 
     public String toString(){
