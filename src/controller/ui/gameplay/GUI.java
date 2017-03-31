@@ -42,10 +42,10 @@ import data.values.TeamColors;
  */
 public class GUI extends JFrame implements GCGUI, CommonGUI
 {
-    protected static final boolean IS_OSX = System.getProperty("os.name").contains("OS X");
-    protected static final boolean IS_APPLE_JAVA = IS_OSX && System.getProperty("java.version").compareTo("1.7") < 0;
-    protected static final Insets insets = IS_APPLE_JAVA ? new Insets (2, -30, 2, -30) : null;
-    protected static final String BUTTON_MASK = IS_APPLE_JAVA
+    public static final boolean IS_OSX = System.getProperty("os.name").contains("OS X");
+    public static final boolean IS_APPLE_JAVA = IS_OSX && System.getProperty("java.version").compareTo("1.7") < 0;
+    public static final Insets insets = IS_APPLE_JAVA ? new Insets (2, -30, 2, -30) : null;
+    public static final String BUTTON_MASK = IS_APPLE_JAVA
             ? "<html><div style=\"padding: 0px 12px\"><center>%s</center></div></html>"
             : "<html><center>%s</center></html>";
 
@@ -174,11 +174,11 @@ public class GUI extends JFrame implements GCGUI, CommonGUI
     protected static final String CANCEL = "Cancel";
     protected static final String COACH = "Coach";
     protected static final String BACKGROUND_BOTTOM = "timeline_ground.png";
-    protected static final Color COLOR_HIGHLIGHT = Color.YELLOW;
+    public static final Color COLOR_HIGHLIGHT = Color.YELLOW;
     protected static final Color COLOR_STANDARD = (new JButton()).getBackground();
     protected static final int UNPEN_HIGHLIGHT_SECONDS = 10;
     protected static final int TIMEOUT_HIGHLIGHT_SECONDS = 10;
-    protected static final int FINISH_HIGHLIGHT_SECONDS = 10;
+    public static final int FINISH_HIGHLIGHT_SECONDS = 10;
     protected static final int KICKOFF_BLOCKED_HIGHLIGHT_SECONDS = 3;
 
     /** Some attributes used in the GUI components. */
@@ -226,7 +226,7 @@ public class GUI extends JFrame implements GCGUI, CommonGUI
     protected JToggleButton set;
     protected JToggleButton play;
     protected JToggleButton finish;
-    protected ButtonGroup stateGroup;
+    ButtonGroup stateGroup;
     protected ImageButton clockReset;
     protected ImagePanel clockContainer;
     protected JLabel clock;

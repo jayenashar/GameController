@@ -23,5 +23,7 @@ public interface GCGUI
      * 
      * @param data  The Model to view.
      */
-    public void update(AdvancedData data);
+    void update(AdvancedData data);
+
+    void dispose();
 }

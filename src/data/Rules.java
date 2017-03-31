@@ -1,8 +1,7 @@
 package data;
 
-import data.hl.HL;
-import data.hl.HLAdult;
-import data.hl.HLTeen;
+import controller.ui.GCGUI;
+import data.hl.*;
 import data.spl.SPL;
 import data.spl.SPLDropIn;
 import data.values.Penalties;
@@ -23,7 +22,8 @@ public abstract class Rules
         new SPLDropIn(),
         new HL(),
         new HLTeen(),
-        new HLAdult()
+        new HLAdult(),
+        new HLDropIn()
     };
 
     public boolean equals(Rules rules) {

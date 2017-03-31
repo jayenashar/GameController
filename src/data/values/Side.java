@@ -1,0 +1,21 @@
+package data.values;
+
+/**
+ * The sides indices for both teams as convenient typed Enum
+ */
+public enum Side {
+
+    LEFT(0),
+    RIGHT(1);
+
+
+    private int side;
+
+    Side(int side){
+        this.side = side;
+    }
+
+    public int value(){
+        return this.side;
+    }
+}
