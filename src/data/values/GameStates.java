@@ -3,7 +3,7 @@ package data.values;
 /**
  * Created by rkessler on 2017-03-25.
  */
-public enum GameStates implements DocumentableHtml {
+public enum GameStates implements DocumentingMarkdown {
 
     IMPOSSIBLE(-1, "Impossible"),
     INITIAL(0, "Initial"),
@@ -31,8 +31,8 @@ public enum GameStates implements DocumentableHtml {
                 return gameState;
             }
         }
-        System.out.println("This should never happen! Could not resolve GameState byte.");
-        return null;
+        System.out.println("Warning: Could not resolve GameState byte.");
+        return IMPOSSIBLE;
     }
 
     public String toString(){

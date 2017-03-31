@@ -5,7 +5,7 @@ import java.awt.*;
 /**
  * Created by rkessler on 2017-03-25.
  */
-public enum TeamColors  implements DocumentableHtml{
+public enum TeamColors  implements DocumentingMarkdown {
 
     BLUE(0, Color.BLUE),
     RED(1, Color.RED),
@@ -16,7 +16,9 @@ public enum TeamColors  implements DocumentableHtml{
     ORANGE(6, new Color(255, 165, 0)),
     PURPLE(7, new Color(128, 0, 128)),
     BROWN(8, new Color(165, 42, 42)),
-    GRAY(9, new Color(128, 128, 128));
+    GRAY(9, new Color(128, 128, 128)),
+
+    UNKNOWN(255, new Color(0, 255, 255));
 
     private byte byte_value;
     private Color color;
@@ -36,8 +38,8 @@ public enum TeamColors  implements DocumentableHtml{
                 return teamColor;
             }
         }
-        System.out.println("This should never happen! Could not resolve Team Color byte.");
-        return null;
+        System.out.println("Warning: Could not resolve Team Color byte.");
+        return UNKNOWN;
     }
 
     public String toString(){

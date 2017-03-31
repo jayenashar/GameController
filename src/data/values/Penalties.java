@@ -3,7 +3,7 @@ package data.values;
 /**
  * Created by rkessler on 2017-03-25.
  */
-public enum Penalties implements DocumentableHtml {
+public enum Penalties implements DocumentingMarkdown {
 
     UNKNOWN(255, "Unknown", -1),
 
@@ -22,12 +22,12 @@ public enum Penalties implements DocumentableHtml {
     SUBSTITUTE(14, "substitute", -1), // TODO check if different for SPL than HL and what value is
     MANUAL(15, "manual", -1), // TODO check if different for SPL than HL and what value is
 
-    HL_BALL_MANIPULATION(30, "ball_manipulation", 30), // TODO Include to change log: Moved from byte 1
-    HL_PHYSICAL_CONTACT(31, "pushing", 30), // TODO Include to change log: Moved from byte 2
-    HL_ILLEGAL_ATTACK(32, "illegal attack", 30), // TODO Include to change log: Moved from byte 3
-    HL_ILLEGAL_DEFENSE(33, "illegal defender", 30), // TODO Include to change log: Moved from byte 4
-    HL_PICKUP_OR_INCAPABLE(34, "pickup/incapable", 30), // TODO Include to change log: Moved from byte 5
-    HL_SERVICE(35, "service", 60); // TODO Include to change log: Moved from byte 6
+    HL_BALL_MANIPULATION(30, "ball_manipulation", 30),
+    HL_PHYSICAL_CONTACT(31, "pushing", 30),
+    HL_ILLEGAL_ATTACK(32, "illegal attack", 30),
+    HL_ILLEGAL_DEFENSE(33, "illegal defender", 30),
+    HL_PICKUP_OR_INCAPABLE(34, "pickup/incapable", 30),
+    HL_SERVICE(35, "service", 60);
 
     private byte byte_value;
     private String humanReadable;
@@ -52,7 +52,7 @@ public enum Penalties implements DocumentableHtml {
                 return penalty;
             }
         }
-        System.out.println("This should never happen! Could not resolve Penalty byte.");
+        System.out.println("Warning: Could not resolve Penalty byte.");
         return UNKNOWN;
     }
 
