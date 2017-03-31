@@ -42,6 +42,8 @@
 #define STATE2_PENALTYSHOOT         1
 #define STATE2_OVERTIME             2
 #define STATE2_TIMEOUT              3
+#define STATE2_FREEKICK             4
+#define STATE2_PENALTYKICK          5
 
 #define PENALTY_NONE                        0
 // SPL
@@ -104,6 +106,7 @@ struct RoboCupGameControlData
   uint8_t firstHalf;            // 1 = game in first half, 0 otherwise
   uint8_t kickOffTeam;          // the team number of the next team to kick off or DROPBALL
   uint8_t secondaryState;       // extra state information - (STATE2_NORMAL, STATE2_PENALTYSHOOT, etc)
+  char secondaryStateInfo[4];   // Extra info on the secondary state
   uint8_t dropInTeam;           // number of team that caused last drop in
   uint16_t dropInTime;          // number of seconds passed since the last drop in. -1 (0xffff) before first dropin
   uint16_t secsRemaining;       // estimate of number of seconds remaining in the half
