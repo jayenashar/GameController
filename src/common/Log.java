@@ -52,7 +52,7 @@ public class Log
     public synchronized static void init(String path)
     {
         if (instance.file != null) {
-            throw new IllegalStateException("logger already initialized");
+            //throw new IllegalStateException("logger already initialized");
         }
         try{
             instance.file = new FileWriter(new File(path));

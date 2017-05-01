@@ -1,15 +1,12 @@
 package data;
 
-import data.communication.GameControlData;
 import data.hl.HL;
 import data.hl.HLAdult;
 import data.hl.HLTeen;
 import data.spl.SPL;
 import data.spl.SPLDropIn;
-import org.junit.Rule;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 /**
  * Created by rkessler on 2017-02-11.

@@ -6,6 +6,8 @@ import controller.action.ActionBoard;
 import controller.net.GameControlReturnDataReceiver;
 import controller.net.SPLCoachMessageReceiver;
 import controller.net.Sender;
+import controller.ui.GCGUI;
+import controller.ui.ui.HL_DropIn;
 import controller.ui.gameplay.GUI;
 import controller.ui.KeyboardListener;
 import controller.ui.gameplay.HL_GUI;
@@ -205,6 +207,7 @@ public class GameController {
 
         //collect the start parameters and put them into the first data.
         StartInput input = new StartInput(!windowMode);
+
         while (!input.finished) {
             try {
                 Thread.sleep(100);
@@ -233,6 +236,7 @@ public class GameController {
         if (testMode) {
             Rules.league.delayedSwitchToPlaying = 0;
         }
+
 
         try {
             //sender
@@ -286,11 +290,18 @@ public class GameController {
                 + ") vs " + Teams.getNames(false)[data.team[1].teamNumber]
                 + " (" + data.team[1].teamColor + ")");
 
-        GUI gui;
-        if (Rules.league instanceof SPL) {
-            gui = new GUI(gpd.getFullScreen(), data);
-        } else {
-            gui = new HL_GUI(gpd.getFullScreen(), data);
+
+
+        GCGUI gui;
+        if (Rules.league.leagueDirectory.equals("hl_dropin")){
+            gui = new HL_DropIn(gpd.getFullScreen(), data);
+        }
+        else{
+            if (Rules.league instanceof SPL) {
+                gui = new GUI(gpd.getFullScreen(), data);
+            } else {
+                gui = new HL_GUI(gpd.getFullScreen(), data);
+            }
         }
 
         new KeyboardListener();
@@ -302,7 +313,6 @@ public class GameController {
 
         //clock runs until window is closed
         Clock.getInstance().start();
-
 
         // shutdown
         Log.toFile("Shutdown GameController");
@@ -337,7 +347,7 @@ public class GameController {
             splStandardMessageReceiver.join(1000);
         } catch (InterruptedException ex) {
         }
+
         System.exit(0);
-        
     }
 }
