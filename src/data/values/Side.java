@@ -8,7 +8,6 @@ public enum Side {
     LEFT(0),
     RIGHT(1);
 
-
     private int side;
 
     Side(int side){
@@ -17,5 +16,13 @@ public enum Side {
 
     public int value(){
         return this.side;
+    }
+
+    public Side getOther(){
+        if (this == LEFT){
+            return RIGHT;
+        } else {
+            return LEFT;
+        }
     }
 }

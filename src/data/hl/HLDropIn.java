@@ -14,5 +14,10 @@ public class HLDropIn extends HL
         /** The league´s directory name with it´s teams and icons. */
         leagueDirectory = "hl_dropin";
         /** If true, the drop-in player competition is active */
-        dropInPlayerMode = true;    }
+        dropInPlayerMode = true;
+
+        robotsPlaying = 5;
+
+        teamSize = 7;
+    }
 }

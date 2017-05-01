@@ -2,6 +2,8 @@ package controller.ui.ui.components;
 
 import common.TotalScaleLayout;
 import controller.action.ActionBoard;
+import controller.action.ActionType;
+import controller.action.GCAction;
 import controller.net.RobotOnlineStatus;
 import controller.net.RobotWatcher;
 import controller.ui.ui.customized.Button;
@@ -17,11 +19,13 @@ import data.values.Side;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Created by rkessler on 2017-03-29.
  */
-public class DropInTeamComponent extends AbstractComponent {
+public class DropInTeamComponent extends AbstractComponent implements Refreshable {
 
     private Side side;
 
@@ -37,6 +41,12 @@ public class DropInTeamComponent extends AbstractComponent {
 
     protected JPanel robots;
     protected JButton[] robot;
+
+    private DropInPointCounter dropInPointCounter;
+
+    protected JButton[] robotPointsInc;
+    protected JButton[] robotPointsDec;
+    protected JLabel[] robotPointsLabel;
 
     protected JLabel[] robotLabel;
     protected ImageIcon[] lanIcon;
@@ -58,8 +68,9 @@ public class DropInTeamComponent extends AbstractComponent {
     public static final String KICKOFF = "Kickoff";
     private int teamSize;
 
-    public DropInTeamComponent(Side side){
+    public DropInTeamComponent(Side side, DropInPointCounter dropInPointCounter){
         this.side = side;
+        this.dropInPointCounter = dropInPointCounter;
 
         goalInc = new Button("+");
         goalDec = new Button("-");
@@ -76,6 +87,20 @@ public class DropInTeamComponent extends AbstractComponent {
 
         goalDec.addActionListener(ActionBoard.goalDec[side.value()]);
         goalInc.addActionListener(ActionBoard.goalInc[side.value()]);
+        goalInc.addActionListener(new GCAction(ActionType.UI) {
+
+            @Override
+            public void perform(AdvancedData data) {
+                dropInPointCounter.scoreGoal(data, side);
+                updateDropInPointsLabels();
+            }
+
+            @Override
+            public boolean isLegal(AdvancedData data) {
+                return true;
+            }
+        });
+
         kickOff.addActionListener(ActionBoard.kickOff[side.value()]);
 
         pushes = new JLabel("0");
@@ -94,6 +119,14 @@ public class DropInTeamComponent extends AbstractComponent {
         }
 
         defineLayout();
+    }
+
+
+    private void updateDropInPointsLabels(){
+        for (int j=0; j < teamSize; j++) {
+            int points = dropInPointCounter.getPoints(side, j);
+            robotPointsLabel[j].setText(points + " Points");
+        }
     }
 
 
@@ -121,6 +154,10 @@ public class DropInTeamComponent extends AbstractComponent {
         robotLabel = new JLabel[teamSize];
         lanIcon = new ImageIcon[teamSize];
         robotTime = new JProgressBar[teamSize];
+        robotPointsLabel = new JLabel[teamSize];
+        robotPointsInc = new JButton[teamSize];
+        robotPointsDec = new JButton[teamSize];
+        dropInPointCounter.initializeSide(this.side, teamSize, this);
 
         for (int j=0; j < teamSize; j++) {
             robot[j] = new Button();
@@ -131,13 +168,38 @@ public class DropInTeamComponent extends AbstractComponent {
             robotTime[j] = new JProgressBar();
             robotTime[j].setMaximum(1000);
             robotTime[j].setVisible(false);
-            robot[j].setLayout(new BoxLayout(robot[j], BoxLayout.Y_AXIS));
-            robot[j].add(robotLabel[j]);
-            robot[j].add(robotTime[j]);
-            tsc.add(0, 0.2+0.1*j, 1, 0.1, robot[j]);
 
+            TotalScaleLayout layout = new TotalScaleLayout(robot[j]);
+            robot[j].setLayout(layout);
+
+            robotPointsLabel[j] = new JLabel();
+            robotPointsInc[j] = new JButton("+");
+            robotPointsDec[j] = new JButton("-");
+
+            final int h = j;
+
+            robotPointsInc[j].addActionListener(actionEvent -> {
+                dropInPointCounter.deltaPoints(side, h, +1);
+                updateDropInPointsLabels();
+            });
+
+            robotPointsDec[j].addActionListener(actionEvent -> {
+                dropInPointCounter.deltaPoints(side, h, -1);
+                updateDropInPointsLabels();
+            });
+
+            layout.add(0, 0, 0.2, 0.35, robotPointsInc[j]);
+            layout.add(0, 0.35, 0.2, 0.35, robotPointsDec[j]);
+            layout.add(0.02, 0.7, 0.18, 0.3, robotPointsLabel[j]);
+
+            layout.add(0.275, 0.1, 0.7, 0.4, robotLabel[j]);
+            layout.add(0.275, 0.5, 0.7, 0.4, robotTime[j]);
+
+
+            tsc.add(0, 0.2+0.1*j, 1, 0.1, robot[j]);
             robot[j].addActionListener(ActionBoard.robot[side.value()][j]);
         }
+        updateDropInPointsLabels();
 
         robots.setVisible(true);
 
@@ -295,5 +357,10 @@ public class DropInTeamComponent extends AbstractComponent {
                 }
                 robotLabel[j].setIcon(currentLanIcon);
             }
+    }
+
+    @Override
+    public void refresh() {
+        updateDropInPointsLabels();
     }
 }

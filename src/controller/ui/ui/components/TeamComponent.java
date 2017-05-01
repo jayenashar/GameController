@@ -147,7 +147,6 @@ public class TeamComponent extends AbstractComponent {
         ((TotalScaleLayout) this.getLayout()).add(0, 0, 1, 1, robots);
 
         this.setVisible(true);
-
     }
 
     protected static final String PUSHES = "Pushes";

@@ -61,10 +61,7 @@ public class TestTeamLoader {
 
         assertEquals(tli.name, "NimbRo TeenSize");
         assertEquals(tli.identifier, 33);
-        assertEquals(tli.colors.length, 2);
-        assertEquals(tli.colors[0], "yellow");
-        // TODO could not resolve yellow
-        assertEquals(tli.colors[1], "black");
+        assertEquals(tli.colors.length, 0);
         assertTrue(tli.icon != null);
     }
 }

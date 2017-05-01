@@ -51,6 +51,12 @@ public class GamePreparationData {
         assert Helper.isValidRule(_new_rules) : "Can not switch to this rules. Not active!";
         _active_rules = _new_rules;
         refreshTeams();
+
+        if (_new_rules instanceof HLDropIn){
+            firstTeam = new PrepTeam(availableTeams.get(1));
+            secondTeam = new PrepTeam(availableTeams.get(2));
+            firstTeam.setTeamColor("red");
+        }
     }
 
     public String canStart(){
