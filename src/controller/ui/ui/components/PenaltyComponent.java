@@ -1,5 +1,6 @@
 package controller.ui.ui.components;
 
+import common.TotalScaleLayout;
 import controller.EventHandler;
 import controller.action.ActionBoard;
 import controller.action.GCAction;
@@ -13,6 +14,7 @@ import data.states.AdvancedData;
 import data.values.Penalties;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ import java.util.Map;
 /**
  * Created by rkessler on 2017-03-29.
  */
-public class PenaltyComponent extends AbstractComponent implements SelectedPenalty {
+public class PenaltyComponent extends AbstractComponent {
 
     private static final String PEN_PUSHING = "Pushing";
     private static final String PEN_LEAVING = "Leaving the Field";
@@ -45,41 +47,17 @@ public class PenaltyComponent extends AbstractComponent implements SelectedPenal
 
     private Map<Penalties, JToggleButton> penaltyButtons;
     private ButtonGroup penaltyGroup;
-    private ArrayList<Notifiable> notifiables;
+    private JPanel penaltyButtonContainer;
+    private TotalScaleLayout layout;
 
     public PenaltyComponent(){
         penaltyButtons = new HashMap<>();
         penaltyGroup = new ButtonGroup();
-        notifiables = new ArrayList<>();
+        penaltyButtonContainer = new JPanel();
+        layout = new TotalScaleLayout(penaltyButtonContainer);
+        penaltyButtonContainer.setLayout(layout);
 
         defineLayout();
-    }
-
-    public void addNotifiers(Notifiable nf){
-        notifiables.add(nf);
-    }
-
-    public void notifyObservers(){
-        for(Notifiable n: notifiables){
-            n.notifyObservers();
-        }
-    }
-
-    @Override
-    public Penalties selectedPenalty(){
-        for(Penalties pen : penaltyButtons.keySet()){
-            ButtonModel bm = penaltyButtons.get(pen).getModel();
-            if (bm == penaltyGroup.getSelection()){
-                return pen;
-            }
-        }
-
-        return null;
-    }
-
-    @Override
-    public void reset() {
-        penaltyGroup.clearSelection();
     }
 
     public boolean selectPenalty(Penalties pen){
@@ -97,12 +75,10 @@ public class PenaltyComponent extends AbstractComponent implements SelectedPenal
         butt.addActionListener(ballManipulation);
         penaltyButtons.put(pen, butt);
         penaltyGroup.add(butt);
-        this.add(butt);
     }
 
     public void defineLayout(){
         // TODO Customizable with inheritance
-
         if (Rules.league instanceof SPL) {
             addButtonByPenalty(Penalties.SPL_PLAYER_PUSHING, ActionBoard.pushing);
             addButtonByPenalty(Penalties.SPL_LEAVING_THE_FIELD, ActionBoard.leaving );
@@ -131,7 +107,17 @@ public class PenaltyComponent extends AbstractComponent implements SelectedPenal
             addButtonByPenalty(Penalties.HL_SERVICE, ActionBoard.serviceHL);
             addButtonByPenalty(Penalties.SUBSTITUTE, ActionBoard.substitute);
         }
+        penaltyButtonContainer.setVisible(true);
 
+        // Add all penalty buttons to layout
+        float height = (float) (1.0 / penaltyButtons.size());
+        for (int i=0; i < penaltyButtons.size(); i++){
+            ToggleButton tb = (ToggleButton) penaltyButtons.values().toArray()[i];
+            layout.add(0, i*height, 1, height, tb);
+        }
+
+
+        this.add(penaltyButtonContainer);
         this.setVisible(true);
         this.setLayout(
                 new BoxLayout(this, BoxLayout.Y_AXIS)

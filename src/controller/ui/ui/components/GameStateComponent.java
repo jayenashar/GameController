@@ -1,5 +1,6 @@
 package controller.ui.ui.components;
 
+import common.TotalScaleLayout;
 import controller.action.ActionBoard;
 import controller.ui.gameplay.GUI;
 import controller.ui.ui.customized.ToggleButton;
@@ -21,6 +22,8 @@ public class GameStateComponent extends AbstractComponent {
     protected JToggleButton set;
     protected JToggleButton play;
     protected JToggleButton finish;
+
+    protected JPanel gameStateButtonContainer;
 
     private Map<GameStates, JToggleButton> buttonMapping = new HashMap<>();
 
@@ -57,13 +60,23 @@ public class GameStateComponent extends AbstractComponent {
 
     // This eneds to be overwritten to specify the layouting of this group
     protected void defineLayout(){
-        this.setSize(400, 300);
-        this.add(initial);
-        this.add(ready);
-        this.add(set);
-        this.add(play);
-        this.add(finish);
-        this.setLayout(new FlowLayout());
+        gameStateButtonContainer = new JPanel();
+        TotalScaleLayout layout = new TotalScaleLayout(gameStateButtonContainer);
+
+        gameStateButtonContainer.setLayout(layout);
+        layout.add(0, 0, 0.2, 1, initial);
+        layout.add(0.2, 0, 0.2, 1, ready);
+        layout.add(0.4, 0, 0.2, 1, set);
+        layout.add(0.6, 0, 0.2, 1, play);
+        layout.add(0.8, 0, 0.2, 1, finish);
+
+        //gameStateButtonContainer.setSize(100, 100);
+        gameStateButtonContainer.setVisible(true);
+
+
+        this.setLayout(new TotalScaleLayout(this));
+        ((TotalScaleLayout) this.getLayout()).add(0, 0, 1, 1, gameStateButtonContainer);
+        this.setVisible(true);
     }
 
     public void update(AdvancedData data)

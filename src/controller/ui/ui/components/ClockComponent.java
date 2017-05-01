@@ -25,6 +25,7 @@ public class ClockComponent extends AbstractComponent {
     private ImageButton clockReset;
     private ImagePanel clockContainer;
 
+
     private static final String CLOCK_RESET = "reset.png";
     private static final String CLOCK_PAUSE = "pause.png";
     private static final String CLOCK_PLAY = "play.png";
@@ -49,6 +50,8 @@ public class ClockComponent extends AbstractComponent {
         clockImgPlay = new ImageIcon(ICONS_PATH + CLOCK_PLAY);
         clockImgPlus = new ImageIcon(ICONS_PATH + CLOCK_PLUS);
         clockImgPause = new ImageIcon(ICONS_PATH + CLOCK_PAUSE);
+
+
 
         defineLayout();
     }
@@ -88,7 +91,12 @@ public class ClockComponent extends AbstractComponent {
         clockContainer.add(clockReset);
         clockContainer.add(incGameClock);
         clockContainer.setLayout(new BoxLayout(clockContainer, BoxLayout.Y_AXIS));
-        clockContainer.setSize(100, 200);
+
+        clockReset.addActionListener(ActionBoard.clockReset);
+        clockPause.addActionListener(ActionBoard.clockPause);
+        if (Rules.league.lostTime) {
+            incGameClock.addActionListener(ActionBoard.incGameClock);
+        }
 
         this.add(clockContainer);
         this.setVisible(true);

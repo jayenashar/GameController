@@ -18,7 +18,7 @@ import java.awt.*;
  *         <p>
  *         This is the main GUI for the HL League - overwriting soem functionality and layouting choices.
  */
-public class HL_GUI extends GUI {
+public class HL_GUI extends GUIBackup {
 
     protected JButton[] freeKick;
     protected JButton[] penaltyKick;

@@ -1,29 +1,42 @@
 package controller.ui.ui.components;
 
+import common.TotalScaleLayout;
 import controller.action.ActionBoard;
 import controller.net.RobotOnlineStatus;
 import controller.net.RobotWatcher;
+import controller.ui.gameplay.GUI;
 import controller.ui.ui.customized.Button;
 
-import common.TotalScaleLayout;
+import controller.ui.ui.customized.ImagePanel;
 import data.Rules;
+import data.communication.GameControlData;
 import data.hl.HL;
 import data.spl.SPL;
 import data.states.AdvancedData;
+import data.values.GameStates;
 import data.values.Penalties;
+import data.values.SecondaryGameStates;
 import data.values.Side;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
 
 /**
  * Created by rkessler on 2017-03-29.
  */
-public class RobotList extends AbstractComponent implements Notifiable {
+public class TeamComponent extends AbstractComponent {
 
     private Side side;
+
+    protected JLabel name;
+    protected JButton goalDec;
+    protected JButton goalInc;
+    protected JLabel goals;
+
+    protected JRadioButton kickOff;
+    protected ButtonGroup kickOffGroup;
+
+    protected JLabel pushes;
 
     protected JPanel robots;
     protected JButton[] robot;
@@ -36,18 +49,40 @@ public class RobotList extends AbstractComponent implements Notifiable {
     protected ImageIcon lanOffline;
     protected ImageIcon lanUnknown;
 
+    protected static final String KICKOFF_PENALTY_SHOOTOUT = "P.-taker";
+
     protected static final String ICONS_PATH = "config/icons/";
     protected static final String ONLINE = "wlan_status_green.png";
     protected static final String OFFLINE = "wlan_status_red.png";
     protected static final String HIGH_LATENCY = "wlan_status_yellow.png";
     protected static final String UNKNOWN_ONLINE_STATUS = "wlan_status_grey.png";
 
+    public static final String KICKOFF = "Kickoff";
     private int teamSize;
-    private SelectedPenalty selectedPenalty;
 
-
-    public RobotList(Side side, SelectedPenalty selectedPenalty){
+    public TeamComponent(Side side){
         this.side = side;
+
+        goalInc = new Button("+");
+        goalDec = new Button("-");
+        kickOff = new JRadioButton(KICKOFF);
+        kickOff.setOpaque(false);
+        kickOff.setHorizontalAlignment(JLabel.CENTER);
+
+        // TODO - needs to be a button group across both sides ( i guess)
+        kickOffGroup = new ButtonGroup();
+        kickOffGroup.add(kickOff);
+
+        goals = new JLabel("0");
+        goals.setHorizontalAlignment(JLabel.CENTER);
+
+        goalDec.addActionListener(ActionBoard.goalDec[side.value()]);
+        goalInc.addActionListener(ActionBoard.goalInc[side.value()]);
+        kickOff.addActionListener(ActionBoard.kickOff[side.value()]);
+
+        pushes = new JLabel("0");
+        pushes.setHorizontalAlignment(JLabel.CENTER);
+
 
         lanOnline = new ImageIcon(ICONS_PATH+ONLINE);
         lanHighLatency = new ImageIcon(ICONS_PATH+HIGH_LATENCY);
@@ -72,8 +107,17 @@ public class RobotList extends AbstractComponent implements Notifiable {
         }
 
         robots = new JPanel();
-        robots.setLayout(new GridLayout(teamSize, 1, 0, 10));
-        robots.setOpaque(false);
+        TotalScaleLayout tsc = new TotalScaleLayout(robots);
+        robots.setLayout(tsc);
+
+        // First row
+        tsc.add(0, 0, 0.33, 0.1, goals);
+        tsc.add(0.33, 0, 0.33, 0.1, pushes);
+        tsc.add(0.66, 0, 0.33, 0.1, kickOff);
+
+        //
+        tsc.add(0, 0.1, 0.5, 0.1, goalDec);
+        tsc.add(0.5, 0.1, 0.5, 0.1, goalInc);
 
         robot = new JButton[teamSize];
         robotLabel = new JLabel[teamSize];
@@ -92,17 +136,23 @@ public class RobotList extends AbstractComponent implements Notifiable {
             robot[j].setLayout(new BoxLayout(robot[j], BoxLayout.Y_AXIS));
             robot[j].add(robotLabel[j]);
             robot[j].add(robotTime[j]);
-            robots.add(robot[j]);
+            tsc.add(0, 0.2+0.1*j, 1, 0.1, robot[j]);
+
+            robot[j].addActionListener(ActionBoard.robot[side.value()][j]);
         }
 
         robots.setVisible(true);
-        robots.setSize(500, 600);
 
-        this.add(robots);
-        this.setSize(500, 600);
+        this.setLayout(new TotalScaleLayout(this));
+        ((TotalScaleLayout) this.getLayout()).add(0, 0, 1, 1, robots);
+
         this.setVisible(true);
 
     }
+
+    protected static final String PUSHES = "Pushes";
+    protected static final String SHOT = "Shot";
+    protected static final String SHOTS = "Shots";
 
     protected static final int UNPEN_HIGHLIGHT_SECONDS = 10;
 
@@ -118,9 +168,55 @@ public class RobotList extends AbstractComponent implements Notifiable {
 
     protected static final String STANDARD_FONT = "Helvetica";
 
+    protected void updatePushes(AdvancedData data)
+    {
+            if (data.secGameState != SecondaryGameStates.PENALTYSHOOT && data.previousSecGameState != SecondaryGameStates.PENALTYSHOOT) {
+                if (Rules.league.pushesToEjection == null || Rules.league.pushesToEjection.length == 0) {
+                    pushes.setText("");
+                } else {
+                    pushes.setText(PUSHES+": "+data.pushes[side.value()]);
+                }
+            } else {
+                pushes.setText((side.value() == 0 && (data.gameState == GameStates.SET
+                        || data.gameState == GameStates.PLAYING) ? SHOT : SHOTS)+": "+data.team[side.value()].penaltyShot);
+            }
+
+    }
+
+    public void updateKickOff(AdvancedData data)
+    {
+        if (data.kickOffTeam == GameControlData.DROPBALL) {
+            kickOff.setSelected(true);
+        }
+        else if (data.team[side.value()].teamNumber == data.kickOffTeam){
+            kickOff.setSelected(true);
+        }
+        else {
+            kickOff.setSelected(false);
+        }
+
+        kickOff.setEnabled(ActionBoard.kickOff[side.value()].isLegal(data));
+        if (data.secGameState != SecondaryGameStates.PENALTYSHOOT
+                && data.previousSecGameState != SecondaryGameStates.PENALTYSHOOT) {
+            kickOff.setText(KICKOFF);
+        } else {
+            kickOff.setText(KICKOFF_PENALTY_SHOOTOUT);
+        }
+
+    }
+
     @SuppressWarnings("Duplicates")
     @Override
     public void update(AdvancedData data) {
+
+        updateKickOff(data);
+        updatePushes(data);
+
+        goals.setText("Goals: " + data.team[side.value()].score);
+        goalInc.setEnabled(ActionBoard.goalInc[side.value()].isLegal(data));
+        goalDec.setVisible(ActionBoard.goalDec[side.value()].isLegal(data));
+
+
         Font titleFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(20));
 
 
@@ -201,10 +297,5 @@ public class RobotList extends AbstractComponent implements Notifiable {
                 }
                 robotLabel[j].setIcon(currentLanIcon);
             }
-    }
-
-    @Override
-    public void notifyObservers() {
-        System.out.println("Was notified! Need to highlight buttons!");
     }
 }
