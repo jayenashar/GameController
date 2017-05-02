@@ -18,6 +18,6 @@ public class HLDropIn extends HL
 
         robotsPlaying = 5;
 
-        teamSize = 7;
+        teamSize = 5;
     }
 }
