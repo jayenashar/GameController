@@ -770,7 +770,7 @@ public class GUIBackup extends JFrame implements GCGUI, CommonGUI
     protected void updateHalf(AdvancedData data)
     {
         for (int i=0; i<2; i++) {
-//            name[i].setText(Teams.getNames(false)[data.team[i].teamNumber]);
+            name[i].setText(Teams.getNames(false)[data.team[i].teamNumber]);
         }
         firstHalf.setEnabled(ActionBoard.firstHalf.isLegal(data));
         secondHalf.setEnabled(ActionBoard.secondHalf.isLegal(data));
