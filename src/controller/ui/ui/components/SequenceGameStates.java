@@ -2,6 +2,7 @@ package controller.ui.ui.components;
 
 import common.TotalScaleLayout;
 import controller.action.ActionBoard;
+import controller.ui.gameplay.GUIBackup;
 import controller.ui.ui.customized.Button;
 import controller.ui.ui.customized.ToggleButton;
 import data.Rules;
@@ -86,6 +87,8 @@ public class SequenceGameStates extends AbstractComponent {
         }
         penaltyShoot.addActionListener(ActionBoard.penaltyShoot);
 
+        refereeTimeout.addActionListener(ActionBoard.refereeTimeout);
+
         if (Rules.league instanceof HL) {
             dropBall = new Button(DROP_BALL);
             dropBall.addActionListener(ActionBoard.dropBall);
@@ -93,12 +96,13 @@ public class SequenceGameStates extends AbstractComponent {
 
         TotalScaleLayout layout = new TotalScaleLayout(this);
 
-        layout.add(0.00, 0, 0.15, 1, firstHalf);
-        layout.add(0.15, 0, 0.15, 1, secondHalf);
-        layout.add(0.30, 0, 0.15, 1, firstHalfOvertime);
-        layout.add(0.45, 0, 0.15, 1, secondHalfOvertime);
-        layout.add(0.60, 0, 0.20, 1, penaltyShoot);
-        layout.add(0.80, 0, 0.20, 1, refereeTimeout);
+        layout.add(0.00, 0, 0.12, 1, firstHalf);
+        layout.add(0.12, 0, 0.12, 1, secondHalf);
+        layout.add(0.24, 0, 0.12, 1, firstHalfOvertime);
+        layout.add(0.36, 0, 0.12, 1, secondHalfOvertime);
+        layout.add(0.48, 0, 0.17, 1, penaltyShoot);
+        layout.add(0.65, 0, 0.17, 1, refereeTimeout);
+        layout.add(0.82, 0, 0.18, 1, dropBall);
 
         this.setLayout(layout);
 
