@@ -120,9 +120,6 @@ public class SequenceGameStates extends AbstractComponent {
         if (Rules.league instanceof HL) {
             updateDropBall(data);
         }
-        for (int i = 0; i < 2; i++) {
-//            name[i].setText(Teams.getNames(false)[data.team[i].teamNumber]);
-        }
         firstHalf.setEnabled(ActionBoard.firstHalf.isLegal(data));
         secondHalf.setEnabled(ActionBoard.secondHalf.isLegal(data));
         if (Rules.league.overtime) {

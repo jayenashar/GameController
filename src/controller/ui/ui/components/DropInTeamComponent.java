@@ -35,7 +35,7 @@ public class DropInTeamComponent extends AbstractComponent implements Refreshabl
     protected JLabel goals;
 
     protected JRadioButton kickOff;
-    protected ButtonGroup kickOffGroup;
+    private ButtonGroup kickOffGroup;
 
     protected JLabel pushes;
 
@@ -68,7 +68,7 @@ public class DropInTeamComponent extends AbstractComponent implements Refreshabl
     public static final String KICKOFF = "Kickoff";
     private int teamSize;
 
-    public DropInTeamComponent(Side side, DropInPointCounter dropInPointCounter){
+    public DropInTeamComponent(Side side, DropInPointCounter dropInPointCounter, ButtonGroup kickOffGroup){
         this.side = side;
         this.dropInPointCounter = dropInPointCounter;
 
@@ -78,9 +78,8 @@ public class DropInTeamComponent extends AbstractComponent implements Refreshabl
         kickOff.setOpaque(false);
         kickOff.setHorizontalAlignment(JLabel.CENTER);
 
-        // TODO - needs to be a button group across both sides ( i guess)
-        kickOffGroup = new ButtonGroup();
-        kickOffGroup.add(kickOff);
+        this.kickOffGroup = kickOffGroup;
+        this.kickOffGroup.add(kickOff);
 
         goals = new JLabel("0");
         goals.setHorizontalAlignment(JLabel.CENTER);
@@ -246,7 +245,7 @@ public class DropInTeamComponent extends AbstractComponent implements Refreshabl
     public void updateKickOff(AdvancedData data)
     {
         if (data.kickOffTeam == GameControlData.DROPBALL) {
-            kickOff.setSelected(true);
+            this.kickOffGroup.clearSelection();
         }
         else if (data.team[side.value()].teamNumber == data.kickOffTeam){
             kickOff.setSelected(true);
