@@ -311,14 +311,10 @@ public class StartInput extends JFrame implements Serializable {
         for (int i = 0; i < 2; i++) {
             teamSelectionDropDown[i].removeAllItems();
 
-            if (Rules.league.dropInPlayerMode) {
-                teamSelectionDropDown[i].addItem(preparedTeams.get(0));
-                teamSelectionDropDown[i].addItem(preparedTeams.get(i == 0 ? 1 : 2));
-            } else {
-                for (int j = 0; j < preparedTeams.size(); j++) {
-                    teamSelectionDropDown[i].addItem(preparedTeams.get(j));
-                }
+            for (int j = 0; j < preparedTeams.size(); j++) {
+                teamSelectionDropDown[i].addItem(preparedTeams.get(j));
             }
+
             teamSelectionDropDown[i].setSelectedItem(gamePrepData.getPrepTeam(i).getTeamInfo());
         }
     }
