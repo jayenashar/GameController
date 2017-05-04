@@ -35,7 +35,7 @@ public class DropInPointCounter {
 
         for (int i = 0; i < pointList.length; i++){
             Penalties penalty = data.team[teamScoring.value()].player[i].penalty;
-            if (penalty != Penalties.SUBSTITUTE && penalty != Penalties.HL_SERVICE) {
+            if (penalty == Penalties.NONE) {
                 pointList[i] += 1;
             }
         }
