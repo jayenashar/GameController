@@ -20,7 +20,8 @@ import java.awt.*;
  */
 public class HL_GUI extends GUIBackup {
 
-    protected JButton[] freeKick;
+    protected JButton[] directFreeKick;
+    protected JButton[] indirectFreeKick;
     protected JButton[] penaltyKick;
 
     public HL_GUI(boolean fullscreen, GameControlData data) {
@@ -31,9 +32,14 @@ public class HL_GUI extends GUIBackup {
      * that they can be arranged in the layout and actions can be bound to them
      */
     public void setupGuiElement(){
-        freeKick = new Button[2];
+        directFreeKick = new Button[2];
         for (int i=0; i<2; i++) {
-            freeKick[i] = new Button(Localization.getDefault().FREE_KICK_PREPARE);
+            directFreeKick[i] = new Button(Localization.getDefault().DIRECT_FREE_KICK_PREPARE);
+        }
+
+        indirectFreeKick = new Button[2];
+        for (int i=0; i<2; i++) {
+            indirectFreeKick[i] = new Button(Localization.getDefault().INDIRECT_FREE_KICK_PREPARE);
         }
 
         penaltyKick = new Button[2];
@@ -45,8 +51,11 @@ public class HL_GUI extends GUIBackup {
     public void setupActionHandlers(){
         super.setupActionHandlers();
 
-        freeKick[0].addActionListener(ActionBoard.freeKick[0]);
-        freeKick[1].addActionListener(ActionBoard.freeKick[1]);
+        directFreeKick[0].addActionListener(ActionBoard.directFreeKick[0]);
+        directFreeKick[1].addActionListener(ActionBoard.directFreeKick[1]);
+
+        indirectFreeKick[0].addActionListener(ActionBoard.indirectFreeKick[0]);
+        indirectFreeKick[1].addActionListener(ActionBoard.indirectFreeKick[1]);
 
         penaltyKick[0].addActionListener(ActionBoard.penaltyKick[0]);
         penaltyKick[1].addActionListener(ActionBoard.penaltyKick[1]);
@@ -84,7 +93,8 @@ public class HL_GUI extends GUIBackup {
         layout.add(.71, .77, .28, .09, teamActionPanel[1]);
 
         for (int i=0; i < 2; i++) {
-            teamActionPanel[i].add(freeKick[i]);
+            teamActionPanel[i].add(directFreeKick[i]);
+            teamActionPanel[i].add(indirectFreeKick[i]);
             teamActionPanel[i].add(timeOut[i]);
             teamActionPanel[i].add(out[i]);
             teamActionPanel[i].add(penaltyKick[i]);
@@ -172,7 +182,8 @@ public class HL_GUI extends GUIBackup {
         updateRefereeTimeout(data);
         updateOut(data);
 
-        updateFreeKick(data);
+        updateIndirectFreeKick(data);
+        updateDirectFreeKick(data);
         updatePenaltyKick(data);
 
         updatePenaltiesHL(data);
@@ -183,16 +194,30 @@ public class HL_GUI extends GUIBackup {
         repaint();
     }
 
-    private void updateFreeKick(AdvancedData data) {
+    private void updateDirectFreeKick(AdvancedData data) {
         for(int i = 0; i < 2; i++){
             // Check whether the button can be pressed
-            freeKick[i].setEnabled(ActionBoard.freeKick[i].isLegal(data));
+            directFreeKick[i].setEnabled(ActionBoard.directFreeKick[i].isLegal(data));
 
             // Check if the label of the button needs to be switched
-            if (data.freeKickActive[i]){
-                freeKick[i].setText(Localization.getDefault().FREE_KICK_EXECUTE);
+            if (data.directFreeKickActive[i]){
+                directFreeKick[i].setText(Localization.getDefault().DIRECT_FREE_KICK_EXECUTE);
             } else {
-                freeKick[i].setText(Localization.getDefault().FREE_KICK_PREPARE);
+                directFreeKick[i].setText(Localization.getDefault().DIRECT_FREE_KICK_PREPARE);
+            }
+        }
+    }
+
+    private void updateIndirectFreeKick(AdvancedData data) {
+        for(int i = 0; i < 2; i++){
+            // Check whether the button can be pressed
+            indirectFreeKick[i].setEnabled(ActionBoard.indirectFreeKick[i].isLegal(data));
+
+            // Check if the label of the button needs to be switched
+            if (data.indirectFreeKickActive[i]){
+                indirectFreeKick[i].setText(Localization.getDefault().INDIRECT_FREE_KICK_EXECUTE);
+            } else {
+                indirectFreeKick[i].setText(Localization.getDefault().INDIRECT_FREE_KICK_PREPARE);
             }
         }
     }

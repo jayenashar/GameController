@@ -14,7 +14,8 @@ import javax.swing.*;
  */
 public class HLTeamActions extends TeamActions {
 
-    private JButton freeKick;
+    private JButton indirectFreeKick;
+    private JButton directFreeKick;
     private JButton penaltyKick;
 
     public HLTeamActions(Side side) {
@@ -33,15 +34,19 @@ public class HLTeamActions extends TeamActions {
         timeOut = new JToggleButton(TIMEOUT);
         out = new JButton(OUT);
 
-        freeKick = new Button(Localization.getDefault().FREE_KICK_PREPARE);
+        directFreeKick = new Button(Localization.getDefault().DIRECT_FREE_KICK_PREPARE);
+        indirectFreeKick = new Button(Localization.getDefault().INDIRECT_FREE_KICK_PREPARE);
+
         penaltyKick = new Button(Localization.getDefault().PENALTY_KICK_PREPARE);
 
-        freeKick.addActionListener(ActionBoard.freeKick[side.value()]);
+        directFreeKick.addActionListener(ActionBoard.directFreeKick[side.value()]);
+        indirectFreeKick.addActionListener(ActionBoard.indirectFreeKick[side.value()]);
         penaltyKick.addActionListener(ActionBoard.penaltyKick[side.value()]);
 
         layout.add(0, 0, 0.25, 1, timeOut);
         layout.add(0.25, 0, 0.25, 1, out);
-        layout.add(0.5, 0, 0.25, 1, freeKick);
+        layout.add(0.5, 0, 0.15, 1, directFreeKick);
+        layout.add(0.65, 0, 0.10, 1, indirectFreeKick);
         layout.add(0.75, 0, 0.25, 1, penaltyKick);
 
         timeOut.setVisible(true);
@@ -59,20 +64,33 @@ public class HLTeamActions extends TeamActions {
     @Override
     public void update(AdvancedData data) {
         super.update(data);
-        updateFreeKick(data);
+        updateDirectFreeKick(data);
+        updateIndirectFreeKick(data);
         updatePenaltyKick(data);
     }
 
 
-    private void updateFreeKick(AdvancedData data) {
+    private void updateDirectFreeKick(AdvancedData data) {
         // Check whether the button can be pressed
-        freeKick.setEnabled(ActionBoard.freeKick[side.value()].isLegal(data));
+        directFreeKick.setEnabled(ActionBoard.directFreeKick[side.value()].isLegal(data));
 
         // Check if the label of the button needs to be switched
-        if (data.freeKickActive[side.value()]) {
-            freeKick.setText(Localization.getDefault().FREE_KICK_EXECUTE);
+        if (data.directFreeKickActive[side.value()]) {
+            directFreeKick.setText(Localization.getDefault().DIRECT_FREE_KICK_EXECUTE);
         } else {
-            freeKick.setText(Localization.getDefault().FREE_KICK_PREPARE);
+            directFreeKick.setText(Localization.getDefault().DIRECT_FREE_KICK_PREPARE);
+        }
+    }
+
+    private void updateIndirectFreeKick(AdvancedData data) {
+        // Check whether the button can be pressed
+        indirectFreeKick.setEnabled(ActionBoard.indirectFreeKick[side.value()].isLegal(data));
+
+        // Check if the label of the button needs to be switched
+        if (data.indirectFreeKickActive[side.value()]) {
+            indirectFreeKick.setText(Localization.getDefault().INDIRECT_FREE_KICK_EXECUTE);
+        } else {
+            indirectFreeKick.setText(Localization.getDefault().INDIRECT_FREE_KICK_PREPARE);
         }
     }
 

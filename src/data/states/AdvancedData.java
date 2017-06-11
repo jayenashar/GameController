@@ -84,8 +84,11 @@ public class AdvancedData extends GameControlData implements Cloneable
     /** TimeOut counters for each team, 0:left side, 1:right side. */
     public boolean[] timeOutTaken = {false, false};
 
-    /** Whether we are in the free kick mode */
-    public boolean[] freeKickActive = {false, false};
+    /** Whether we are in the indirect free kick mode */
+    public boolean[] indirectFreeKickActive = {false, false};
+
+    /** Whether we are in the direct free kick mode */
+    public boolean[] directFreeKickActive = {false, false};
 
     /** Whether we are in the penalty kick mode */
     public boolean[] penaltyKickActive = {false, false};

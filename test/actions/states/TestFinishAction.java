@@ -2,7 +2,6 @@ package actions.states;
 
 import common.Log;
 import controller.action.ActionBoard;
-import controller.action.ui.FreeKick;
 import controller.action.ui.state.Finish;
 import data.states.AdvancedData;
 import data.values.GameStates;

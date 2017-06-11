@@ -18,12 +18,12 @@ import data.values.SecondaryGameStates;
  * is taken again. Based on which side the action is executed for the FreeKick Mode in the
  * Secondary State Object is updated
  */
-public class FreeKick extends GCAction
+public class DirectFreeKick extends GCAction
 {
     /** On which side (0:left, 1:right) */
     private int side;
 
-    public FreeKick(int side)
+    public DirectFreeKick(int side)
     {
         super(ActionType.UI);
         this.side = side;
@@ -32,12 +32,12 @@ public class FreeKick extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if (!data.freeKickActive[side]) {
+        if (!data.directFreeKickActive[side]) {
             data.previousSecGameState = data.secGameState;
             data.secGameState = SecondaryGameStates.FREEKICK;
             data.secGameStateInfo.switchToFreeKick(data.team[side].teamNumber);
             data.whenFreeKick = data.getTime();
-            data.freeKickActive[side] = true;
+            data.directFreeKickActive[side] = true;
             data.gameClock.setSecondaryClock(Rules.league.free_kick_preparation_time);
             Log.setNextMessage("FreeKick " + data.team[side].teamColor.toString());
             ActionBoard.clockPause.perform(data);
@@ -45,7 +45,7 @@ public class FreeKick extends GCAction
             data.secGameState = data.previousSecGameState;
             data.previousSecGameState = SecondaryGameStates.FREEKICK;
             data.secGameStateInfo.reset();
-            data.freeKickActive[side] = false;
+            data.directFreeKickActive[side] = false;
             Log.setNextMessage("End FreeKick " + data.team[side].teamColor.toString());
             ActionBoard.clockPause.perform(data);
         }
@@ -55,7 +55,7 @@ public class FreeKick extends GCAction
     public boolean isLegal(AdvancedData data)
     {
       return data.gameState == GameStates.PLAYING
-              && !data.freeKickActive[1-side]
+              && !data.directFreeKickActive[1-side]
               && data.secGameState != SecondaryGameStates.PENALTYKICK;
     }
 }

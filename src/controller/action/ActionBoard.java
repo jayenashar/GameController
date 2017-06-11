@@ -92,7 +92,8 @@ public class ActionBoard
     public static TeammatePushing teammatePushing;
     public static Substitute substitute;
     public static DropBall dropBall;
-    public static FreeKick[] freeKick = new FreeKick[2];
+    public static IndirectFreeKick[] indirectFreeKick = new IndirectFreeKick[2];
+    public static DirectFreeKick[] directFreeKick = new DirectFreeKick[2];
     public static PenaltyKick[] penaltyKick = new PenaltyKick[2];
 
     public static Manual[][] manualPen = Rules.league.isCoachAvailable ? new Manual[2][Rules.league.teamSize+1] : new Manual[2][Rules.league.teamSize];
@@ -131,7 +132,8 @@ public class ActionBoard
             timeOut[i] = new TimeOut(i);
             stuck[i] = new GlobalStuck(i);
             out[i] = new Out(i);
-            freeKick[i] = new FreeKick(i);
+            indirectFreeKick[i] = new IndirectFreeKick(i);
+            directFreeKick[i] = new DirectFreeKick(i);
             penaltyKick[i] = new PenaltyKick(i);
         }
         

@@ -2,7 +2,7 @@ package actions;
 
 import common.Log;
 import controller.action.ActionBoard;
-import controller.action.ui.FreeKick;
+import controller.action.ui.IndirectFreeKick;
 import data.states.AdvancedData;
 import data.values.SecondaryGameStates;
 import org.junit.BeforeClass;
@@ -32,7 +32,7 @@ public class TestFreeKickAction {
         ActionBoard.init(); // TODO - get rid of this stupid static thing
 
         /// Create a free kick action
-        FreeKick fk = new FreeKick(0);
+        IndirectFreeKick fk = new IndirectFreeKick(0);
 
         // Create an advanced data object to perform it on
         AdvancedData data = new AdvancedData();
@@ -56,7 +56,7 @@ public class TestFreeKickAction {
         ActionBoard.init(); // TODO - get rid of this stupid static thing
 
         /// Create a free kick action
-        FreeKick fk = new FreeKick(0);
+        IndirectFreeKick fk = new IndirectFreeKick(0);
 
         // Create an advanced data object to perform it on
         AdvancedData data = new AdvancedData();
