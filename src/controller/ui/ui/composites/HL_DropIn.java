@@ -1,6 +1,7 @@
-package controller.ui.ui;
+package controller.ui.ui.composites;
 
 import common.TotalScaleLayout;
+import controller.ui.ui.AbstractUI;
 import controller.ui.ui.components.*;
 import data.states.AdvancedData;
 import data.values.Side;

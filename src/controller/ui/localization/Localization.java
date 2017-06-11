@@ -17,4 +17,7 @@ public class Localization {
 
     public final String PENALTY_KICK_PREPARE = "Prepare Penalty Kick";
     public final String PENALTY_KICK_EXECUTE = "Execute Penalty Kick";
+
+    public final String COACH = "Coach";
+    public final String EJECTED = "Ejected";
 }

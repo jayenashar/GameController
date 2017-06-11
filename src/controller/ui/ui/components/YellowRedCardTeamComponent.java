@@ -5,14 +5,10 @@ import controller.action.ActionBoard;
 import controller.net.RobotOnlineStatus;
 import controller.net.RobotWatcher;
 import controller.ui.ui.customized.Button;
-
 import data.Rules;
 import data.communication.GameControlData;
-import data.hl.HL;
-import data.spl.SPL;
 import data.states.AdvancedData;
 import data.values.GameStates;
-import data.values.Penalties;
 import data.values.SecondaryGameStates;
 import data.values.Side;
 
@@ -22,7 +18,7 @@ import java.awt.*;
 /**
  * Created by rkessler on 2017-03-29.
  */
-public class TeamComponent extends AbstractComponent {
+public class YellowRedCardTeamComponent extends AbstractComponent {
 
     private Side side;
 
@@ -36,7 +32,10 @@ public class TeamComponent extends AbstractComponent {
     protected JLabel pushes;
 
     protected JPanel robots;
-    protected JButton[] robot;
+    //protected JButton[] robot;
+
+    protected Robot[] robot;
+
     protected JLabel[] robotLabel;
     protected ImageIcon[] lanIcon;
     protected JProgressBar[] robotTime;
@@ -57,7 +56,8 @@ public class TeamComponent extends AbstractComponent {
     public static final String KICKOFF = "Kickoff";
     private int teamSize;
 
-    public TeamComponent(Side side, ButtonGroup kickOffGroup){
+
+    public YellowRedCardTeamComponent(Side side, ButtonGroup kickOffGroup){
         this.side = side;
 
         goalInc = new Button("+");
@@ -95,6 +95,8 @@ public class TeamComponent extends AbstractComponent {
     }
 
 
+
+
     public void defineLayout(){
         int teamSize = Rules.league.teamSize;
 
@@ -115,28 +117,14 @@ public class TeamComponent extends AbstractComponent {
         tsc.add(0, 0.1, 0.5, 0.1, goalDec);
         tsc.add(0.5, 0.1, 0.5, 0.1, goalInc);
 
-        robot = new JButton[teamSize];
-        robotLabel = new JLabel[teamSize];
-        lanIcon = new ImageIcon[teamSize];
-        robotTime = new JProgressBar[teamSize];
+        robot = new Robot[teamSize];
 
         for (int j=0; j < teamSize; j++) {
-            robot[j] = new Button();
-            robotLabel[j] = new JLabel();
-            robotLabel[j].setHorizontalAlignment(JLabel.CENTER);
-            lanIcon[j] = lanUnknown;
-            robotLabel[j].setIcon(lanIcon[j]);
-            robotTime[j] = new JProgressBar();
-            robotTime[j].setMaximum(1000);
-            robotTime[j].setVisible(false);
-            robot[j].setLayout(new BoxLayout(robot[j], BoxLayout.Y_AXIS));
-            robot[j].add(robotLabel[j]);
-            robot[j].add(robotTime[j]);
-            tsc.add(0, 0.2+0.1*j, 1, 0.1, robot[j]);
+            robot[j] = new Robot(side, j);
 
-            robot[j].addActionListener(ActionBoard.robot[side.value()][j]);
+            tsc.add(0, 0.2+0.13*j, 1, 0.13, robot[j]);
+
         }
-
         robots.setVisible(true);
 
         this.setLayout(new TotalScaleLayout(this));
@@ -148,10 +136,8 @@ public class TeamComponent extends AbstractComponent {
     protected static final String PUSHES = "Pushes";
     protected static final String SHOT = "Shot";
     protected static final String SHOTS = "Shots";
-
-
-
     protected static final String STANDARD_FONT = "Helvetica";
+
 
     protected void updatePushes(AdvancedData data)
     {
@@ -201,10 +187,11 @@ public class TeamComponent extends AbstractComponent {
         goalInc.setEnabled(ActionBoard.goalInc[side.value()].isLegal(data));
         goalDec.setVisible(ActionBoard.goalDec[side.value()].isLegal(data));
 
+
         Font titleFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(20));
 
-        for (int j=0; j<teamSize; j++) {
-            robotLabel[j].setFont(titleFont);
+        for (int j=0; j< teamSize; j++) {
+            robot[j].update(data);
         }
     }
 }

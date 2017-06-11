@@ -37,4 +37,10 @@ public class Helper {
         }
         return null;
     }
+
+    public static String formatTime(int seconds) {
+        int displaySeconds = Math.abs(seconds) % 60;
+        int displayMinutes = Math.abs(seconds) / 60;
+        return (seconds < 0 ? "-" : "") + String.format("%02d:%02d", displayMinutes, displaySeconds);
+    }
 }
