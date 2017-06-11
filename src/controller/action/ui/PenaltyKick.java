@@ -53,8 +53,10 @@ public class PenaltyKick extends GCAction
             data.previousSecGameState = SecondaryGameStates.PENALTYKICK;
             data.secGameStateInfo.reset();
             data.penaltyKickActive[side] = false;
+
             Log.setNextMessage("End PenaltyKick " + data.team[side].teamColor);
             ActionBoard.clockPause.perform(data);
+            data.gameClock.setSecondaryClock(10);
         }
     }
     

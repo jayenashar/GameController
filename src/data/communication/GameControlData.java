@@ -29,7 +29,7 @@ public class GameControlData implements Serializable
     public static final int GAMECONTROLLER_GAMEDATA_PORT= 3838; // port to send game state packets to
 
     public static final String GAMECONTROLLER_STRUCT_HEADER = "RGme";
-    public static final byte GAMECONTROLLER_STRUCT_VERSION = 11;
+    public static final byte GAMECONTROLLER_STRUCT_VERSION = 12;
     public static final byte DROPBALL = -128;
 
 

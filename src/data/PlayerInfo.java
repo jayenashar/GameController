@@ -21,11 +21,15 @@ public class PlayerInfo implements Serializable
     /** The size in bytes this class has packed. */
     public static final int SIZE =
             1 + // penalty
-            1;  // secsToUnpen
+            1 +  // secsToUnpen
+            1 + // Numbers of yellow cards
+            1; // Numbers of red cards
 
     //this is streamed
     public Penalties penalty = Penalties.NONE; // penalty state of the player
     public byte secsTillUnpenalised;    // estimate of time till unpenalised
+    public byte yellowCardCount = 0;    // estimate of time till unpenalised
+    public byte redCardCount = 0;    // estimate of time till unpenalised
 
     /**
      * Packing this Java class to the C-structure to be send.
@@ -37,6 +41,8 @@ public class PlayerInfo implements Serializable
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.put(penalty.value());
         buffer.put(secsTillUnpenalised);
+        buffer.put(yellowCardCount);
+        buffer.put(redCardCount);
         return buffer.array();
     }
 
@@ -51,6 +57,8 @@ public class PlayerInfo implements Serializable
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         penalty = Penalties.fromValue(buffer.get());
         secsTillUnpenalised = buffer.get();
+        yellowCardCount = buffer.get();
+        redCardCount = buffer.get();
     }
 
     @Override
@@ -59,6 +67,8 @@ public class PlayerInfo implements Serializable
         String out = "----------------------------------------\n";
         out += "            penalty: "+penalty.toString()+"\n";
         out += "secsTillUnpenalised: "+secsTillUnpenalised+"\n";
+        out += "yellowCardCount: "+yellowCardCount+"\n";
+        out += "redCardCount: "+redCardCount+"\n";
         return out;
     }
 }
