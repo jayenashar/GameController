@@ -6,7 +6,8 @@ import controller.action.ui.CardIncrease;
 import controller.net.RobotOnlineStatus;
 import controller.net.RobotWatcher;
 import controller.ui.helper.FontHelper;
-import controller.ui.helper.Localization;
+import controller.ui.localization.Localization;
+import controller.ui.localization.LocalizationManager;
 import controller.ui.ui.customized.Button;
 import controller.ui.ui.customized.CountDownCircle;
 import data.Helper;
@@ -160,23 +161,12 @@ public class Robot extends AbstractComponent {
         // then we update the yellow and red card buttons with the number of cards
         updatePenaltyCards(robotInfo);
 
-
-
-
-
-
-
-
-
-
-
-
         if (ActionBoard.robot[sideValue][robotId].isCoach(data)) {
             if (data.team[sideValue].coach.penalty == Penalties.SPL_COACH_MOTION) {
                 robot.setEnabled(false);
-                robotLabel.setText(Localization.getDefault().EJECTED);
+                robotLabel.setText(LocalizationManager.getLocalization().EJECTED);
             } else {
-                robotLabel.setText(data.team[sideValue].teamColor + " " + Localization.getDefault().COACH);
+                robotLabel.setText(data.team[sideValue].teamColor + " " + LocalizationManager.getLocalization().COACH);
             }
         } else {
             if (robotInfo.penalty != Penalties.NONE) {
@@ -214,7 +204,7 @@ public class Robot extends AbstractComponent {
                     double percent = 100.0 * seconds / (double) penTime;
                     robotTime.updateValue(seconds, percent);
                 } else {
-                    robotLabel.setText(Localization.getDefault().EJECTED);
+                    robotLabel.setText(LocalizationManager.getLocalization().EJECTED);
                     robotTime.setVisible(false);
                     highlight(robot, false);
                 }

@@ -1,13 +1,9 @@
-package controller.ui.helper;
+package controller.ui.localization;
 
 /**
  * Created by rkessler on 2017-03-23.
  */
 public class Localization {
-
-    public static Localization getDefault(){
-        return new Localization();
-    }
 
     public final String DIRECT_FREE_KICK_PREPARE = "Prepare Free Kick";
     public final String DIRECT_FREE_KICK_EXECUTE = "Execute Free Kick";

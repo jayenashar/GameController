@@ -2,7 +2,8 @@ package controller.ui.ui.components;
 
 import common.TotalScaleLayout;
 import controller.action.ActionBoard;
-import controller.ui.helper.Localization;
+import controller.ui.localization.Localization;
+import controller.ui.localization.LocalizationManager;
 import controller.ui.ui.customized.Button;
 import data.states.AdvancedData;
 import data.values.Side;
@@ -34,10 +35,10 @@ public class HLTeamActions extends TeamActions {
         timeOut = new JToggleButton(TIMEOUT);
         out = new JButton(OUT);
 
-        directFreeKick = new Button(Localization.getDefault().DIRECT_FREE_KICK_PREPARE);
-        indirectFreeKick = new Button(Localization.getDefault().INDIRECT_FREE_KICK_PREPARE);
+        directFreeKick = new Button(LocalizationManager.getLocalization().DIRECT_FREE_KICK_PREPARE);
+        indirectFreeKick = new Button(LocalizationManager.getLocalization().INDIRECT_FREE_KICK_PREPARE);
 
-        penaltyKick = new Button(Localization.getDefault().PENALTY_KICK_PREPARE);
+        penaltyKick = new Button(LocalizationManager.getLocalization().PENALTY_KICK_PREPARE);
 
         directFreeKick.addActionListener(ActionBoard.directFreeKick[side.value()]);
         indirectFreeKick.addActionListener(ActionBoard.indirectFreeKick[side.value()]);
@@ -76,9 +77,9 @@ public class HLTeamActions extends TeamActions {
 
         // Check if the label of the button needs to be switched
         if (data.directFreeKickActive[side.value()]) {
-            directFreeKick.setText(Localization.getDefault().DIRECT_FREE_KICK_EXECUTE);
+            directFreeKick.setText(LocalizationManager.getLocalization().DIRECT_FREE_KICK_EXECUTE);
         } else {
-            directFreeKick.setText(Localization.getDefault().DIRECT_FREE_KICK_PREPARE);
+            directFreeKick.setText(LocalizationManager.getLocalization().DIRECT_FREE_KICK_PREPARE);
         }
     }
 
@@ -88,9 +89,9 @@ public class HLTeamActions extends TeamActions {
 
         // Check if the label of the button needs to be switched
         if (data.indirectFreeKickActive[side.value()]) {
-            indirectFreeKick.setText(Localization.getDefault().INDIRECT_FREE_KICK_EXECUTE);
+            indirectFreeKick.setText(LocalizationManager.getLocalization().INDIRECT_FREE_KICK_EXECUTE);
         } else {
-            indirectFreeKick.setText(Localization.getDefault().INDIRECT_FREE_KICK_PREPARE);
+            indirectFreeKick.setText(LocalizationManager.getLocalization().INDIRECT_FREE_KICK_PREPARE);
         }
     }
 
@@ -100,9 +101,9 @@ public class HLTeamActions extends TeamActions {
 
         // Check if the label of the button needs to be switched
         if (data.penaltyKickActive[side.value()]) {
-            penaltyKick.setText(Localization.getDefault().PENALTY_KICK_EXECUTE);
+            penaltyKick.setText(LocalizationManager.getLocalization().PENALTY_KICK_EXECUTE);
         } else {
-            penaltyKick.setText(Localization.getDefault().PENALTY_KICK_PREPARE);
+            penaltyKick.setText(LocalizationManager.getLocalization().PENALTY_KICK_PREPARE);
         }
     }
 }
