@@ -1,4 +1,4 @@
-package controller.ui.localization;
+package controller.ui.helper;
 
 /**
  * Created by rkessler on 2017-03-23.

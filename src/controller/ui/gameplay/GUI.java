@@ -118,8 +118,6 @@ public class GUI extends JFrame implements GCGUI, CommonGUI
         mid = new ImagePanel(new ImageIcon(ICONS_PATH+BACKGROUND_MID).getImage());
         bottom = new ImagePanel(new ImageIcon(ICONS_PATH+BACKGROUND_BOTTOM).getImage());
 
-        System.out.println("1");
-
         //  robots
         robots = new JPanel[2];
         for (int i=0; i<2; i++) {

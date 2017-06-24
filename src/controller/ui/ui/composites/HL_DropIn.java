@@ -30,7 +30,6 @@ public class HL_DropIn extends AbstractUI {
         );
 
         setVisible(true);
-        System.out.println("Came to set visible");
     }
 
     private void setupUI() {

@@ -1,5 +1,6 @@
 package controller.action.ui;
 
+import common.Log;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.states.AdvancedData;
@@ -26,10 +27,21 @@ public class CardIncrease extends GCAction {
     @Override
     public void perform(AdvancedData data) {
         if (this.color == Color.YELLOW) {
-            data.team[side.value()].player[player].yellowCardCount += 1;
+            int currentCount = data.team[side.value()].player[player].yellowCardCount;
+
+            if (currentCount < 2){
+                data.team[side.value()].player[player].yellowCardCount += 1;
+                Log.state(data, "Added yellow card");
+            }
+
         }
         if (this.color == Color.RED) {
-            data.team[side.value()].player[player].redCardCount += 1;
+            int currentCount = data.team[side.value()].player[player].redCardCount;
+
+            if (currentCount == 0){
+                data.team[side.value()].player[player].redCardCount = 1;
+                Log.state(data, "Added red card");
+            }
         }
     }
 

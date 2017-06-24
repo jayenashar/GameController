@@ -2,7 +2,7 @@ package controller.ui.ui.components;
 
 import common.TotalScaleLayout;
 import controller.action.ActionBoard;
-import controller.ui.localization.Localization;
+import controller.ui.helper.Localization;
 import controller.ui.ui.customized.Button;
 import data.states.AdvancedData;
 import data.values.Side;

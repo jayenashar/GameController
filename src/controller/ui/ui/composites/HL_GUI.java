@@ -27,7 +27,6 @@ public class HL_GUI extends AbstractUI {
         );
 
         setVisible(true);
-        System.out.println("Came to set visible");
     }
 
     private void setupUI() {

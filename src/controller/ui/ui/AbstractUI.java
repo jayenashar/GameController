@@ -19,11 +19,6 @@ public abstract class AbstractUI extends JFrame implements GCGUI {
         uiElements = new ArrayList<>();
     }
 
-    public void addUIPart(AbstractComponent uiPart){
-        uiElements.add(uiPart);
-        this.add(uiPart);
-    }
-
     @Override
     public void update(AdvancedData data) {
         for(AbstractComponent uiPart : uiElements){
