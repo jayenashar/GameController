@@ -23,7 +23,7 @@ public class TestGameControlData {
     public void test_secondary_game_state_send_correctly() {
         AdvancedData data = new AdvancedData();
 
-        data.secGameState = SecondaryGameStates.FREEKICK;
+        data.secGameState = SecondaryGameStates.DIRECT_FREEKICK;
         data.dropInTeam = TeamColors.BLACK.value();
 
         ByteBuffer byteBuffer = data.toByteArray();

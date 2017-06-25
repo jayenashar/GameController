@@ -2,13 +2,18 @@ package controller.ui.ui.components;
 
 import common.TotalScaleLayout;
 import controller.action.ActionBoard;
+import controller.action.ui.DirectFreeKick;
+import controller.action.ui.IndirectFreeKick;
+import controller.action.ui.PenaltyKick;
 import controller.ui.localization.Localization;
 import controller.ui.localization.LocalizationManager;
 import controller.ui.ui.customized.Button;
 import data.states.AdvancedData;
+import data.values.SecondaryGameStates;
 import data.values.Side;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Created by rkessler on 2017-04-29.
@@ -40,15 +45,16 @@ public class HLTeamActions extends TeamActions {
 
         penaltyKick = new Button(LocalizationManager.getLocalization().PENALTY_KICK_PREPARE);
 
-        directFreeKick.addActionListener(ActionBoard.directFreeKick[side.value()]);
-        indirectFreeKick.addActionListener(ActionBoard.indirectFreeKick[side.value()]);
-        penaltyKick.addActionListener(ActionBoard.penaltyKick[side.value()]);
+        directFreeKick.addActionListener(new DirectFreeKick(side.value()));
+        indirectFreeKick.addActionListener(new IndirectFreeKick(side.value()));
+        penaltyKick.addActionListener(new PenaltyKick(side.value()));
 
-        layout.add(0, 0, 0.25, 1, timeOut);
-        layout.add(0.25, 0, 0.25, 1, out);
-        layout.add(0.5, 0, 0.15, 1, directFreeKick);
-        layout.add(0.65, 0, 0.10, 1, indirectFreeKick);
-        layout.add(0.75, 0, 0.25, 1, penaltyKick);
+        layout.add(0, 0, 0.33, 0.5, timeOut);
+        layout.add(0.33, 0, 0.33, 0.5, out);
+        layout.add(0.66, 0, 0.34, 0.5, penaltyKick);
+
+        layout.add(0, 0.5, 0.5, 0.5, directFreeKick);
+        layout.add(0.5, 0.5, 0.5, 0.5, indirectFreeKick);
 
         timeOut.setVisible(true);
         out.setVisible(true);
@@ -75,23 +81,57 @@ public class HLTeamActions extends TeamActions {
         // Check whether the button can be pressed
         directFreeKick.setEnabled(ActionBoard.directFreeKick[side.value()].isLegal(data));
 
-        // Check if the label of the button needs to be switched
-        if (data.directFreeKickActive[side.value()]) {
-            directFreeKick.setText(LocalizationManager.getLocalization().DIRECT_FREE_KICK_EXECUTE);
+        // Check secondary game state as that informs us if a direct freekick is active
+
+        if (data.secGameState == SecondaryGameStates.DIRECT_FREEKICK){
+            byte[] bytes = data.secGameStateInfo.toByteArray();
+            byte team = bytes[0];
+            byte subMode = bytes[1];
+
+            // Only change text and color if it is our team
+            boolean isUs = team == data.team[side.value()].teamNumber;
+
+            if (isUs){
+                if (subMode == 0){
+                    directFreeKick.setText(LocalizationManager.getLocalization().DIRECT_FREE_KICK_FREEZE);
+                    directFreeKick.setBackground(new Color(193, 255, 208));
+                } else {
+                    directFreeKick.setText(LocalizationManager.getLocalization().DIRECT_FREE_KICK_EXECUTE);
+                    directFreeKick.setBackground(new Color(193, 255, 208));
+                }
+            }
         } else {
             directFreeKick.setText(LocalizationManager.getLocalization().DIRECT_FREE_KICK_PREPARE);
+            directFreeKick.setBackground(null);
         }
     }
 
     private void updateIndirectFreeKick(AdvancedData data) {
         // Check whether the button can be pressed
-        indirectFreeKick.setEnabled(ActionBoard.indirectFreeKick[side.value()].isLegal(data));
+        indirectFreeKick.setEnabled(new IndirectFreeKick(side.value()).isLegal(data));
 
-        // Check if the label of the button needs to be switched
-        if (data.indirectFreeKickActive[side.value()]) {
-            indirectFreeKick.setText(LocalizationManager.getLocalization().INDIRECT_FREE_KICK_EXECUTE);
+        // Check secondary game state as that informs us if a direct freekick is active
+
+        if (data.secGameState == SecondaryGameStates.INDIRECT_FREEKICK){
+            byte[] bytes = data.secGameStateInfo.toByteArray();
+            byte team = bytes[0];
+            byte subMode = bytes[1];
+
+            // Only change text and color if it is our team
+            boolean isUs = team == data.team[side.value()].teamNumber;
+
+            if (isUs){
+                if (subMode == 0){
+                    indirectFreeKick.setText(LocalizationManager.getLocalization().INDIRECT_FREE_KICK_FREEZE);
+                    indirectFreeKick.setBackground(new Color(193, 255, 208));
+                } else {
+                    indirectFreeKick.setText(LocalizationManager.getLocalization().INDIRECT_FREE_KICK_EXECUTE);
+                    indirectFreeKick.setBackground(new Color(193, 255, 208));
+                }
+            }
         } else {
             indirectFreeKick.setText(LocalizationManager.getLocalization().INDIRECT_FREE_KICK_PREPARE);
+            indirectFreeKick.setBackground(null);
         }
     }
 

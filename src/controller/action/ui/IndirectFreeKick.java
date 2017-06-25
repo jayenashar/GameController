@@ -5,6 +5,7 @@ import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
 import data.Rules;
+import data.communication.TeamInfo;
 import data.states.AdvancedData;
 import data.values.GameStates;
 import data.values.SecondaryGameStates;
@@ -32,30 +33,50 @@ public class IndirectFreeKick extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if (!data.indirectFreeKickActive[side]) {
+        boolean isInDirectfreeKick = data.secGameState == SecondaryGameStates.INDIRECT_FREEKICK;
+
+        // Multiple possibilities
+
+        // If we are not in DirectFreeKick we can switch to the first state of it meaning
+        // secondaryGameState = DIRECT_FREEKICK and secondaryGameStateInfo = (teamnumber, state)
+        if (!isInDirectfreeKick) {
             data.previousSecGameState = data.secGameState;
-            data.secGameState = SecondaryGameStates.FREEKICK;
-            data.secGameStateInfo.switchToFreeKick(data.team[side].teamNumber);
+            data.secGameState = SecondaryGameStates.INDIRECT_FREEKICK;
+            data.secGameStateInfo.setFreeKickData(data.team[side].teamNumber, (byte) 0);
+
             data.whenFreeKick = data.getTime();
-            data.indirectFreeKickActive[side] = true;
             data.gameClock.setSecondaryClock(Rules.league.free_kick_preparation_time);
-            Log.setNextMessage("FreeKick " + data.team[side].teamColor.toString());
+            Log.setNextMessage("IndirectFreeKick " + data.team[side].teamColor.toString());
             ActionBoard.clockPause.perform(data);
         } else {
-            data.secGameState = data.previousSecGameState;
-            data.previousSecGameState = SecondaryGameStates.FREEKICK;
-            data.secGameStateInfo.reset();
-            data.indirectFreeKickActive[side] = false;
-            Log.setNextMessage("End FreeKick " + data.team[side].teamColor.toString());
-            ActionBoard.clockPause.perform(data);
+            // Otherwise we need to check in which sub mode we are - and move one forward if not at 1
+            byte team = data.secGameStateInfo.toByteArray()[0];
+            byte subMode = data.secGameStateInfo.toByteArray()[1];
+
+            if (subMode == 0){
+                data.secGameStateInfo.setFreeKickData(team, (byte) 1);
+            } else {
+                data.secGameState = data.previousSecGameState;
+                data.previousSecGameState = SecondaryGameStates.INDIRECT_FREEKICK;
+                data.secGameStateInfo.reset();
+                Log.setNextMessage("End IndirectFreeKick " + data.team[side].teamColor.toString());
+                ActionBoard.clockPause.perform(data);
+            }
         }
     }
 
     @Override
     public boolean isLegal(AdvancedData data)
     {
-      return data.gameState == GameStates.PLAYING
-              && !data.indirectFreeKickActive[1-side]
-              && data.secGameState != SecondaryGameStates.PENALTYKICK;
+        boolean ifInDirectFreeKickItsMe = true;
+
+        if (data.secGameState == SecondaryGameStates.INDIRECT_FREEKICK){
+            ifInDirectFreeKickItsMe = data.secGameStateInfo.toByteArray()[0] == data.team[side].teamNumber;
+        }
+
+        return data.testmode || data.gameState == GameStates.PLAYING
+                && ifInDirectFreeKickItsMe
+                && data.secGameState != SecondaryGameStates.PENALTYKICK
+                && data.secGameState != SecondaryGameStates.DIRECT_FREEKICK;
     }
 }

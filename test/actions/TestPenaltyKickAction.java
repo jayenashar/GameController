@@ -60,7 +60,7 @@ public class TestPenaltyKickAction {
 
         // Create an advanced data object to perform it on
         AdvancedData data = new AdvancedData();
-        data.secGameState = SecondaryGameStates.FREEKICK;
+//        data.secGameState = SecondaryGameStates.FREEKICK;
 
         // Assert that it is not possible to execute a FreeKickAction during a PenaltyKick
         assertFalse(fk.isLegal(data));

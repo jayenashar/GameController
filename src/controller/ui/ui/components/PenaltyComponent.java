@@ -4,7 +4,6 @@ import common.TotalScaleLayout;
 import controller.EventHandler;
 import controller.action.ActionBoard;
 import controller.action.GCAction;
-import controller.action.ui.penalty.BallManipulation;
 import controller.action.ui.penalty.Penalty;
 import controller.ui.ui.customized.ToggleButton;
 import data.Rules;
@@ -14,10 +13,6 @@ import data.states.AdvancedData;
 import data.values.Penalties;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,71 +21,46 @@ import java.util.Map;
  */
 public class PenaltyComponent extends AbstractComponent {
 
-    private static final String PEN_PUSHING = "Pushing";
-    private static final String PEN_LEAVING = "Leaving the Field";
-    private static final String PEN_MOTION_IN_SET = "Motion in Set";
-    private static final String PEN_MOTION_IN_SET_SHORT = "Motion";
     private static final String PEN_INACTIVE = "Fallen / Inactive / Local Game Stuck";
-    private static final String PEN_DEFENDER = "Illegal Defender";
-    private static final String PEN_BALL_CONTACT = "Ball Holding / Hands";
-    private static final String PEN_KICK_OFF_GOAL = "Kickoff Goal";
-    private static final String PEN_COACH_MOTION = "Coach Motion";
-    private static final String PEN_PICKUP = "Pick-Up";
-    private static final String PEN_MANIPULATION = "Ball Manipulation";
-    private static final String PEN_PHYSICAL = "Physical Contact";
-    private static final String PEN_DEFENSE = "Illegal Defense";
-    private static final String PEN_ATTACK = "Illegal Attack";
-    private static final String PEN_PICKUP_INCAPABLE = "Pickup/Incapable";
-    private static final String PEN_SERVICE = "Service";
-    private static final String PEN_SUBSTITUTE = "Substitute";
-    private static final String PEN_SUBSTITUTE_SHORT = "Sub";
+
 
     private Map<Penalties, JToggleButton> penaltyButtons;
     private ButtonGroup penaltyGroup;
     private JPanel penaltyButtonContainer;
     private TotalScaleLayout layout;
 
-    public PenaltyComponent(){
+    public PenaltyComponent() {
         penaltyButtons = new HashMap<>();
         penaltyGroup = new ButtonGroup();
         penaltyButtonContainer = new JPanel();
+
         layout = new TotalScaleLayout(penaltyButtonContainer);
         penaltyButtonContainer.setLayout(layout);
 
         defineLayout();
     }
 
-    public boolean selectPenalty(Penalties pen){
-        if (penaltyButtons.containsKey(pen)){
-            penaltyButtons.get(pen).setSelected(true);
-            return true;
-        }else {
-            return false;
-        }
-
-    }
-
-    void addButtonByPenalty(Penalties pen, Penalty ballManipulation){
+    private void addButtonByPenalty(Penalties pen, Penalty ballManipulation) {
         ToggleButton butt = new ToggleButton(pen.toString());
         butt.addActionListener(ballManipulation);
         penaltyButtons.put(pen, butt);
         penaltyGroup.add(butt);
     }
 
-    public void defineLayout(){
+    public void defineLayout() {
         // TODO Customizable with inheritance
         if (Rules.league instanceof SPL) {
             addButtonByPenalty(Penalties.SPL_PLAYER_PUSHING, ActionBoard.pushing);
-            addButtonByPenalty(Penalties.SPL_LEAVING_THE_FIELD, ActionBoard.leaving );
+            addButtonByPenalty(Penalties.SPL_LEAVING_THE_FIELD, ActionBoard.leaving);
             addButtonByPenalty(Penalties.SPL_INACTIVE_PLAYER, ActionBoard.inactive);
-            addButtonByPenalty(Penalties.SPL_ILLEGAL_DEFENDER,  ActionBoard.defender);
-            addButtonByPenalty(Penalties.SPL_ILLEGAL_MOTION_IN_SET,  ActionBoard.motionInSet);
+            addButtonByPenalty(Penalties.SPL_ILLEGAL_DEFENDER, ActionBoard.defender);
+            addButtonByPenalty(Penalties.SPL_ILLEGAL_MOTION_IN_SET, ActionBoard.motionInSet);
             addButtonByPenalty(Penalties.SPL_KICK_OFF_GOAL, ActionBoard.kickOffGoal);
             addButtonByPenalty(Penalties.SPL_ILLEGAL_BALL_CONTACT, ActionBoard.ballContact);
             addButtonByPenalty(Penalties.SPL_REQUEST_FOR_PICKUP, ActionBoard.pickUp);
             addButtonByPenalty(Penalties.SUBSTITUTE, ActionBoard.substitute);
 
-            if (Rules.league.dropInPlayerMode){
+            if (Rules.league.dropInPlayerMode) {
                 // TODO - Figure out what the SPL wants here?
                 //addButtonByPenalty(Penalties.TEAM_MATE_PUSHING);
             } else {
@@ -111,9 +81,9 @@ public class PenaltyComponent extends AbstractComponent {
 
         // Add all penalty buttons to layout
         float height = (float) (1.0 / penaltyButtons.size());
-        for (int i=0; i < penaltyButtons.size(); i++){
+        for (int i = 0; i < penaltyButtons.size(); i++) {
             ToggleButton tb = (ToggleButton) penaltyButtons.values().toArray()[i];
-            layout.add(0, i*height, 1, height, tb);
+            layout.add(0, i * height, 1, height, tb);
         }
 
 
@@ -134,15 +104,14 @@ public class PenaltyComponent extends AbstractComponent {
     }
 
 
-    private void updatePenaltiesSPL(AdvancedData data)
-    {
+    private void updatePenaltiesSPL(AdvancedData data) {
         penaltyButtons.get(Penalties.SPL_PLAYER_PUSHING).setEnabled(ActionBoard.pushing.isLegal(data));
         penaltyButtons.get(Penalties.SPL_LEAVING_THE_FIELD).setEnabled(ActionBoard.leaving.isLegal(data));
         penaltyButtons.get(Penalties.SPL_INACTIVE_PLAYER).setEnabled(ActionBoard.inactive.isLegal(data));
 
         penaltyButtons.get(Penalties.SPL_INACTIVE_PLAYER).setText("<html><center>"
-                +(ActionBoard.inactive.isLegal(data) ? "<font color=#000000>" : "<font color=#808080>")
-                +PEN_INACTIVE);
+                + (ActionBoard.inactive.isLegal(data) ? "<font color=#000000>" : "<font color=#808080>")
+                + PEN_INACTIVE);
 
         penaltyButtons.get(Penalties.SPL_ILLEGAL_DEFENDER).setEnabled(ActionBoard.defender.isLegal(data));
         penaltyButtons.get(Penalties.SPL_ILLEGAL_MOTION_IN_SET).setEnabled(ActionBoard.motionInSet.isLegal(data));
@@ -188,8 +157,7 @@ public class PenaltyComponent extends AbstractComponent {
         //        }
     }
 
-    private void updatePenaltiesHL(AdvancedData data)
-    {
+    private void updatePenaltiesHL(AdvancedData data) {
         penaltyButtons.get(Penalties.HL_BALL_MANIPULATION).setEnabled(ActionBoard.ballManipulation.isLegal(data));
         penaltyButtons.get(Penalties.HL_PHYSICAL_CONTACT).setEnabled(ActionBoard.pushing.isLegal(data));
         penaltyButtons.get(Penalties.HL_ILLEGAL_ATTACK).setEnabled(ActionBoard.attack.isLegal(data));

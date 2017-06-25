@@ -17,11 +17,11 @@ public class TestSecondaryState {
     @Test
     public void test_secondary_state_buffer_works() {
         SecondaryStateInfo secState = new SecondaryStateInfo();
-        secState.switchToFreeKick((byte) 14);
+        secState.setFreeKickData((byte) 14, (byte) 1);
 
         byte[] result = secState.toByteArray();
         assertEquals(14, result[0]);
-        assertEquals(0, result[1]);
+        assertEquals(1, result[1]);
         assertEquals(0, result[2]);
         assertEquals(0, result[3]);
 

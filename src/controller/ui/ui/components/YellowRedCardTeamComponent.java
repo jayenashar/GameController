@@ -2,8 +2,6 @@ package controller.ui.ui.components;
 
 import common.TotalScaleLayout;
 import controller.action.ActionBoard;
-import controller.net.RobotOnlineStatus;
-import controller.net.RobotWatcher;
 import controller.ui.ui.customized.Button;
 import data.Rules;
 import data.communication.GameControlData;
@@ -23,41 +21,27 @@ public class YellowRedCardTeamComponent extends AbstractComponent {
     private Side side;
 
     protected JLabel name;
-    protected JButton goalDec;
-    protected JButton goalInc;
-    protected JLabel goals;
+    private JButton goalDec;
+    private JButton goalInc;
+    private JLabel goals;
 
-    protected JRadioButton kickOff;
+    private JRadioButton kickOff;
 
-    protected JLabel pushes;
+    private JLabel pushes;
 
-    protected JPanel robots;
-    //protected JButton[] robot;
+    private JPanel robots;
 
-    protected Robot[] robot;
+    private Robot[] robot;
 
-    protected JLabel[] robotLabel;
-    protected ImageIcon[] lanIcon;
-    protected JProgressBar[] robotTime;
 
-    protected ImageIcon lanOnline;
-    protected ImageIcon lanHighLatency;
-    protected ImageIcon lanOffline;
-    protected ImageIcon lanUnknown;
+    private static final String KICKOFF_PENALTY_SHOOTOUT = "P.-taker";
 
-    protected static final String KICKOFF_PENALTY_SHOOTOUT = "P.-taker";
 
-    protected static final String ICONS_PATH = "config/icons/";
-    protected static final String ONLINE = "wlan_status_green.png";
-    protected static final String OFFLINE = "wlan_status_red.png";
-    protected static final String HIGH_LATENCY = "wlan_status_yellow.png";
-    protected static final String UNKNOWN_ONLINE_STATUS = "wlan_status_grey.png";
-
-    public static final String KICKOFF = "Kickoff";
+    private static final String KICKOFF = "Kickoff";
     private int teamSize;
 
 
-    public YellowRedCardTeamComponent(Side side, ButtonGroup kickOffGroup){
+    public YellowRedCardTeamComponent(Side side, ButtonGroup kickOffGroup) {
         this.side = side;
 
         goalInc = new Button("+");
@@ -80,14 +64,9 @@ public class YellowRedCardTeamComponent extends AbstractComponent {
         pushes.setHorizontalAlignment(JLabel.CENTER);
 
 
-        lanOnline = new ImageIcon(ICONS_PATH+ONLINE);
-        lanHighLatency = new ImageIcon(ICONS_PATH+HIGH_LATENCY);
-        lanOffline = new ImageIcon(ICONS_PATH+OFFLINE);
-        lanUnknown = new ImageIcon(ICONS_PATH+UNKNOWN_ONLINE_STATUS);
-
         teamSize = Rules.league.teamSize;
 
-        if (Rules.league.isCoachAvailable){
+        if (Rules.league.isCoachAvailable) {
             teamSize += 1;
         }
 
@@ -95,12 +74,10 @@ public class YellowRedCardTeamComponent extends AbstractComponent {
     }
 
 
-
-
-    public void defineLayout(){
+    public void defineLayout() {
         int teamSize = Rules.league.teamSize;
 
-        if (Rules.league.isCoachAvailable){
+        if (Rules.league.isCoachAvailable) {
             teamSize += 1;
         }
 
@@ -119,10 +96,10 @@ public class YellowRedCardTeamComponent extends AbstractComponent {
 
         robot = new Robot[teamSize];
 
-        for (int j=0; j < teamSize; j++) {
+        for (int j = 0; j < teamSize; j++) {
             robot[j] = new Robot(side, j);
 
-            tsc.add(0, 0.2+0.13*j, 1, 0.13, robot[j]);
+            tsc.add(0, 0.2 + 0.13 * j, 1, 0.13, robot[j]);
 
         }
         robots.setVisible(true);
@@ -139,30 +116,26 @@ public class YellowRedCardTeamComponent extends AbstractComponent {
     protected static final String STANDARD_FONT = "Helvetica";
 
 
-    protected void updatePushes(AdvancedData data)
-    {
-            if (data.secGameState != SecondaryGameStates.PENALTYSHOOT && data.previousSecGameState != SecondaryGameStates.PENALTYSHOOT) {
-                if (Rules.league.pushesToEjection == null || Rules.league.pushesToEjection.length == 0) {
-                    pushes.setText("");
-                } else {
-                    pushes.setText(PUSHES+": "+data.pushes[side.value()]);
-                }
+    protected void updatePushes(AdvancedData data) {
+        if (data.secGameState != SecondaryGameStates.PENALTYSHOOT && data.previousSecGameState != SecondaryGameStates.PENALTYSHOOT) {
+            if (Rules.league.pushesToEjection == null || Rules.league.pushesToEjection.length == 0) {
+                pushes.setText("");
             } else {
-                pushes.setText((side.value() == 0 && (data.gameState == GameStates.SET
-                        || data.gameState == GameStates.PLAYING) ? SHOT : SHOTS)+": "+data.team[side.value()].penaltyShot);
+                pushes.setText(PUSHES + ": " + data.pushes[side.value()]);
             }
+        } else {
+            pushes.setText((side.value() == 0 && (data.gameState == GameStates.SET
+                    || data.gameState == GameStates.PLAYING) ? SHOT : SHOTS) + ": " + data.team[side.value()].penaltyShot);
+        }
 
     }
 
-    public void updateKickOff(AdvancedData data)
-    {
+    public void updateKickOff(AdvancedData data) {
         if (data.kickOffTeam == GameControlData.DROPBALL) {
             kickOff.setSelected(true);
-        }
-        else if (data.team[side.value()].teamNumber == data.kickOffTeam){
+        } else if (data.team[side.value()].teamNumber == data.kickOffTeam) {
             kickOff.setSelected(true);
-        }
-        else {
+        } else {
             kickOff.setSelected(false);
         }
 
@@ -188,9 +161,9 @@ public class YellowRedCardTeamComponent extends AbstractComponent {
         goalDec.setVisible(ActionBoard.goalDec[side.value()].isLegal(data));
 
 
-        Font titleFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(20));
+        Font titleFont = new Font(STANDARD_FONT, Font.PLAIN, (int) (20));
 
-        for (int j=0; j< teamSize; j++) {
+        for (int j = 0; j < teamSize; j++) {
             robot[j].update(data);
         }
     }

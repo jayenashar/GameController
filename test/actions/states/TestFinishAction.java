@@ -35,7 +35,7 @@ public class TestFinishAction {
 
         // Create an advanced data object to perform it on
         AdvancedData data = new AdvancedData();
-        data.secGameState = SecondaryGameStates.FREEKICK;
+        data.secGameState = SecondaryGameStates.DIRECT_FREEKICK;
 
         // Assert that game cannot be finish in FreeKick
         assertFalse(finish.isLegal(data));

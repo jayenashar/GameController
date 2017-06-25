@@ -29,7 +29,6 @@ import java.awt.event.ComponentEvent;
  */
 public class Robot extends AbstractComponent {
 
-    private ImageIcon lanIcon;
     private Side side;
     private int id;
     private JButton robot;
@@ -38,21 +37,21 @@ public class Robot extends AbstractComponent {
     private JButton yellowCard;
     private JButton redCard;
 
+    private ImageIcon lanIcon;
+    private ImageIcon lanOnline;
+    private ImageIcon lanHighLatency;
+    private ImageIcon lanOffline;
+    private ImageIcon lanUnknown;
 
-    protected ImageIcon lanOnline;
-    protected ImageIcon lanHighLatency;
-    protected ImageIcon lanOffline;
-    protected ImageIcon lanUnknown;
 
-
-    protected static final String ICONS_PATH = "config/icons/";
-    protected static final String ONLINE = "wlan_status_green.png";
-    protected static final String OFFLINE = "wlan_status_red.png";
-    protected static final String HIGH_LATENCY = "wlan_status_yellow.png";
-    protected static final String UNKNOWN_ONLINE_STATUS = "wlan_status_grey.png";
+    private static final String ICONS_PATH = "config/icons/";
+    private static final String ONLINE = "wlan_status_green.png";
+    private static final String OFFLINE = "wlan_status_red.png";
+    private static final String HIGH_LATENCY = "wlan_status_yellow.png";
+    private static final String UNKNOWN_ONLINE_STATUS = "wlan_status_grey.png";
     public static final Color COLOR_HIGHLIGHT = Color.YELLOW;
 
-    protected static final int UNPEN_HIGHLIGHT_SECONDS = 10;
+    private static final int UNPEN_HIGHLIGHT_SECONDS = 10;
 
     private CountDownCircle robotTime;
 

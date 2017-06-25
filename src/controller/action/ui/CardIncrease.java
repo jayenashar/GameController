@@ -34,6 +34,7 @@ public class CardIncrease extends GCAction {
                 Log.state(data, "Added yellow card");
             }
 
+
         }
         if (this.color == Color.RED) {
             int currentCount = data.team[side.value()].player[player].redCardCount;

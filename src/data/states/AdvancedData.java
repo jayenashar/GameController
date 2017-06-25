@@ -84,12 +84,6 @@ public class AdvancedData extends GameControlData implements Cloneable
     /** TimeOut counters for each team, 0:left side, 1:right side. */
     public boolean[] timeOutTaken = {false, false};
 
-    /** Whether we are in the indirect free kick mode */
-    public boolean[] indirectFreeKickActive = {false, false};
-
-    /** Whether we are in the direct free kick mode */
-    public boolean[] directFreeKickActive = {false, false};
-
     /** Whether we are in the penalty kick mode */
     public boolean[] penaltyKickActive = {false, false};
 
@@ -261,7 +255,8 @@ public class AdvancedData extends GameControlData implements Cloneable
         int regularNumberOfPenaltyShots = (gameType == GameTypes.PLAYOFF) ? Rules.league.numberOfPenaltyShotsLong : Rules.league.numberOfPenaltyShotsShort;
         int duration = secGameState == SecondaryGameStates.TIMEOUT ? secsRemaining :
                 secGameState == SecondaryGameStates.NORMAL ? Rules.league.halfTime :
-                secGameState == SecondaryGameStates.FREEKICK ? secsRemaining :
+                secGameState == SecondaryGameStates.DIRECT_FREEKICK ? secsRemaining :
+                secGameState == SecondaryGameStates.INDIRECT_FREEKICK ? secsRemaining :
                 secGameState == SecondaryGameStates.PENALTYKICK ? secsRemaining
                 : secGameState == SecondaryGameStates.OVERTIME ? Rules.league.overtimeTime
                 : Math.max(team[0].penaltyShot, team[1].penaltyShot) > regularNumberOfPenaltyShots
@@ -388,9 +383,14 @@ public class AdvancedData extends GameControlData implements Cloneable
     public Integer getSecondaryTime(int timeKickOffBlockedOvertime)
     {
 
-        if (secGameState == SecondaryGameStates.FREEKICK){
+        if (secGameState == SecondaryGameStates.DIRECT_FREEKICK){
             return gameClock.getSecondaryTime();
         }
+
+        if (secGameState == SecondaryGameStates.INDIRECT_FREEKICK){
+            return gameClock.getSecondaryTime();
+        }
+
 
         if (secGameState == SecondaryGameStates.PENALTYKICK){
             return gameClock.getSecondaryTime();

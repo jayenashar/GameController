@@ -11,8 +11,10 @@ public enum SecondaryGameStates implements DocumentingMarkdown {
     PENALTYSHOOT(1, "Penalty Shoot"),
     OVERTIME(2, "Overtime"),
     TIMEOUT(3, "Timeout"),
-    FREEKICK(4, "Free Kick"),
-    PENALTYKICK(5, "Penalty Kick");
+    DIRECT_FREEKICK(4, "Direct Free Kick"),
+    INDIRECT_FREEKICK(5, "Indirect Free Kick"),
+
+    PENALTYKICK(6, "Penalty Kick");
 
     private byte byte_value;
     private String humanReadable;

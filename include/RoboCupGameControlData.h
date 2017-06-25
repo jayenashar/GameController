@@ -42,8 +42,9 @@
 #define STATE2_PENALTYSHOOT         1
 #define STATE2_OVERTIME             2
 #define STATE2_TIMEOUT              3
-#define STATE2_FREEKICK             4
-#define STATE2_PENALTYKICK          5
+#define STATE2_DIRECT_FREEKICK      4
+#define STATE2_INDIRECT_FREEKICK    5
+#define STATE2_PENALTYKICK          6
 
 #define PENALTY_NONE                        0
 

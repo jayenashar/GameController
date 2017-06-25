@@ -14,4 +14,10 @@ public class FontHelper {
         return new Font(STANDARD_FONT, Font.BOLD, TITLE_FONT_SIZE);
     }
 
+    protected static final int TIME_FONT_SIZE = 50;
+    protected static final int TIME_SUB_FONT_SIZE = 40;
+
+    public static Font timeFont = new Font(STANDARD_FONT, Font.PLAIN,  TIME_FONT_SIZE);
+    public static Font timeSubFont = new Font(STANDARD_FONT, Font.PLAIN,  TIME_SUB_FONT_SIZE);
+
 }

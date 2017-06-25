@@ -2,15 +2,17 @@ package controller.ui.ui.components;
 
 import common.TotalScaleLayout;
 import controller.action.ActionBoard;
-import controller.ui.gameplay.GUI;
+import controller.ui.helper.FontHelper;
 import controller.ui.ui.customized.ImageButton;
 import controller.ui.ui.customized.ImagePanel;
+import data.Helper;
 import data.Rules;
 import data.states.AdvancedData;
 import data.values.GameStates;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 
 /**
@@ -23,7 +25,6 @@ public class ClockComponent extends AbstractComponent {
     private ImageButton incGameClock;
     private ImageButton clockPause;
     private ImageButton clockReset;
-    private ImagePanel clockContainer;
 
 
     private static final String CLOCK_RESET = "reset.png";
@@ -36,9 +37,11 @@ public class ClockComponent extends AbstractComponent {
 
     private static final String ICONS_PATH = "config/icons/";
 
-    protected static final int KICKOFF_BLOCKED_HIGHLIGHT_SECONDS = 3;
+    private static final int KICKOFF_BLOCKED_HIGHLIGHT_SECONDS = 3;
 
-    public static final Color COLOR_HIGHLIGHT = Color.YELLOW;
+    private static final Color COLOR_HIGHLIGHT = Color.YELLOW;
+    private static final Color SUB_CLOCK_COLOUR = Color.LIGHT_GRAY;
+    private static final Color CLOCK_COLOUR = Color.WHITE;
 
     private ImageIcon clockImgReset;
     private ImageIcon clockImgPlay;
@@ -51,8 +54,6 @@ public class ClockComponent extends AbstractComponent {
         clockImgPlus = new ImageIcon(ICONS_PATH + CLOCK_PLUS);
         clockImgPause = new ImageIcon(ICONS_PATH + CLOCK_PAUSE);
 
-
-
         defineLayout();
     }
 
@@ -62,20 +63,26 @@ public class ClockComponent extends AbstractComponent {
         clockReset = new ImageButton(clockImgReset.getImage());
         clockReset.setOpaque(false);
         clockReset.setBorder(null);
+        ImagePanel clockContainer;
         if (Rules.league.lostTime) {
             clockContainer = new ImagePanel(new ImageIcon(ICONS_PATH + BACKGROUND_CLOCK_SMALL).getImage());
         } else {
             clockContainer = new ImagePanel(new ImageIcon(ICONS_PATH + BACKGROUND_CLOCK).getImage());
         }
         clockContainer.setOpaque(false);
+
         clock = new JLabel("10:00");
-        clock.setForeground(Color.WHITE);
+        clock.setForeground(CLOCK_COLOUR);
         clock.setHorizontalAlignment(JLabel.CENTER);
+
         clockPause = new ImageButton(clockImgReset.getImage());
         clockPause.setOpaque(false);
         clockPause.setBorder(null);
+
         clockSub = new JLabel("0:00");
         clockSub.setHorizontalAlignment(JLabel.CENTER);
+        clockSub.setForeground(SUB_CLOCK_COLOUR);
+
         incGameClock = new ImageButton(clockImgPlus.getImage());
         incGameClock.setOpaque(false);
         incGameClock.setBorder(null);
@@ -84,54 +91,55 @@ public class ClockComponent extends AbstractComponent {
         clockPause.setVisible(true);
         clockSub.setVisible(true);
 
-        clockContainer.add(clock);
-        clockContainer.add(clockSub);
-        clockContainer.add(clockPause);
-        clockContainer.add(clockSub);
-        clockContainer.add(clockReset);
-        clockContainer.add(incGameClock);
-        clockContainer.setLayout(new BoxLayout(clockContainer, BoxLayout.Y_AXIS));
+
+        TotalScaleLayout tsl = new TotalScaleLayout(this);
+
+        tsl.add(0, 0, 0.85, 0.5, clock);
+        tsl.add(0, 0.5, 0.85, 0.5, clockSub);
+
+        tsl.add(0.05, 0.05, 0.75, 0.9, clockContainer);
+
+        tsl.add(0.85, 0, 0.15, 0.33, clockPause);
+        tsl.add(0.85, 0.33, 0.15, 0.33, clockReset);
+        tsl.add(0.85, 0.66, 0.15, 0.34, incGameClock);
 
         clockReset.addActionListener(ActionBoard.clockReset);
         clockPause.addActionListener(ActionBoard.clockPause);
         if (Rules.league.lostTime) {
             incGameClock.addActionListener(ActionBoard.incGameClock);
+        } else {
+            incGameClock.setVisible(false);
         }
 
-        this.add(clockContainer);
+        this.setLayout(tsl);
         this.setVisible(true);
     }
 
 
-    protected static final int TIME_FONT_SIZE = 50;
-    protected static final int TIME_SUB_FONT_SIZE = 40;
 
-    private double lastSize = 0;
-    protected static final String STANDARD_FONT = "Helvetica";
 
     @SuppressWarnings("Duplicates")
     @Override
     public void update(AdvancedData data) {
-        Font timeFont = new Font(STANDARD_FONT, Font.PLAIN, (int) (TIME_FONT_SIZE * (1)));
-        Font timeSubFont = new Font(STANDARD_FONT, Font.PLAIN, (int) (TIME_SUB_FONT_SIZE * (1)));
+        // Set the font
+        clock.setFont(FontHelper.timeFont);
+        clockSub.setFont(FontHelper.timeSubFont);
 
-        clock.setFont(timeFont);
-        clockSub.setFont(timeSubFont);
+        clock.setText(Helper.formatTime(data.getRemainingGameTime(true)));
 
-        clock.setText(formatTime(data.getRemainingGameTime(true)));
         Integer secondaryTime = data.getSecondaryTime(KICKOFF_BLOCKED_HIGHLIGHT_SECONDS - 1);
         if (secondaryTime != null) {
             if (data.gameState == GameStates.PLAYING) {
-                clockSub.setText(formatTime(Math.max(0, secondaryTime)));
+                clockSub.setText(Helper.formatTime(Math.max(0, secondaryTime)));
                 clockSub.setForeground(secondaryTime <= 0
-                        && clockSub.getForeground() != COLOR_HIGHLIGHT ? COLOR_HIGHLIGHT : Color.BLACK);
+                        && clockSub.getForeground() != COLOR_HIGHLIGHT ? COLOR_HIGHLIGHT : SUB_CLOCK_COLOUR);
             } else {
-                clockSub.setText(formatTime(secondaryTime));
-                clockSub.setForeground(Color.BLACK);
+                clockSub.setText(Helper.formatTime(secondaryTime));
+                clockSub.setForeground(SUB_CLOCK_COLOUR);
             }
         } else {
             clockSub.setText("");
-            clockSub.setForeground(Color.BLACK);
+            clockSub.setForeground(SUB_CLOCK_COLOUR);
         }
 
         ImageIcon tmp;
@@ -146,11 +154,5 @@ public class ClockComponent extends AbstractComponent {
         if (Rules.league.lostTime) {
             incGameClock.setEnabled(ActionBoard.incGameClock.isLegal(data));
         }
-    }
-
-    private String formatTime(int seconds) {
-        int displaySeconds = Math.abs(seconds) % 60;
-        int displayMinutes = Math.abs(seconds) / 60;
-        return (seconds < 0 ? "-" : "") + String.format("%02d:%02d", displayMinutes, displaySeconds);
     }
 }

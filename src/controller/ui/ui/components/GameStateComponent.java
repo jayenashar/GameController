@@ -40,7 +40,7 @@ public class GameStateComponent extends AbstractComponent {
         stateGroup.add(initial);
         stateGroup.add(ready);
         stateGroup.add(set);
-        stateGroup.add(ready);
+        stateGroup.add(play);
         stateGroup.add(finish);
 
         buttonMapping.put(GameStates.INITIAL, initial);

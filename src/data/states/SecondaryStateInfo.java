@@ -22,9 +22,14 @@ public class SecondaryStateInfo implements Serializable {
         secondaryStateInfo = byte_array;
     }
 
-    /** Switches the mode to free kick and records the team performing it **/
-    public void switchToFreeKick(byte teamPerforming){
+    /**
+     * Updates the additional info in the secondary game state regarding free kicks
+     * @param teamPerforming - The team that is performing the free kick
+     * @param subMode - The mode we are in (0 = prepare, 1 = ready, switch back to normal means execute)
+     */
+    public void setFreeKickData(byte teamPerforming, byte subMode){
         secondaryStateInfo[0] = teamPerforming;
+        secondaryStateInfo[1] = subMode;
     }
 
     public void reset() {

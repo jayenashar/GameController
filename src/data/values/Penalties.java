@@ -1,5 +1,7 @@
 package data.values;
 
+import controller.ui.localization.LocalizationManager;
+
 /**
  * Created by rkessler on 2017-03-25.
  */
@@ -9,8 +11,8 @@ public enum Penalties implements DocumentingMarkdown {
 
     NONE(0, "None", -1),
 
-    SPL_ILLEGAL_BALL_CONTACT(1, "illegal ball contact", 45),
-    SPL_PLAYER_PUSHING(2, "pushing", 45),
+    SPL_ILLEGAL_BALL_CONTACT(1, LocalizationManager.getLocalization().ILLEGAL_BALL_CONTACT, 45),
+    SPL_PLAYER_PUSHING(2, LocalizationManager.getLocalization().PUSHING, 45),
     SPL_ILLEGAL_MOTION_IN_SET(3, "illegal motion in set", 0),
     SPL_INACTIVE_PLAYER(4, "inactive", 45),
     SPL_ILLEGAL_DEFENDER(5, "illegal defender", 45),
