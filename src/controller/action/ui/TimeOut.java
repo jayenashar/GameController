@@ -4,6 +4,8 @@ import common.Log;
 import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
+import data.Rules;
+import data.spl.SPL;
 import data.states.AdvancedData;
 import data.values.GameStates;
 import data.values.SecondaryGameStates;
@@ -43,10 +45,12 @@ public class TimeOut extends GCAction
             data.secGameState = SecondaryGameStates.TIMEOUT;
             data.timeOutActive[side] = true;
             data.timeOutTaken[side] = true;
-            if (data.previousSecGameState != SecondaryGameStates.PENALTYSHOOT) {
-                data.kickOffTeam = data.team[1 - side].teamNumber;
-            } else if (data.gameState == GameStates.SET) {
-                data.team[data.kickOffTeam == data.team[0].teamNumber ? 0 : 1].penaltyShot--;
+            if (Rules.league instanceof SPL) {
+                if (data.previousSecGameState != SecondaryGameStates.PENALTYSHOOT) {
+                    data.kickOffTeam = data.team[1 - side].teamNumber;
+                } else if (data.gameState == GameStates.SET) {
+                    data.team[data.kickOffTeam == data.team[0].teamNumber ? 0 : 1].penaltyShot--;
+                }
             }
             Log.setNextMessage("Timeout " + data.team[side].teamColor);
             data.gameState = GameStates.IMPOSSIBLE; // something impossible to force execution of next call

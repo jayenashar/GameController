@@ -6,7 +6,18 @@ tag they are considered working. An item will be listed in the form:
 - [ ] Planned but not implemented feature
 
 
-### 2017
+### 2017 - v2
+- [x] Drop in challenge for Humanoid League (2017.2)
+- [x] Moved to Protocol Version 12 (2017.2)
+  - Split up FREE_KICK into DIRECT_FREE_KICK and INDIRECT_FREE_KICK
+  - Updated bytes for secondary states
+  - secondary state info got additional field with meaning during free kick
+  - Added number of yellow cards and number of red cards to RobotInfo
+- [x] Direct and Indirect Free-Kick are delivering additional info in secondary state info (2017.2)
+- [X] Moved humanoid normal games to new component based UI (2017.2)
+- [x] Removed switch of kick-off after timeout for HL 
+
+### 2017 - v1
 - [x] Updated Game Controller to Java 1.8 (2017.1)
 - [x] Remove support for Protocol Version 7 (2017.1)
 - [x] Updated Penalty bytes for Humanoid League (2017.1)
@@ -26,4 +37,4 @@ tag they are considered working. An item will be listed in the form:
   - Restricted pressing Finish during a FreeKick Preparation
 - [x] Referee Timeout (2017.1)
 - [x] Align Adult League (2017.1)
-- [ ] Drop in challenge for Humanoid League
+

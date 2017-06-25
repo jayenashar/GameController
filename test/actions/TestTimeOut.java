@@ -3,11 +3,15 @@ package actions;
 import common.Log;
 import controller.action.ActionBoard;
 import controller.action.ui.TimeOut;
+import data.Rules;
+import data.communication.TeamInfo;
+import data.hl.HL;
 import data.states.AdvancedData;
 import data.values.GameStates;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 
@@ -48,5 +52,30 @@ public class TestTimeOut {
         assertTrue(to.isLegal(data));
     }
 
+    @Test
+    public void testTimeoutDoesNotSwitchKickOff() {
+        ActionBoard.init();
+        Rules.league = new HL();
+
+        TimeOut to = new TimeOut(0);
+        AdvancedData data = new AdvancedData();
+        data.gameState = GameStates.READY;
+        data.team = new TeamInfo[2];
+
+        data.team[0] = new TeamInfo();
+        data.team[0].teamNumber = 0;
+
+        data.team[1] = new TeamInfo();
+        data.team[1].teamNumber = 1;
+
+        // Perform it the first time to activate the timeout
+        to.perform(data);
+
+        // Perform it the second time to remove the timeout
+        to.perform(data);
+
+        assertEquals(data.kickOffTeam, data.team[0].teamNumber);
+
+    }
 
 }
