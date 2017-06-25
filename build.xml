@@ -69,7 +69,7 @@
                 <attribute name="Author" value="Felix Thielke" />
             </manifest>
         </jar>
-        <jar destfile="${jar.dir}/TeamCommunicationMonitor.jar" basedir="${classes.dir}" includes="${common_classes} teamcomm/" excludes="teamcomm/gui/drawings/common/">
+        <jar destfile="${jar.dir}/TeamCommunicationMonitor.jar" basedir="${classes.dir}" includes="${common_classes} controller/ teamcomm/" excludes="teamcomm/gui/drawings/common/">
             <manifest>
                 <attribute name="Main-Class" value="teamcomm.TeamCommunicationMonitor"/>
                 <attribute name="Author" value="Felix Thielke" />

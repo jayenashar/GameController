@@ -2,10 +2,7 @@ package teamcomm;
 
 import com.jogamp.opengl.GLProfile;
 import common.ApplicationLock;
-import java.awt.HeadlessException;
-import java.io.IOException;
-import java.net.SocketException;
-import javax.swing.JOptionPane;
+import data.Rules;
 import teamcomm.data.GameState;
 import teamcomm.gui.MainWindow;
 import teamcomm.gui.View3DGSV;
@@ -13,6 +10,11 @@ import teamcomm.net.GameControlDataReceiver;
 import teamcomm.net.SPLStandardMessageReceiverTCM;
 import teamcomm.net.logging.LogReplayer;
 import teamcomm.net.logging.Logger;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.IOException;
+import java.net.SocketException;
 
 /**
  * The team communication monitor starts in this class.
@@ -160,13 +162,17 @@ public class TeamCommunicationMonitor {
     private static final String ARG_WINDOWED = "--windowed";
     private static final String ARG_WINDOWED_SHORT = "-w";
 
+    private static final String ARG_LEAGUE_SHORT = "-l";
+    private static final String ARG_LEAGUE = "--league";
+
     private static void parseArgs(final String[] args) {
-        for (final String arg : args) {
-            switch (arg) {
+        for (int i = 0; i < args.length; i++) {
+            switch (args[i].toLowerCase()) {
                 case ARG_HELP_SHORT:
                 case ARG_HELP:
                     System.out.println("Usage: java -jar TeamCommunicationMonitor.jar {options}"
                             + "\n  (-h | --help)                   display help"
+                            + "\n  (-l | --league) <league>        select league"
                             + "\n  (-s | --silent)                 start in silent mode"
                             + "\n  (--gsv)                         start as GameStateVisualizer");
                     System.exit(0);
@@ -181,8 +187,22 @@ public class TeamCommunicationMonitor {
                 case ARG_GSV:
                     gsvMode = true;
                     break;
+                case ARG_LEAGUE_SHORT:
+                case ARG_LEAGUE:
+                    final String leagueName = args[++i];
+                    for (final Rules league : Rules.LEAGUES) {
+                        if (league.leagueDirectory.equalsIgnoreCase(leagueName)) {
+                            Rules.league = league;
+                        }
+                    }
+                    break;
             }
         }
+        System.out.println("Starting with:");
+        System.out.println("\tleague = " + Rules.league.leagueName);
+        System.out.println("\tgsv = " + gsvMode);
+        System.out.println("\twindowed = " + forceWindowed);
+        System.out.println("\tsilent = " + silentMode);
     }
 
     /**
