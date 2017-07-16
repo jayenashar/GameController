@@ -39,24 +39,32 @@ public class PenaltyKick extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
-        if (!data.penaltyKickActive[side]) {
+        boolean isInPenaltyKick = data.secGameState == SecondaryGameStates.PENALTYKICK;
+
+        if (!isInPenaltyKick) {
             data.previousSecGameState = data.secGameState;
             data.secGameState = SecondaryGameStates.PENALTYKICK;
-            data.secGameStateInfo.switchToPenaltyKick(data.team[side].teamNumber);
+            data.secGameStateInfo.switchToPenaltyKick(data.team[side].teamNumber, (byte) 0);
+
             data.whenPenaltyKick = data.getTime();
-            data.penaltyKickActive[side] = true;
             data.gameClock.setSecondaryClock(Rules.league.penalty_kick_preparation_time);
             Log.setNextMessage("PenaltyKick " + data.team[side].teamColor);
             ActionBoard.clockPause.perform(data);
         } else {
-            data.secGameState = data.previousSecGameState;
-            data.previousSecGameState = SecondaryGameStates.PENALTYKICK;
-            data.secGameStateInfo.reset();
-            data.penaltyKickActive[side] = false;
+            byte team = data.secGameStateInfo.toByteArray()[0];
+            byte subMode = data.secGameStateInfo.toByteArray()[1];
 
-            Log.setNextMessage("End PenaltyKick " + data.team[side].teamColor);
-            ActionBoard.clockPause.perform(data);
-            data.gameClock.setSecondaryClock(10);
+            if (subMode == 0){
+                data.secGameStateInfo.setFreeKickData(team, (byte) 1);
+            } else {
+                data.secGameState = data.previousSecGameState;
+                data.previousSecGameState = SecondaryGameStates.PENALTYKICK;
+                data.secGameStateInfo.reset();
+
+                Log.setNextMessage("End PenaltyKick " + data.team[side].teamColor);
+                ActionBoard.clockPause.perform(data);
+//            data.gameClock.setSecondaryClock(10);
+            }
         }
     }
     
@@ -69,8 +77,14 @@ public class PenaltyKick extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
+        boolean ifInPenaltyKick = true;
+
+        if (data.secGameState == SecondaryGameStates.PENALTYKICK){
+            ifInPenaltyKick = data.secGameStateInfo.toByteArray()[0] == data.team[side].teamNumber;
+        }
+
       return data.testmode || data.gameState == GameStates.PLAYING
-              && !data.penaltyKickActive[1-side]
+              && ifInPenaltyKick
               && data.secGameState != SecondaryGameStates.DIRECT_FREEKICK
               && data.secGameState != SecondaryGameStates.INDIRECT_FREEKICK;
     }

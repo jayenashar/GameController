@@ -14,6 +14,7 @@ public class Localization {
     public final String INDIRECT_FREE_KICK_EXECUTE = "Execute Indirect Free Kick";
 
     public final String PENALTY_KICK_PREPARE = "Prepare Penalty Kick";
+    public final String PENALTY_KICK_FREEZE = "Freeze Penalty Kick";
     public final String PENALTY_KICK_EXECUTE = "Execute Penalty Kick";
 
     public final String COACH = "Coach";

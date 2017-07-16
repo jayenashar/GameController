@@ -37,7 +37,8 @@ public class SecondaryStateInfo implements Serializable {
     }
 
     /** Switches the mode to penalty kick and records the team performing it **/
-    public void switchToPenaltyKick(byte teamPerforming) {
+    public void switchToPenaltyKick(byte teamPerforming, byte submode) {
         secondaryStateInfo[0] = teamPerforming;
+        secondaryStateInfo[1] = submode;
     }
 }

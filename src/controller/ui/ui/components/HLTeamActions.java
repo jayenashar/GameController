@@ -5,9 +5,9 @@ import controller.action.ActionBoard;
 import controller.action.ui.DirectFreeKick;
 import controller.action.ui.IndirectFreeKick;
 import controller.action.ui.PenaltyKick;
-import controller.ui.localization.Localization;
 import controller.ui.localization.LocalizationManager;
 import controller.ui.ui.customized.Button;
+import controller.ui.ui.customized.JMultiStepIndicatorButton;
 import data.states.AdvancedData;
 import data.values.SecondaryGameStates;
 import data.values.Side;
@@ -20,9 +20,9 @@ import java.awt.*;
  */
 public class HLTeamActions extends TeamActions {
 
-    private JButton indirectFreeKick;
-    private JButton directFreeKick;
-    private JButton penaltyKick;
+    private JMultiStepIndicatorButton indirectFreeKick;
+    private JMultiStepIndicatorButton directFreeKick;
+    private JMultiStepIndicatorButton penaltyKick;
 
     public HLTeamActions(Side side) {
         super(side);
@@ -40,10 +40,10 @@ public class HLTeamActions extends TeamActions {
         timeOut = new JToggleButton(TIMEOUT);
         out = new JButton(OUT);
 
-        directFreeKick = new Button(LocalizationManager.getLocalization().DIRECT_FREE_KICK_PREPARE);
-        indirectFreeKick = new Button(LocalizationManager.getLocalization().INDIRECT_FREE_KICK_PREPARE);
+        directFreeKick = new JMultiStepIndicatorButton(LocalizationManager.getLocalization().DIRECT_FREE_KICK_PREPARE, 2);
+        indirectFreeKick = new JMultiStepIndicatorButton(LocalizationManager.getLocalization().INDIRECT_FREE_KICK_PREPARE, 2);
 
-        penaltyKick = new Button(LocalizationManager.getLocalization().PENALTY_KICK_PREPARE);
+        penaltyKick = new JMultiStepIndicatorButton(LocalizationManager.getLocalization().PENALTY_KICK_PREPARE, 2);
 
         directFreeKick.addActionListener(new DirectFreeKick(side.value()));
         indirectFreeKick.addActionListener(new IndirectFreeKick(side.value()));
@@ -94,15 +94,15 @@ public class HLTeamActions extends TeamActions {
             if (isUs){
                 if (subMode == 0){
                     directFreeKick.setText(LocalizationManager.getLocalization().DIRECT_FREE_KICK_FREEZE);
-                    directFreeKick.setBackground(new Color(193, 255, 208));
+                    directFreeKick.setStep(1);
                 } else {
                     directFreeKick.setText(LocalizationManager.getLocalization().DIRECT_FREE_KICK_EXECUTE);
-                    directFreeKick.setBackground(new Color(193, 255, 208));
+                    directFreeKick.setStep(2);
                 }
             }
         } else {
             directFreeKick.setText(LocalizationManager.getLocalization().DIRECT_FREE_KICK_PREPARE);
-            directFreeKick.setBackground(null);
+            directFreeKick.setStep(0);
         }
     }
 
@@ -123,27 +123,44 @@ public class HLTeamActions extends TeamActions {
             if (isUs){
                 if (subMode == 0){
                     indirectFreeKick.setText(LocalizationManager.getLocalization().INDIRECT_FREE_KICK_FREEZE);
-                    indirectFreeKick.setBackground(new Color(193, 255, 208));
+                    indirectFreeKick.setStep(1);
                 } else {
                     indirectFreeKick.setText(LocalizationManager.getLocalization().INDIRECT_FREE_KICK_EXECUTE);
-                    indirectFreeKick.setBackground(new Color(193, 255, 208));
+                    indirectFreeKick.setStep(2);
                 }
             }
         } else {
             indirectFreeKick.setText(LocalizationManager.getLocalization().INDIRECT_FREE_KICK_PREPARE);
-            indirectFreeKick.setBackground(null);
+            indirectFreeKick.setStep(0);
         }
     }
 
     private void updatePenaltyKick(AdvancedData data) {
         // Check whether the button can be pressed
-        penaltyKick.setEnabled(ActionBoard.penaltyKick[side.value()].isLegal(data));
+        penaltyKick.setEnabled(new PenaltyKick(side.value()).isLegal(data));
 
-        // Check if the label of the button needs to be switched
-        if (data.penaltyKickActive[side.value()]) {
-            penaltyKick.setText(LocalizationManager.getLocalization().PENALTY_KICK_EXECUTE);
+
+
+        if (data.secGameState == SecondaryGameStates.PENALTYKICK) {
+            byte[] bytes = data.secGameStateInfo.toByteArray();
+            byte team = bytes[0];
+            byte subMode = bytes[1];
+
+            boolean isUs = team == data.team[side.value()].teamNumber;
+
+            if (isUs) {
+                if (subMode == 0) {
+                    penaltyKick.setText(LocalizationManager.getLocalization().PENALTY_KICK_FREEZE);
+                    penaltyKick.setStep(1);
+                } else {
+                    penaltyKick.setText(LocalizationManager.getLocalization().PENALTY_KICK_EXECUTE);
+                    penaltyKick.setStep(2);
+
+                }
+            }
         } else {
             penaltyKick.setText(LocalizationManager.getLocalization().PENALTY_KICK_PREPARE);
+            penaltyKick.setStep(0);
         }
     }
 }
