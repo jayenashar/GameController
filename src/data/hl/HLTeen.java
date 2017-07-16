@@ -16,6 +16,6 @@ public class HLTeen extends HL
         /** How many robots are in a team. */
         teamSize = 4;
         /** How many robots of each team may play at one time. */
-        robotsPlaying = 2;
+        robotsPlaying = 3;
     }
 }
