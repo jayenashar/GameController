@@ -14,7 +14,7 @@ public class HLTeen extends HL
         /** The league´s directory name with it´s teams and icons. */
         leagueDirectory = "hl_teen";
         /** How many robots are in a team. */
-        teamSize = 4;
+        teamSize = 5;
         /** How many robots of each team may play at one time. */
         robotsPlaying = 3;
     }
