@@ -98,6 +98,7 @@ public class YellowRedCardTeamComponent extends AbstractComponent {
 
         for (int j = 0; j < teamSize; j++) {
             robot[j] = new Robot(side, j);
+            robot[j].setup();
 
             tsc.add(0, 0.1 + robot_height * j + 0.01 * j, 1, robot_height , robot[j]);
 

@@ -14,16 +14,12 @@ import java.awt.*;
 public class HL_GUI extends AbstractUI {
 
     private ButtonGroup kickOffGroup;
-    private AdvancedData initialData;
-    private GamePreparationData gamePrepData;
 
     public HL_GUI(boolean fullscreen, AdvancedData data, GamePreparationData gamePrepData) {
-        super(fullscreen, data);
+        super(fullscreen, data, gamePrepData);
 
         // Set some class variables which are used widely
         kickOffGroup = new ButtonGroup();
-        initialData = data;
-        this.gamePrepData = gamePrepData;
 
         // Setup the UI
         setupUI();

@@ -13,12 +13,11 @@ import java.awt.*;
 
 public class HL_DropIn extends AbstractUI {
 
-    DropInPointCounter dropInPointCounter;
-    ButtonGroup kickOffGroup;
+    private DropInPointCounter dropInPointCounter;
+    private ButtonGroup kickOffGroup;
 
-
-    public HL_DropIn(boolean fullscreen, AdvancedData data, GamePreparationData gpd) {
-        super(fullscreen, data);
+    public HL_DropIn(boolean fullscreen, AdvancedData data, GamePreparationData gamePrepData) {
+        super(fullscreen, data, gamePrepData);
         dropInPointCounter = new DropInPointCounter();
         kickOffGroup = new ButtonGroup();
 
@@ -63,13 +62,18 @@ public class HL_DropIn extends AbstractUI {
         setupRightPanel(right_panel_layout);
 
         // Layouting those three
-        layout.add(.01, .01, .28, .85, left_team_panel);
-        layout.add(.3, .01, .4, .85, center_panel);
-        layout.add(.71, .01, .28, .85, right_team_panel);
+        layout.add(.01, .11, .28, .75, left_team_panel);
+        layout.add(.3, .11, .4, .75, center_panel);
+        layout.add(.71, .11, .28, .75, right_team_panel);
+
+        GameMetaInfo meta_info = new GameMetaInfo(initialData, gamePrepData);
+        uiElements.add(meta_info);
+
+        // Adding the meta level top component
+        layout.add(.01, .01, .98, .07, meta_info);
 
         // Adding the History component
         GameStateHistoryLogger gshl = new GameStateHistoryLogger();
-        gshl.setBackground(new Color(56, 125, 255));
         uiElements.add(gshl);
         layout.add(.01, .88, .98, .10, gshl);
 
@@ -80,7 +84,6 @@ public class HL_DropIn extends AbstractUI {
     private void setupCenterPanel(TotalScaleLayout center_panel_layout) {
 
         SequenceGameStates sgs = new SequenceGameStates();
-        sgs.setBackground(new Color(236, 255, 207));
         uiElements.add(sgs);
         center_panel_layout.add(0.01, 0.01, 0.98, 0.1, sgs);
 
@@ -92,12 +95,10 @@ public class HL_DropIn extends AbstractUI {
         gsc.setBackground(Color.YELLOW);
 
         ClockComponent cc = new ClockComponent();
-        cc.setBackground(Color.red);
         uiElements.add(cc);
         center_panel_layout.add(0.01, 0.21, 0.98, 0.25, cc);
 
         PenaltyComponent pc = new PenaltyComponent();
-        pc.setBackground(new Color(255, 51, 147));
         uiElements.add(pc);
         center_panel_layout.add(0.01, 0.46, 0.98, 0.45, pc);
 
@@ -107,12 +108,11 @@ public class HL_DropIn extends AbstractUI {
         DropInTeamComponent rl_left = new DropInTeamComponent(Side.LEFT, dropInPointCounter, kickOffGroup);
         rl_left.setBackground(Color.green);
         TeamActions ta_left = new HLTeamActions (Side.LEFT);
-        ta_left.setBackground(new Color(255,100, 2));
         uiElements.add(rl_left);
         uiElements.add(ta_left);
 
-        left_panel_layout.add(0.0, 0.0, 1.0, 0.9, rl_left);
-        left_panel_layout.add(0.0, 0.9, 1.0, 0.1, ta_left);
+        left_panel_layout.add(0.0, 0.0, 1.0, 0.8, rl_left);
+        left_panel_layout.add(0.0, 0.8, 1.0, 0.2, ta_left);
     }
 
     @Override
@@ -122,15 +122,13 @@ public class HL_DropIn extends AbstractUI {
 
     private void setupRightPanel(TotalScaleLayout right_team_panel) {
         DropInTeamComponent rl_right = new DropInTeamComponent(Side.RIGHT, dropInPointCounter, kickOffGroup);
-        rl_right.setBackground(new Color(56, 243, 255));
 
         TeamActions ta_right = new HLTeamActions (Side.RIGHT);
-        ta_right.setBackground(new Color(193, 94, 255));
 
         uiElements.add(rl_right);
         uiElements.add(ta_right);
 
-        right_team_panel.add(0.0, 0.0, 1.0, 0.9, rl_right);
-        right_team_panel.add(0.0, 0.9, 1.0, 0.1, ta_right);
+        right_team_panel.add(0.0, 0.0, 1.0, 0.8, rl_right);
+        right_team_panel.add(0.0, 0.8, 1.0, 0.2, ta_right);
     }
 }

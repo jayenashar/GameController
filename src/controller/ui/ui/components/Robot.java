@@ -29,13 +29,13 @@ import java.awt.event.ComponentEvent;
  */
 public class Robot extends AbstractComponent {
 
-    private Side side;
-    private int id;
-    private Button robot;
-    private JLabel robotLabel;
+    protected Side side;
+    protected int id;
+    Button robot;
+    protected JLabel robotLabel;
 
-    private JButton yellowCard;
-    private JButton redCard;
+    protected JButton yellowCard;
+    protected JButton redCard;
 
     private ImageIcon lanIcon;
     private ImageIcon lanOnline;
@@ -43,7 +43,7 @@ public class Robot extends AbstractComponent {
     private ImageIcon lanOffline;
     private ImageIcon lanUnknown;
 
-    private CountDownBar progressBar;
+    protected CountDownBar progressBar;
 
     private static final String ICONS_PATH = "config/icons/";
     private static final String ONLINE = "wlan_status_green.png";
@@ -62,8 +62,6 @@ public class Robot extends AbstractComponent {
         lanHighLatency = new ImageIcon(ICONS_PATH + HIGH_LATENCY);
         lanOffline = new ImageIcon(ICONS_PATH + OFFLINE);
         lanUnknown = new ImageIcon(ICONS_PATH + UNKNOWN_ONLINE_STATUS);
-
-        setup();
     }
 
 
@@ -71,8 +69,6 @@ public class Robot extends AbstractComponent {
         TotalScaleLayout robotLayout = new TotalScaleLayout(robot);
         robot.setLayout(robotLayout);
         robot.removeAll();
-
-        progressBar = new CountDownBar();
 
         // Figure out a way to make this easier
         double rightOffset = 0.01;
@@ -103,6 +99,8 @@ public class Robot extends AbstractComponent {
 
         TotalScaleLayout robotLayout = new TotalScaleLayout(robot);
         robot.setLayout(robotLayout);
+
+        progressBar = new CountDownBar();
 
         robotLabel = new JLabel();
         robotLabel.setHorizontalAlignment(JLabel.LEFT);
@@ -152,8 +150,10 @@ public class Robot extends AbstractComponent {
         int robotId = this.id;
         PlayerInfo robotInfo = data.team[sideValue].player[robotId];
 
+
         // First of all we update the Online Status of the Robot
         updateRobotOnlineStatus();
+
 
         // then we update the yellow and red card buttons with the number of cards
         updatePenaltyCards(robotInfo);

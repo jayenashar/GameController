@@ -5,16 +5,9 @@ import controller.ui.helper.FontHelper;
 import data.communication.TeamInfo;
 import data.states.AdvancedData;
 import data.states.GamePreparationData;
-import data.teams.TeamsLoader;
 import data.values.Side;
 
 import javax.swing.*;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-
-import static controller.ui.ui.components.DropInTeamComponent.ICONS_PATH;
-import static controller.ui.ui.components.TeamComponent.ONLINE;
 
 
 /**
