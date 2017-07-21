@@ -2,6 +2,7 @@ package data.states;
 
 import data.Helper;
 import data.Rules;
+import data.hl.HL;
 import data.hl.HLDropIn;
 import data.teams.TeamLoadInfo;
 import data.teams.TeamsLoader;
@@ -112,8 +113,10 @@ public class GamePreparationData {
 
         if (team_index == 0){
             firstTeam = new PrepTeam(new_team);
+            firstTeam.setTeamColor("red");
         } else {
             secondTeam = new PrepTeam(new_team);
+            secondTeam.setTeamColor("blue");
         }
     }
 
