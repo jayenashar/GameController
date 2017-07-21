@@ -4,6 +4,7 @@ import common.TotalScaleLayout;
 import controller.EventHandler;
 import controller.action.ActionBoard;
 import controller.action.GCAction;
+import controller.action.ui.penalty.HLPushing;
 import controller.action.ui.penalty.Penalty;
 import controller.ui.ui.customized.ToggleButton;
 import data.Rules;
@@ -70,7 +71,7 @@ public class PenaltyComponent extends AbstractComponent {
 
         if (Rules.league instanceof HL) {
             addButtonByPenalty(Penalties.HL_BALL_MANIPULATION, ActionBoard.ballManipulation);
-            addButtonByPenalty(Penalties.HL_PHYSICAL_CONTACT, ActionBoard.pushing);
+            addButtonByPenalty(Penalties.HL_PHYSICAL_CONTACT, new HLPushing());
             addButtonByPenalty(Penalties.HL_ILLEGAL_ATTACK, ActionBoard.attack);
             addButtonByPenalty(Penalties.HL_ILLEGAL_DEFENSE, ActionBoard.defense);
             addButtonByPenalty(Penalties.HL_PICKUP_OR_INCAPABLE, ActionBoard.pickUpHL);
