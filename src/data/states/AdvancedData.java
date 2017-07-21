@@ -15,10 +15,7 @@ import data.Rules;
 import data.spl.SPLCoachMessage;
 import data.communication.TeamInfo;
 import data.communication.GameControlData;
-import data.values.GameStates;
-import data.values.GameTypes;
-import data.values.Penalties;
-import data.values.SecondaryGameStates;
+import data.values.*;
 
 /**
  * This class extends the GameControlData that is send to the robots. It
@@ -472,6 +469,10 @@ public class AdvancedData extends GameControlData implements Cloneable
                 }
             }
         }
+    }
+
+    public TeamInfo getTeam(Side side) {
+        return team[side.value()];
     }
 
     public class PenaltyQueueData  implements Serializable {

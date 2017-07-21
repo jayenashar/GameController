@@ -1,6 +1,5 @@
 package data.states;
 
-import data.communication.GameControlData;
 import data.teams.TeamLoadInfo;
 import data.values.TeamColors;
 
@@ -19,10 +18,6 @@ public class PrepTeam {
 
     public PrepTeam(TeamLoadInfo teamLoadInfo){
         this.teamLoadInfo = teamLoadInfo;
-
-        if (teamLoadInfo.colors == null){
-            int a = 1;
-        }
 
         if (teamLoadInfo.colors == null || teamLoadInfo.colors.length == 0){
             this.teamColor = "Blue";

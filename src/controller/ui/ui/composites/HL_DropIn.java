@@ -4,6 +4,7 @@ import common.TotalScaleLayout;
 import controller.ui.ui.AbstractUI;
 import controller.ui.ui.components.*;
 import data.states.AdvancedData;
+import data.states.GamePreparationData;
 import data.values.Side;
 
 import javax.swing.*;
@@ -16,7 +17,7 @@ public class HL_DropIn extends AbstractUI {
     ButtonGroup kickOffGroup;
 
 
-    public HL_DropIn(boolean fullscreen, AdvancedData data) {
+    public HL_DropIn(boolean fullscreen, AdvancedData data, GamePreparationData gpd) {
         super(fullscreen, data);
         dropInPointCounter = new DropInPointCounter();
         kickOffGroup = new ButtonGroup();

@@ -6,10 +6,9 @@ import controller.action.ui.CardIncrease;
 import controller.net.RobotOnlineStatus;
 import controller.net.RobotWatcher;
 import controller.ui.helper.FontHelper;
-import controller.ui.localization.Localization;
 import controller.ui.localization.LocalizationManager;
 import controller.ui.ui.customized.Button;
-import controller.ui.ui.customized.CountDownCircle;
+import controller.ui.ui.customized.CountDownBar;
 import data.Helper;
 import data.PlayerInfo;
 import data.Rules;
@@ -20,6 +19,7 @@ import data.values.Penalties;
 import data.values.Side;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -31,7 +31,7 @@ public class Robot extends AbstractComponent {
 
     private Side side;
     private int id;
-    private JButton robot;
+    private Button robot;
     private JLabel robotLabel;
 
     private JButton yellowCard;
@@ -43,6 +43,7 @@ public class Robot extends AbstractComponent {
     private ImageIcon lanOffline;
     private ImageIcon lanUnknown;
 
+    private CountDownBar progressBar;
 
     private static final String ICONS_PATH = "config/icons/";
     private static final String ONLINE = "wlan_status_green.png";
@@ -52,8 +53,6 @@ public class Robot extends AbstractComponent {
     public static final Color COLOR_HIGHLIGHT = Color.YELLOW;
 
     private static final int UNPEN_HIGHLIGHT_SECONDS = 10;
-
-    private CountDownCircle robotTime;
 
 
     public Robot(Side side, int id) {
@@ -73,23 +72,24 @@ public class Robot extends AbstractComponent {
         robot.setLayout(robotLayout);
         robot.removeAll();
 
-        // Figure out a way to make this easier
-        double rightOffset = 0.05;
+        progressBar = new CountDownBar();
 
-        double robotTimeWidth = 0.8 / aspectRatio;
-        robotLayout.add(1 - robotTimeWidth - rightOffset, 0.1, robotTimeWidth, 0.8, robotTime);
+        // Figure out a way to make this easier
+        double rightOffset = 0.01;
 
         double cardWidth = 0.4 / aspectRatio;
-        robotLayout.add(1-robotTimeWidth-cardWidth - rightOffset, 0.1, cardWidth, 0.8, yellowCard);
-        robotLayout.add(1-robotTimeWidth-2*cardWidth - rightOffset, 0.1, cardWidth, 0.8, redCard);
+        robotLayout.add(1-cardWidth - rightOffset, 0.1, cardWidth, 0.75, yellowCard);
+        robotLayout.add(1-2*cardWidth - rightOffset, 0.1, cardWidth, 0.75, redCard);
 
-        double restWidth = 1 - robotTimeWidth-2*cardWidth - rightOffset;
+        double restWidth = 1 - 2*cardWidth - rightOffset;
 
-        robotLayout.add(0, 0, restWidth, 1, robotLabel);
+        robotLayout.add(0, 0, restWidth, 0.9, robotLabel);
+
+        robotLayout.add(0, 0.9, 1, 0.1, progressBar);
     }
 
     public void setup() {
-        robot = new JButton();
+        robot = new Button();
         robot.addActionListener(ActionBoard.robot[side.value()][this.id]);
         robot.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
@@ -105,11 +105,9 @@ public class Robot extends AbstractComponent {
         robot.setLayout(robotLayout);
 
         robotLabel = new JLabel();
-        robotLabel.setHorizontalAlignment(JLabel.CENTER);
+        robotLabel.setHorizontalAlignment(JLabel.LEFT);
         robotLabel.setIcon(lanIcon);
-
-        robotTime = new CountDownCircle();
-        robotTime.setVisible(false);
+        robotLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         yellowCard = new Button("Yellow");
         yellowCard.addActionListener(new CardIncrease(side, this.id, Color.YELLOW));
@@ -201,16 +199,16 @@ public class Robot extends AbstractComponent {
                     // Update the robot time component
                     int penTime = (seconds + data.getSecondsSince(data.whenPenalized[sideValue][robotId]));
                     double percent = 100.0 * seconds / (double) penTime;
-                    robotTime.updateValue(seconds, percent);
+                    progressBar.updateValue(percent);
                 } else {
                     robotLabel.setText(LocalizationManager.getLocalization().EJECTED);
-                    robotTime.setVisible(false);
                     highlight(robot, false);
+                    progressBar.setVisible(false);
                 }
             } else {
                 robotLabel.setText(data.team[sideValue].teamColor + " " + (robotId + 1));
-                robotTime.setVisible(false);
                 highlight(robot, false);
+                progressBar.setVisible(false);
             }
         }
     }

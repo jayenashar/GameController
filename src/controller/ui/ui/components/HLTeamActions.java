@@ -49,12 +49,12 @@ public class HLTeamActions extends TeamActions {
         indirectFreeKick.addActionListener(new IndirectFreeKick(side.value()));
         penaltyKick.addActionListener(new PenaltyKick(side.value()));
 
-        layout.add(0, 0, 0.33, 0.5, timeOut);
-        layout.add(0.33, 0, 0.33, 0.5, out);
-        layout.add(0.66, 0, 0.34, 0.5, penaltyKick);
+        layout.add(0, 0, 0.5, 0.25, timeOut);
+        layout.add(0.5, 0, 0.5, 0.25, out);
 
-        layout.add(0, 0.5, 0.5, 0.5, directFreeKick);
-        layout.add(0.5, 0.5, 0.5, 0.5, indirectFreeKick);
+        layout.add(0, 0.25, 1, 0.25, penaltyKick);
+        layout.add(0, 0.5, 1, 0.25, directFreeKick);
+        layout.add(0, 0.75, 1, 0.25, indirectFreeKick);
 
         timeOut.setVisible(true);
         out.setVisible(true);

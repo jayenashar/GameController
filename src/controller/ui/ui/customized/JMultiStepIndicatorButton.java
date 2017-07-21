@@ -23,8 +23,15 @@ public class JMultiStepIndicatorButton extends Button {
 
         _currentStep = 0;
         _maxSteps = steps;
+    }
 
+    public JMultiStepIndicatorButton() {
+        super("");
+        setContentAreaFilled(false);
+        setFocusPainted(false); // used for demonstration
 
+        _currentStep = 0;
+        _maxSteps = 1;
     }
 
     public void setStep(int step){

@@ -2,6 +2,7 @@ package data.communication;
 
 import data.PlayerInfo;
 import data.spl.SPLCoachMessage;
+import data.states.PrepTeam;
 import data.values.TeamColors;
 
 import java.io.Serializable;
@@ -48,7 +49,10 @@ public class TeamInfo implements Serializable
     public byte[] coachMessage = new byte[SPLCoachMessage.SPL_COACH_MESSAGE_SIZE];
     public PlayerInfo coach = new PlayerInfo();
     public PlayerInfo[] player = new PlayerInfo[MAX_NUM_PLAYERS];   // the team's players
-    
+
+    private String teamName; // The teams display name
+
+
     /**
      * Creates a new TeamInfo.
      */
@@ -57,6 +61,7 @@ public class TeamInfo implements Serializable
         for (int i=0; i<player.length; i++) {
             player[i] = new PlayerInfo();
         }
+        teamName = "";
     }
     
     /**
@@ -116,5 +121,19 @@ public class TeamInfo implements Serializable
         out += "       coachMessage: "+new String(coachMessage)+"\n";
         out += "        coachStatus: "+coach.toString()+"\n";
         return out;
+    }
+
+    /**
+     * Initializes the team from the Prep Team from the selection window
+     * @param team - information about the team
+     */
+    public void initialize(PrepTeam team) {
+        this.teamNumber = (byte) team.getTeamInfo().identifier;
+        this.teamColor = team.getTeamColorAsByte();
+        this.teamName = team.getTeamInfo().name;
+    }
+
+    public String getName(){
+        return this.teamName;
     }
 }

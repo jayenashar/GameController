@@ -4,6 +4,7 @@ import common.TotalScaleLayout;
 import controller.ui.ui.AbstractUI;
 import controller.ui.ui.components.*;
 import data.states.AdvancedData;
+import data.states.GamePreparationData;
 import data.values.Side;
 
 import javax.swing.*;
@@ -14,13 +15,15 @@ public class HL_GUI extends AbstractUI {
 
     private ButtonGroup kickOffGroup;
     private AdvancedData initialData;
+    private GamePreparationData gamePrepData;
 
-    public HL_GUI(boolean fullscreen, AdvancedData data) {
+    public HL_GUI(boolean fullscreen, AdvancedData data, GamePreparationData gamePrepData) {
         super(fullscreen, data);
 
         // Set some class variables which are used widely
         kickOffGroup = new ButtonGroup();
         initialData = data;
+        this.gamePrepData = gamePrepData;
 
         // Setup the UI
         setupUI();
@@ -61,9 +64,16 @@ public class HL_GUI extends AbstractUI {
         setupRightPanel(right_panel_layout);
 
         // Layouting those three
-        layout.add(.01, .01, .28, .85, left_team_panel);
-        layout.add(.3, .01, .4, .85, center_panel);
-        layout.add(.71, .01, .28, .85, right_team_panel);
+        layout.add(.01, .11, .28, .75, left_team_panel);
+        layout.add(.3, .11, .4, .75, center_panel);
+        layout.add(.71, .11, .28, .75, right_team_panel);
+
+
+        GameMetaInfo meta_info = new GameMetaInfo(initialData, gamePrepData);
+        uiElements.add(meta_info);
+
+        // Adding the meta level top component
+        layout.add(.01, .01, .98, .07, meta_info);
 
         // Adding the History component
         GameStateHistoryLogger gshl = new GameStateHistoryLogger();
@@ -81,28 +91,28 @@ public class HL_GUI extends AbstractUI {
 
         GameStateComponent gsc = new GameStateComponent();
         uiElements.add(gsc);
-        center_panel_layout.add(0.01, 0.11, 0.98, 0.1, gsc);
+        center_panel_layout.add(0.01, 0.12, 0.98, 0.05, gsc);
 
         ClockComponent cc = new ClockComponent();
         uiElements.add(cc);
-        center_panel_layout.add(0.01, 0.21, 0.98, 0.25, cc);
+        center_panel_layout.add(0.01, 0.18, 0.98, 0.25, cc);
 
         PenaltyComponent pc = new PenaltyComponent();
         uiElements.add(pc);
-        center_panel_layout.add(0.01, 0.46, 0.98, 0.45, pc);
+        center_panel_layout.add(0.01, 0.44, 0.98, 0.45, pc);
 
     }
 
     private void setupLeftPanel(TotalScaleLayout left_panel_layout) {
-        YellowRedCardTeamComponent rl_left = new YellowRedCardTeamComponent(Side.LEFT, kickOffGroup);
+        YellowRedCardTeamComponent rl_left = new YellowRedCardTeamComponent(Side.LEFT, kickOffGroup, initialData);
 
         TeamActions ta_left = new HLTeamActions (Side.LEFT);
 
         uiElements.add(rl_left);
         uiElements.add(ta_left);
 
-        left_panel_layout.add(0.0, 0.0, 1.0, 0.9, rl_left);
-        left_panel_layout.add(0.0, 0.9, 1.0, 0.1, ta_left);
+        left_panel_layout.add(0.0, 0.0, 1.0, 0.8, rl_left);
+        left_panel_layout.add(0.0, 0.8, 1.0, 0.2, ta_left);
     }
 
     @Override
@@ -111,14 +121,14 @@ public class HL_GUI extends AbstractUI {
     }
 
     private void setupRightPanel(TotalScaleLayout right_team_panel) {
-        YellowRedCardTeamComponent rl_right = new YellowRedCardTeamComponent(Side.RIGHT, kickOffGroup);
+        YellowRedCardTeamComponent rl_right = new YellowRedCardTeamComponent(Side.RIGHT, kickOffGroup, initialData);
 
         TeamActions ta_right = new HLTeamActions (Side.RIGHT);
 
         uiElements.add(rl_right);
         uiElements.add(ta_right);
 
-        right_team_panel.add(0.0, 0.0, 1.0, 0.9, rl_right);
-        right_team_panel.add(0.0, 0.9, 1.0, 0.1, ta_right);
+        right_team_panel.add(0.0, 0.0, 1.0, 0.8, rl_right);
+        right_team_panel.add(0.0, 0.8, 1.0, 0.2, ta_right);
     }
 }

@@ -221,11 +221,8 @@ public class GameController {
 
         AdvancedData data = new AdvancedData();
 
-        data.team[0].teamNumber = (byte) gpd.getFirstTeam().getTeamInfo().identifier;
-        data.team[1].teamNumber = (byte) gpd.getSecondTeam().getTeamInfo().identifier;
-
-        data.team[0].teamColor = gpd.getFirstTeam().getTeamColorAsByte();
-        data.team[1].teamColor = gpd.getSecondTeam().getTeamColorAsByte();
+        data.team[0].initialize(gpd.getFirstTeam());
+        data.team[1].initialize(gpd.getSecondTeam());
 
         data.kickOffTeam = (byte) gpd.getFirstTeam().getTeamInfo().identifier;
         data.colorChangeAuto = gpd.isAutoColorChange();
@@ -294,13 +291,13 @@ public class GameController {
 
         GCGUI gui;
         if (Rules.league.leagueDirectory.equals("hl_dropin")){
-            gui = new HL_DropIn(gpd.getFullScreen(), data);
+            gui = new HL_DropIn(gpd.getFullScreen(), data, gpd);
         }
         else{
             if (Rules.league instanceof SPL) {
                 gui = new GUI(gpd.getFullScreen(), data);
             } else {
-                gui = new HL_GUI(gpd.getFullScreen(), data);
+                gui = new HL_GUI(gpd.getFullScreen(), data, gpd);
             }
         }
 

@@ -96,10 +96,10 @@ public class SequenceGameStates extends AbstractComponent {
 
         TotalScaleLayout layout = new TotalScaleLayout(this);
 
-        layout.add(0.00, 0, 0.12, 1, firstHalf);
-        layout.add(0.12, 0, 0.12, 1, secondHalf);
-        layout.add(0.24, 0, 0.12, 1, firstHalfOvertime);
-        layout.add(0.36, 0, 0.12, 1, secondHalfOvertime);
+        layout.add(0.00, 0, 0.24, 0.5, firstHalf);
+        layout.add(0.00, 0.5, 0.24, 0.5, secondHalf);
+        layout.add(0.24, 0, 0.24, 0.5, firstHalfOvertime);
+        layout.add(0.24, 0.5, 0.24, 0.5, secondHalfOvertime);
         layout.add(0.48, 0, 0.17, 1, penaltyShoot);
         layout.add(0.65, 0, 0.17, 1, refereeTimeout);
         layout.add(0.82, 0, 0.18, 1, dropBall);
