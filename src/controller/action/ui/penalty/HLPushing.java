@@ -45,4 +45,8 @@ public class HLPushing extends Penalty
             || (data.gameState == GameStates.PLAYING)
             || (data.testmode);
     }
+
+    public boolean equals(Object other){
+        return other instanceof HLPushing;
+    }
 }

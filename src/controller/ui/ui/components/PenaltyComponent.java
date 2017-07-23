@@ -6,6 +6,7 @@ import controller.action.ActionBoard;
 import controller.action.GCAction;
 import controller.action.ui.penalty.HLPushing;
 import controller.action.ui.penalty.Penalty;
+
 import controller.ui.ui.customized.ToggleButton;
 import data.Rules;
 import data.hl.HL;
@@ -14,6 +15,8 @@ import data.states.AdvancedData;
 import data.values.Penalties;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -87,7 +90,6 @@ public class PenaltyComponent extends AbstractComponent {
             layout.add(0, i * height, 1, height, tb);
         }
 
-
         this.add(penaltyButtonContainer);
         this.setVisible(true);
         this.setLayout(
@@ -97,6 +99,11 @@ public class PenaltyComponent extends AbstractComponent {
 
     @Override
     public void update(AdvancedData data) {
+        // Clear current selection
+        if (penaltyGroup != null) {
+            penaltyGroup.clearSelection();
+        }
+
         if (Rules.league instanceof HL) {
             updatePenaltiesHL(data);
         } else {
@@ -169,8 +176,9 @@ public class PenaltyComponent extends AbstractComponent {
 
 
         GCAction hightlightEvent = EventHandler.getInstance().lastUIEvent;
+
         penaltyButtons.get(Penalties.HL_BALL_MANIPULATION).setSelected(hightlightEvent == ActionBoard.ballManipulation);
-        penaltyButtons.get(Penalties.HL_PHYSICAL_CONTACT).setSelected(hightlightEvent == ActionBoard.pushing);
+        penaltyButtons.get(Penalties.HL_PHYSICAL_CONTACT).setSelected(new HLPushing().equals(hightlightEvent));
         penaltyButtons.get(Penalties.HL_ILLEGAL_ATTACK).setSelected(hightlightEvent == ActionBoard.attack);
         penaltyButtons.get(Penalties.HL_ILLEGAL_DEFENSE).setSelected(hightlightEvent == ActionBoard.defense);
         penaltyButtons.get(Penalties.HL_PICKUP_OR_INCAPABLE).setSelected(hightlightEvent == ActionBoard.pickUpHL);
