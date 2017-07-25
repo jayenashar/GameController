@@ -43,7 +43,7 @@ public class GameStateHistoryLogger extends AbstractComponent {
             undo[i] = new ToggleButton();
             undo[i].setVisible(false);
             undo[i].addActionListener(ActionBoard.undo[i+1]);
-            layout.add(i*elementWidth, 0, elementWidth, 1, undo[i]);
+            layout.add(1-elementWidth-cancelWidth-i*elementWidth, 0, elementWidth, 1, undo[i]);
         }
 
         cancelUndo = new Button(CANCEL);
