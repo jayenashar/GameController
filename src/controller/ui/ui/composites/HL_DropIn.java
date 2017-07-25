@@ -115,11 +115,6 @@ public class HL_DropIn extends AbstractUI {
         left_panel_layout.add(0.0, 0.8, 1.0, 0.2, ta_left);
     }
 
-    @Override
-    public void dispose() {
-        dispose();
-    }
-
     private void setupRightPanel(TotalScaleLayout right_team_panel) {
         DropInTeamComponent rl_right = new DropInTeamComponent(Side.RIGHT, dropInPointCounter, kickOffGroup);
 
