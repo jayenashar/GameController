@@ -40,10 +40,9 @@ public class HLTeamActions extends TeamActions {
         timeOut = new JToggleButton(TIMEOUT);
         out = new JButton(OUT);
 
-        directFreeKick = new JMultiStepIndicatorButton(LocalizationManager.getLocalization().DIRECT_FREE_KICK_PREPARE, 2);
-        indirectFreeKick = new JMultiStepIndicatorButton(LocalizationManager.getLocalization().INDIRECT_FREE_KICK_PREPARE, 2);
-
-        penaltyKick = new JMultiStepIndicatorButton(LocalizationManager.getLocalization().PENALTY_KICK_PREPARE, 2);
+        directFreeKick = new JMultiStepIndicatorButton(LocalizationManager.getLocalization().DIRECT_FREE_KICK, 2);
+        indirectFreeKick = new JMultiStepIndicatorButton(LocalizationManager.getLocalization().INDIRECT_FREE_KICK, 2);
+        penaltyKick = new JMultiStepIndicatorButton(LocalizationManager.getLocalization().PENALTY_KICK, 2);
 
         directFreeKick.addActionListener(new DirectFreeKick(side.value()));
         indirectFreeKick.addActionListener(new IndirectFreeKick(side.value()));
@@ -92,8 +91,8 @@ public class HLTeamActions extends TeamActions {
             boolean isUs = team == data.team[side.value()].teamNumber;
 
             if (isUs){
-                if (subMode == 0){
-                    directFreeKick.setText(LocalizationManager.getLocalization().DIRECT_FREE_KICK_FREEZE);
+                if (subMode == 1){
+                    directFreeKick.setText(LocalizationManager.getLocalization().DIRECT_FREE_KICK_READY);
                     directFreeKick.setStep(1);
                 } else {
                     directFreeKick.setText(LocalizationManager.getLocalization().DIRECT_FREE_KICK_EXECUTE);
@@ -101,7 +100,7 @@ public class HLTeamActions extends TeamActions {
                 }
             }
         } else {
-            directFreeKick.setText(LocalizationManager.getLocalization().DIRECT_FREE_KICK_PREPARE);
+            directFreeKick.setText(LocalizationManager.getLocalization().DIRECT_FREE_KICK);
             directFreeKick.setStep(0);
         }
     }
@@ -121,8 +120,8 @@ public class HLTeamActions extends TeamActions {
             boolean isUs = team == data.team[side.value()].teamNumber;
 
             if (isUs){
-                if (subMode == 0){
-                    indirectFreeKick.setText(LocalizationManager.getLocalization().INDIRECT_FREE_KICK_FREEZE);
+                if (subMode == 1){
+                    indirectFreeKick.setText(LocalizationManager.getLocalization().INDIRECT_FREE_KICK_READY);
                     indirectFreeKick.setStep(1);
                 } else {
                     indirectFreeKick.setText(LocalizationManager.getLocalization().INDIRECT_FREE_KICK_EXECUTE);
@@ -130,7 +129,7 @@ public class HLTeamActions extends TeamActions {
                 }
             }
         } else {
-            indirectFreeKick.setText(LocalizationManager.getLocalization().INDIRECT_FREE_KICK_PREPARE);
+            indirectFreeKick.setText(LocalizationManager.getLocalization().INDIRECT_FREE_KICK);
             indirectFreeKick.setStep(0);
         }
     }
@@ -149,8 +148,8 @@ public class HLTeamActions extends TeamActions {
             boolean isUs = team == data.team[side.value()].teamNumber;
 
             if (isUs) {
-                if (subMode == 0) {
-                    penaltyKick.setText(LocalizationManager.getLocalization().PENALTY_KICK_FREEZE);
+                if (subMode == 1) {
+                    penaltyKick.setText(LocalizationManager.getLocalization().PENALTY_KICK_READY);
                     penaltyKick.setStep(1);
                 } else {
                     penaltyKick.setText(LocalizationManager.getLocalization().PENALTY_KICK_EXECUTE);
@@ -159,7 +158,7 @@ public class HLTeamActions extends TeamActions {
                 }
             }
         } else {
-            penaltyKick.setText(LocalizationManager.getLocalization().PENALTY_KICK_PREPARE);
+            penaltyKick.setText(LocalizationManager.getLocalization().PENALTY_KICK);
             penaltyKick.setStep(0);
         }
     }

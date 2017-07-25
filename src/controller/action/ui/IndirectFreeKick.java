@@ -42,10 +42,9 @@ public class IndirectFreeKick extends GCAction
         if (!isInDirectfreeKick) {
             data.previousSecGameState = data.secGameState;
             data.secGameState = SecondaryGameStates.INDIRECT_FREEKICK;
-            data.secGameStateInfo.setFreeKickData(data.team[side].teamNumber, (byte) 0);
+            data.secGameStateInfo.setFreeKickData(data.team[side].teamNumber, (byte) 1);
 
-            data.whenFreeKick = data.getTime();
-            data.gameClock.setSecondaryClock(Rules.league.free_kick_preparation_time);
+
             Log.setNextMessage("IndirectFreeKick " + data.team[side].teamColor.toString());
             ActionBoard.clockPause.perform(data);
         } else {
@@ -53,8 +52,10 @@ public class IndirectFreeKick extends GCAction
             byte team = data.secGameStateInfo.toByteArray()[0];
             byte subMode = data.secGameStateInfo.toByteArray()[1];
 
-            if (subMode == 0){
-                data.secGameStateInfo.setFreeKickData(team, (byte) 1);
+            if (subMode == 1){
+                data.secGameStateInfo.setFreeKickData(team, (byte) 0);
+                data.whenFreeKick = data.getTime();
+                data.gameClock.setSecondaryClock(Rules.league.free_kick_preparation_time);
             } else {
                 data.secGameState = data.previousSecGameState;
                 data.previousSecGameState = SecondaryGameStates.INDIRECT_FREEKICK;
