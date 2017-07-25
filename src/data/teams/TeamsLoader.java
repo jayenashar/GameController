@@ -156,4 +156,13 @@ public class TeamsLoader
     public ArrayList<TeamLoadInfo> getTeamLoadInfoList(String leagueName) {
         return _team_mapping.get(leagueName);
     }
+
+    public Map<Integer, TeamLoadInfo> getTeamLoadInfoMap(String leagueName) {
+        ArrayList<TeamLoadInfo> all_tlis = _team_mapping.get(leagueName);
+        Map<Integer, TeamLoadInfo> map = new HashMap<>();
+        for (TeamLoadInfo tli: all_tlis) {
+            map.put(tli.identifier, tli);
+        }
+        return map;
+    }
 }
