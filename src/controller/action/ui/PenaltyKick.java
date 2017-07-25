@@ -86,6 +86,7 @@ public class PenaltyKick extends GCAction
       return data.testmode || data.gameState == GameStates.PLAYING
               && ifInPenaltyKick
               && data.secGameState != SecondaryGameStates.DIRECT_FREEKICK
+              && data.secGameState != SecondaryGameStates.PENALTYSHOOT
               && data.secGameState != SecondaryGameStates.INDIRECT_FREEKICK;
     }
 }

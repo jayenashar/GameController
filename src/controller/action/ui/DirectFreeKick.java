@@ -77,6 +77,7 @@ public class DirectFreeKick extends GCAction
         return data.testmode || data.gameState == GameStates.PLAYING
               && ifInDirectFreeKickItsMe
               && data.secGameState != SecondaryGameStates.PENALTYKICK
+              && data.secGameState != SecondaryGameStates.PENALTYSHOOT
               && data.secGameState != SecondaryGameStates.INDIRECT_FREEKICK;
     }
 }
