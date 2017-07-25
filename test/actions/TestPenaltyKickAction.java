@@ -48,14 +48,14 @@ public class TestPenaltyKickAction {
 
         assertEquals(secondaryGameState, data.secGameState);
         assertEquals(14, data.secGameStateInfo.toByteArray()[0]);
-        assertEquals(0, data.secGameStateInfo.toByteArray()[1]);
+        assertEquals(1, data.secGameStateInfo.toByteArray()[1]);
 
         // Perform it again and expect the substate to move forward by one
         fk.perform(data);
 
         assertEquals(secondaryGameState, data.secGameState);
         assertEquals(14, data.secGameStateInfo.toByteArray()[0]);
-        assertEquals(1, data.secGameStateInfo.toByteArray()[1]);
+        assertEquals(0, data.secGameStateInfo.toByteArray()[1]);
 
         // Perform it again and expect it being the previous state again
         fk.perform(data);
