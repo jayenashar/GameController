@@ -24,25 +24,36 @@ public class CardIncrease extends GCAction {
         this.color = color;
     }
 
+    private void giveRedCard(AdvancedData data){
+        int currentCount = data.team[side.value()].player[player].redCardCount;
+
+        if (currentCount == 0){
+            data.team[side.value()].player[player].redCardCount = 1;
+            Log.state(data, "Added red card");
+        }
+    }
+
+    private void giveYellowCard(AdvancedData data){
+        int currentCount = data.team[side.value()].player[player].yellowCardCount;
+
+        if (currentCount < 2){
+            currentCount += 1;
+            data.team[side.value()].player[player].yellowCardCount = (byte) currentCount;
+            Log.state(data, "Added yellow card");
+        }
+
+        if (currentCount == 2){
+            giveRedCard(data);
+        }
+    }
+
     @Override
     public void perform(AdvancedData data) {
         if (this.color == Color.YELLOW) {
-            int currentCount = data.team[side.value()].player[player].yellowCardCount;
-
-            if (currentCount < 2){
-                data.team[side.value()].player[player].yellowCardCount += 1;
-                Log.state(data, "Added yellow card");
-            }
-
-
+            giveYellowCard(data);
         }
         if (this.color == Color.RED) {
-            int currentCount = data.team[side.value()].player[player].redCardCount;
-
-            if (currentCount == 0){
-                data.team[side.value()].player[player].redCardCount = 1;
-                Log.state(data, "Added red card");
-            }
+            giveRedCard(data);
         }
     }
 
