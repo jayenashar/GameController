@@ -20,6 +20,8 @@ public class GameMetaInfo extends AbstractComponent {
     private JLabel left_team;
     private JLabel right_team;
 
+    private String[] team_name;
+
     private JLabel score_label;
 
 
@@ -71,5 +73,12 @@ public class GameMetaInfo extends AbstractComponent {
         String left = String.valueOf(data.team[Side.LEFT.value()].score);
         String right = String.valueOf(data.team[Side.RIGHT.value()].score);
         score_label.setText(left + " - " + right);
+
+
+        left_team.setText(data.team[Side.LEFT.value()].getName());
+        left_team.setBackground(data.team[Side.LEFT.value()].teamColor.colorValue());
+
+        right_team.setText(data.team[Side.RIGHT.value()].getName());
+        right_team.setBackground(data.team[Side.RIGHT.value()].teamColor.colorValue());
     }
 }
