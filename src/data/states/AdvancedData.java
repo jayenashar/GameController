@@ -210,8 +210,6 @@ public class AdvancedData extends GameControlData implements Cloneable
         secsRemaining = (short) getRemainingGameTime(false);
         dropInTime = whenDropIn == 0 ? -1 : (short) getSecondsSince(whenDropIn);
         Integer subT = getSecondaryTime(0);
-        System.out.println(subT);
-
 
         if (subT == null) {
             secondaryTime = 0;
