@@ -54,12 +54,12 @@ public class IndirectFreeKick extends GCAction
 
             if (subMode == 1){
                 data.secGameStateInfo.setFreeKickData(team, (byte) 0);
-                data.whenFreeKick = data.getTime();
                 data.gameClock.setSecondaryClock(Rules.league.free_kick_preparation_time);
             } else {
                 data.secGameState = data.previousSecGameState;
                 data.previousSecGameState = SecondaryGameStates.INDIRECT_FREEKICK;
                 data.secGameStateInfo.reset();
+                data.gameClock.clearSecondaryClock();
                 Log.setNextMessage("End IndirectFreeKick " + data.team[side].teamColor.toString());
                 ActionBoard.clockPause.perform(data);
             }

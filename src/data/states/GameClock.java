@@ -19,6 +19,11 @@ public class GameClock implements Serializable {
         secondaryTime = time_in_seconds;
     }
 
+    public void clearSecondaryClock(){
+        secondaryTimeStart = 0;
+        secondaryTime = 0;
+    }
+
 
 
     public long getTime()

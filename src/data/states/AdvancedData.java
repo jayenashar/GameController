@@ -50,12 +50,6 @@ public class AdvancedData extends GameControlData implements Cloneable
 
     /** The Game Clock object that can be stopped, paused, etc. **/
     public GameClock gameClock;
-
-    /** When was the last FreeKick? (ms, 0 = never) */
-    public long whenFreeKick;
-
-    /** When was the last PenaltyKick? (ms, 0 = never) */
-    public long whenPenaltyKick;
     
     /** When was each player penalized last (ms, 0 = never)? */
     public long[][] whenPenalized = Rules.league.isCoachAvailable ? new long[2][Rules.league.teamSize+1] : new long[2][Rules.league.teamSize];

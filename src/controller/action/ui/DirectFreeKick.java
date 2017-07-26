@@ -52,7 +52,6 @@ public class DirectFreeKick extends GCAction
             byte subMode = data.secGameStateInfo.toByteArray()[1];
 
             if (subMode == 1){
-                data.whenFreeKick = data.getTime();
                 data.gameClock.setSecondaryClock(Rules.league.free_kick_preparation_time);
 
                 data.secGameStateInfo.setFreeKickData(team, (byte) 0);
@@ -60,6 +59,7 @@ public class DirectFreeKick extends GCAction
                 data.secGameState = data.previousSecGameState;
                 data.previousSecGameState = SecondaryGameStates.DIRECT_FREEKICK;
                 data.secGameStateInfo.reset();
+                data.gameClock.clearSecondaryClock();
                 Log.setNextMessage("End DirectFreeKick " + data.team[side].teamColor.toString());
                 ActionBoard.clockPause.perform(data);
             }
