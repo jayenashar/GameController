@@ -7,11 +7,15 @@ import java.io.Serializable;
  */
 public class GameClock implements Serializable {
 
-    private int secondaryTime;
-    private long secondaryTimeStart;
+    private Integer secondaryTime;
+    private Long secondaryTimeStart;
 
     public Integer getSecondaryTime() {
-        return getRemainingSeconds(secondaryTimeStart, secondaryTime);
+        if (secondaryTimeStart == null || secondaryTime == null){
+            return null;
+        } else {
+            return getRemainingSeconds(secondaryTimeStart, secondaryTime);
+        }
     }
 
     public void setSecondaryClock(int time_in_seconds){
@@ -20,8 +24,8 @@ public class GameClock implements Serializable {
     }
 
     public void clearSecondaryClock(){
-        secondaryTimeStart = 0;
-        secondaryTime = 0;
+        secondaryTimeStart = null;
+        secondaryTime = null;
     }
 
 
