@@ -22,6 +22,7 @@ public class GameStateComponent extends AbstractComponent {
     protected JToggleButton set;
     protected JToggleButton play;
     protected JToggleButton finish;
+    protected JLabel secondaryGameState;
 
     protected JPanel gameStateButtonContainer;
 
@@ -29,10 +30,22 @@ public class GameStateComponent extends AbstractComponent {
 
     public GameStateComponent(){
         initial = new ToggleButton(GameStates.INITIAL.toString());
+        initial.setHorizontalAlignment(JLabel.CENTER);
+
         ready = new ToggleButton(GameStates.READY.toString());
+        ready.setHorizontalAlignment(JLabel.CENTER);
+
         set = new ToggleButton(GameStates.SET.toString());
+        set.setHorizontalAlignment(JLabel.CENTER);
+
         play = new ToggleButton(GameStates.PLAYING.toString());
+        play.setHorizontalAlignment(JLabel.CENTER);
+
         finish = new ToggleButton(GameStates.FINISHED.toString());
+        finish.setHorizontalAlignment(JLabel.CENTER);
+
+        secondaryGameState = new JLabel();
+        secondaryGameState.setHorizontalAlignment(JLabel.CENTER);
 
         initial.setSelected(true);
 
@@ -64,11 +77,12 @@ public class GameStateComponent extends AbstractComponent {
         TotalScaleLayout layout = new TotalScaleLayout(gameStateButtonContainer);
 
         gameStateButtonContainer.setLayout(layout);
-        layout.add(0, 0, 0.2, 1, initial);
-        layout.add(0.2, 0, 0.2, 1, ready);
-        layout.add(0.4, 0, 0.2, 1, set);
-        layout.add(0.6, 0, 0.2, 1, play);
-        layout.add(0.8, 0, 0.2, 1, finish);
+        layout.add(0, 0, 0.16, 1, initial);
+        layout.add(0.16, 0, 0.16, 1, ready);
+        layout.add(0.32, 0, 0.16, 1, set);
+        layout.add(0.48, 0, 0.16, 1, play);
+        layout.add(0.64, 0, 0.16, 1, finish);
+        layout.add(0.80, 0, 0.20, 1, secondaryGameState);
 
         //gameStateButtonContainer.setSize(100, 100);
         gameStateButtonContainer.setVisible(true);
@@ -87,7 +101,13 @@ public class GameStateComponent extends AbstractComponent {
         play.setEnabled(ActionBoard.play.isLegal(data));
         finish.setEnabled(ActionBoard.finish.isLegal(data));
 
-        buttonMapping.get(data.gameState).setSelected(true);
+        JToggleButton tb = buttonMapping.get(data.gameState);
+
+        if (tb != null){
+            tb.setSelected(true);
+        }
+
+        secondaryGameState.setText(data.secGameState.toString());
 
         highlight(finish, (data.gameState != GameStates.FINISHED)
                 && (data.getRemainingGameTime(true) <= GUI.FINISH_HIGHLIGHT_SECONDS)

@@ -53,9 +53,12 @@ public class TimeOut extends GCAction
                 }
             }
             Log.setNextMessage("Timeout " + data.team[side].teamColor);
+            Log.state(data, "End of Timeout " + data.team[side].teamColor);
+            data.gameClock.setSecondaryClock(Rules.league.timeOutTime);
             data.gameState = GameStates.IMPOSSIBLE; // something impossible to force execution of next call
             ActionBoard.initial.perform(data);
         } else {
+            data.gameClock.clearSecondaryClock();
             data.secGameState = data.previousSecGameState;
             data.previousSecGameState = SecondaryGameStates.TIMEOUT;
             data.timeOutActive[side] = false;
