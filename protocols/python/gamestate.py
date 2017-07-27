@@ -1,52 +1,54 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
-from construct import *
-from construct.formats.filesystem.ext2 import Short
+from construct import Byte, Struct, Enum, Bytes, Const, Array, Renamed, Short
 
-RobotInfo = Struct("robot_info",
-                   # define NONE                        0
-                   # define PENALTY_HL_KID_BALL_MANIPULATION    1
-                   # define PENALTY_HL_KID_PHYSICAL_CONTACT     2
-                   # define PENALTY_HL_KID_ILLEGAL_ATTACK       3
-                   # define PENALTY_HL_KID_ILLEGAL_DEFENSE      4
-                   # define PENALTY_HL_KID_REQUEST_FOR_PICKUP   5
-                   # define PENALTY_HL_KID_REQUEST_FOR_SERVICE  6
-                   # define PENALTY_HL_KID_REQUEST_FOR_PICKUP_2_SERVICE 7
-                   # define MANUAL                      15
-                   Byte("penalty"),
-                   Byte("secs_till_unpenalised")
-                   )
+RobotInfo = "robot_info" / Struct(
+    # define NONE                        0
+    # define PENALTY_HL_KID_BALL_MANIPULATION    1
+    # define PENALTY_HL_KID_PHYSICAL_CONTACT     2
+    # define PENALTY_HL_KID_ILLEGAL_ATTACK       3
+    # define PENALTY_HL_KID_ILLEGAL_DEFENSE      4
+    # define PENALTY_HL_KID_REQUEST_FOR_PICKUP   5
+    # define PENALTY_HL_KID_REQUEST_FOR_SERVICE  6
+    # define PENALTY_HL_KID_REQUEST_FOR_PICKUP_2_SERVICE 7
+    # define MANUAL                      15
+    "penalty" / Byte,
+    "secs_till_unpenalised" / Byte,
+    "number_of_yellow_cards" / Byte,
+    "number_of_red_cards" / Byte
+)
 
-TeamInfo = Struct("team",
-                  Byte("team_number"),
-                  Enum(Byte("team_color"),
-                       BLUE=0,
-                       RED=1,
-                       YELLOW=2,
-                       BLACK=3,
-                       WHITE=4,
-                       GREEN=5,
-                       ORANGE=6,
-                       PURPLE=7,
-                       BROWN=8,
-                       GRAY=9),
-                  Byte("score"),
-                  Byte("penalty_shot"),  # penalty shot counter
-                  Short("single_shots"),  # bits represent penalty shot success
-                  Byte("coach_sequence"),
-                  Bytes("coach_message", 253),
-                  Rename("coach", RobotInfo),
-                  Array(11, Rename("players", RobotInfo))
-                  )
+TeamInfo = "team" / Struct(
+    "team_number" / Byte,
+    "team_color" / Enum(Byte,
+                        BLUE=0,
+                        RED=1,
+                        YELLOW=2,
+                        BLACK=3,
+                        WHITE=4,
+                        GREEN=5,
+                        ORANGE=6,
+                        PURPLE=7,
+                        BROWN=8,
+                        GRAY=9
+                        ),
+    "score" / Byte,
+    "penalty_shot" / Byte,  # penalty shot counter
+    "single_shots" / Short,  # bits represent penalty shot success
+    "coach_sequence" / Byte,
+    "coach_message" / Bytes(253),
+    Renamed("coach", RobotInfo),
+    "players" / Array(11, RobotInfo)
+)
 
-GameState = Struct("gamedata",
-                   Const(Bytes("header", 4), "RGme"),
-                   Const(Byte("version"), 12),
-                   Short("packet_number"),
-                   Byte("players_per_team"),
-                   Byte("game_type"),
-                   Enum(Byte("game_state"),
+GameState = "gamedata" / Struct(
+    "header" / Const(Bytes(4), b'RGme'),
+    "version" / Const(Byte, 12),
+    "packet_number" / Short,
+    "players_per_team" / Byte,
+    "game_type" / Byte,
+    "game_state" / Enum(Byte,
                         STATE_INITIAL=0,
                         # auf startposition gehen
                         STATE_READY=1,
@@ -57,31 +59,31 @@ GameState = Struct("gamedata",
                         # spiel zu ende
                         STATE_FINISHED=4
                         ),
-                   Byte("first_half"),
-                   Byte("kick_of_team"),
-                   Enum(Byte("secondary_state"),
-                        STATE_NORMAL=0,
-                        STATE_PENALTYSHOOT=1,
-                        STATE_OVERTIME=2,
-                        STATE_TIMEOUT=3,
-                        STATE_FREEKICK=4,
-                        STATE_PENALTYKICK=5,
-                        DROPBALL=128),
-                   Bytes("secondary_state_info", 4),
-                   Byte("drop_in_team"),
-                   Short("drop_in_time"),
-                   Short("seconds_remaining"),
-                   Short("secondary_seconds_remaining"),
-
-                   Array(2, Rename("teams", TeamInfo))
-                   )
+    "first_half" / Byte,
+    "kick_of_team" / Byte,
+    "secondary_state" / Enum(Byte,
+                             STATE_NORMAL=0,
+                             STATE_PENALTYSHOOT=1,
+                             STATE_OVERTIME=2,
+                             STATE_TIMEOUT=3,
+                             STATE_FREEKICK=4,
+                             STATE_PENALTYKICK=5,
+                             DROPBALL=128
+                             ),
+    "secondary_state_info" / Bytes(4),
+    "drop_in_team" / Byte,
+    "drop_in_time" / Short,
+    "seconds_remaining" / Short,
+    "secondary_seconds_remaining" / Short,
+    Array(2, Renamed("teams", TeamInfo))
+)
 
 GAME_CONTROLLER_RESPONSE_VERSION = 2
 
-ReturnData = Struct("returndata",
-                    Const(Bytes("header", 4), "RGrt"),
-                    Const(Byte("version"), 2),
-                    Byte("team"),
-                    Byte("player"),
-                    Byte("message")
-                    )
+ReturnData = "returndata" / Struct(
+    "header" / Const(Bytes(4), b"RGrt"),
+    "version" / Const(Byte, 2),
+    "team" / Byte,
+    "player" / Byte,
+    "message" / Byte
+)
