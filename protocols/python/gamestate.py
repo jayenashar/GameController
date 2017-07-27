@@ -42,7 +42,7 @@ TeamInfo = Struct("team",
 
 GameState = Struct("gamedata",
                    Const(Bytes("header", 4), "RGme"),
-                   Const(Byte("version"), 11),
+                   Const(Byte("version"), 12),
                    Short("packet_number"),
                    Byte("players_per_team"),
                    Byte("game_type"),
