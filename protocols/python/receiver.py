@@ -87,7 +87,7 @@ class GameStateReceiver(object):
         try:
             data, peer = self.socket.recvfrom(GameState.sizeof())
 
-            print (len(data))
+            print(len(data))
             # Throws a ConstError if it doesn't work
             parsed_state = GameState.parse(data)
 
@@ -116,7 +116,7 @@ class GameStateReceiver(object):
         return_message = 0 if self.man_penalize else 2
 
         data = Container(
-            header="RGrt",
+            header=b"RGrt",
             version=GAME_CONTROLLER_RESPONSE_VERSION,
             team=self.team,
             player=self.player,
