@@ -274,9 +274,7 @@ public class AdvancedData extends GameControlData implements Cloneable
      */
     public Integer getRemainingPauseTime()
     {
-        if (Rules.league.dropInPlayerMode) {
-            return null;
-        } else if (secGameState == SecondaryGameStates.NORMAL
+        if (secGameState == SecondaryGameStates.NORMAL
                 && (gameState == GameStates.INITIAL && firstHalf != C_TRUE && !timeOutActive[0] && !timeOutActive[1]
                 || gameState == GameStates.FINISHED && firstHalf == C_TRUE)) {
             return getRemainingSeconds(whenCurrentGameStateBegan, Rules.league.pauseTime);
