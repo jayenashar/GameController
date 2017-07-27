@@ -38,7 +38,7 @@ public class FirstHalf extends GCAction
         if (data.firstHalf != GameControlData.C_TRUE || data.secGameState == SecondaryGameStates.PENALTYSHOOT) {
             data.firstHalf = GameControlData.C_TRUE;
             data.secGameState = SecondaryGameStates.NORMAL;
-            changeSide(data);
+            data.changeSide();
             data.kickOffTeam = (data.leftSideKickoff ? data.team[0].teamNumber : data.team[1].teamNumber);
             data.kickOffReason = AdvancedData.KICKOFF_HALF;
             data.gameState = GameStates.INITIAL;
@@ -67,34 +67,5 @@ public class FirstHalf extends GCAction
      * 
      * @param data      The current data to work on.
      */
-    public static void changeSide(AdvancedData data)
-    {
-        TeamInfo team = data.team[0];
-        data.team[0] = data.team[1];
-        data.team[1] = team;
-        boolean[] ejected = data.ejected[0];
-        data.ejected[0] = data.ejected[1];
-        data.ejected[1] = ejected;
-        // if necessary, swap back team colors
-        if (data.secGameState != SecondaryGameStates.PENALTYSHOOT
-                && data.colorChangeAuto) {
-            TeamColors color = data.team[0].teamColor;
-            data.team[0].teamColor = data.team[1].teamColor;
-            data.team[1].teamColor = color;
-        }
-        
-        if (Rules.league.timeOutPerHalf && (data.secGameState != SecondaryGameStates.PENALTYSHOOT)) {
-            data.timeOutTaken = new boolean[] {false, false};
-        } else {
-            boolean timeOutTaken = data.timeOutTaken[0];
-            data.timeOutTaken[0] = data.timeOutTaken[1];
-            data.timeOutTaken[1] = timeOutTaken;
-        }
-        
-        data.timeBeforeCurrentGameState = 0;
-        data.whenDropIn = 0;
-        if(data.secGameState != SecondaryGameStates.PENALTYSHOOT) {
-            data.resetPenalties();
-        }
-    }
+
 }

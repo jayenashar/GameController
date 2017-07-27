@@ -1,6 +1,7 @@
 package controller.ui.ui.components;
 
 import data.states.AdvancedData;
+import data.states.GamePreparationData;
 import data.values.Penalties;
 import data.values.Side;
 
@@ -11,12 +12,14 @@ import java.util.Map;
  * A class counting the drop in points for all players
  * Created by rkessler on 2017-05-01.
  */
-public class DropInPointCounter {
+public class DropInPointCounter extends AbstractComponent {
 
     private Map<Side, int[]> robotPoints;
     private Map<Side, Refreshable> componentMap;
+    private boolean sides_as_started;
 
     public DropInPointCounter(){
+        sides_as_started = true;
         robotPoints = new HashMap<>();
         componentMap = new HashMap<>();
     }
@@ -30,7 +33,12 @@ public class DropInPointCounter {
         componentMap.put(side, refreshable);
     }
 
+
     public void scoreGoal(AdvancedData data, Side teamScoring){
+        if (!sides_as_started){
+            teamScoring = teamScoring.getOther();
+        }
+
         int[] pointList = robotPoints.get(teamScoring);
 
         for (int i = 0; i < pointList.length; i++){
@@ -46,14 +54,34 @@ public class DropInPointCounter {
             pointListOther[i] -= 1;
         }
 
-        componentMap.get(teamScoring.getOther()).refresh();
+        refreshAll();
+    }
+
+    private void refreshAll(){
+        componentMap.get(Side.LEFT).refresh();
+        componentMap.get(Side.RIGHT).refresh();
     }
 
     public int getPoints(Side side, int idx) {
+        if (!sides_as_started){
+            side = side.getOther();
+        }
         return robotPoints.get(side)[idx];
     }
 
     public void deltaPoints(Side side, int idx, int delta) {
+        if (!sides_as_started){
+            side = side.getOther();
+        }
+
         robotPoints.get(side)[idx] += delta;
+    }
+
+    @Override
+    public void update(AdvancedData data) {
+        if (this.sides_as_started != data.sides_as_started){
+            this.sides_as_started = data.sides_as_started;
+            refreshAll();
+        }
     }
 }

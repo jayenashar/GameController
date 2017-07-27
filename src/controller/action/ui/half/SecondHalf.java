@@ -37,7 +37,7 @@ public class SecondHalf extends GCAction
         if (data.firstHalf != GameControlData.C_FALSE || data.secGameState == SecondaryGameStates.PENALTYSHOOT) {
             data.firstHalf = GameControlData.C_FALSE;
             data.secGameState = SecondaryGameStates.NORMAL;
-            FirstHalf.changeSide(data);
+            data.changeSide();
             data.kickOffTeam = (data.leftSideKickoff ? data.team[0].teamNumber : data.team[1].teamNumber);
             data.kickOffReason = AdvancedData.KICKOFF_HALF;
             data.gameState = GameStates.INITIAL;
@@ -55,8 +55,7 @@ public class SecondHalf extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
-        return (!Rules.league.dropInPlayerMode
-                && (((data.firstHalf != GameControlData.C_TRUE)
+        return ((((data.firstHalf != GameControlData.C_TRUE)
                         && (data.secGameState == SecondaryGameStates.NORMAL))
                    || ((data.secGameState == SecondaryGameStates.NORMAL)
                         && (data.gameState == GameStates.FINISHED))))

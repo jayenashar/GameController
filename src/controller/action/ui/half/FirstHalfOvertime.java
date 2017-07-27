@@ -38,7 +38,7 @@ public class FirstHalfOvertime extends GCAction
         if (data.firstHalf != GameControlData.C_TRUE || data.secGameState == SecondaryGameStates.PENALTYSHOOT) {
             data.firstHalf = GameControlData.C_TRUE;
             data.secGameState = SecondaryGameStates.OVERTIME;
-            FirstHalf.changeSide(data);
+            data.changeSide();
             data.kickOffTeam = (data.leftSideKickoff ? data.team[0].teamNumber : data.team[1].teamNumber);
             data.gameState = GameStates.INITIAL;
             Log.state(data, "1st Half Extra Time");

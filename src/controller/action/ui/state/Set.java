@@ -46,7 +46,7 @@ public class Set extends GCAction {
             data.timeBeforeCurrentGameState = 0;
             if (data.gameState != GameStates.INITIAL) {
                 data.kickOffTeam = data.team[data.kickOffTeam == data.team[0].teamNumber ? 1 : 0].teamNumber;
-                FirstHalf.changeSide(data);
+                data.changeSide();
             }
             if (data.gameState != GameStates.PLAYING) {
                 data.team[data.team[0].teamNumber == data.kickOffTeam ? 0 : 1].penaltyShot++;
