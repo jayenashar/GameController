@@ -3,6 +3,7 @@ package controller.ui.ui.components;
 import common.TotalScaleLayout;
 import controller.action.ActionBoard;
 import controller.ui.gameplay.GUIBackup;
+import controller.ui.localization.LocalizationManager;
 import controller.ui.ui.customized.Button;
 import controller.ui.ui.customized.ToggleButton;
 import data.Rules;
@@ -18,7 +19,6 @@ import javax.swing.*;
  */
 public class SequenceGameStates extends AbstractComponent {
 
-    protected static final String REFEREE_TIMEOUT = "Referee<br/>Timeout";
     protected static final String FIRST_HALF = "First Half";
     protected static final String SECOND_HALF = "Second Half";
     protected static final String FIRST_HALF_SHORT = "1st Half";
@@ -48,12 +48,13 @@ public class SequenceGameStates extends AbstractComponent {
 
 
     public void defineLayout() {
+
         if (!Rules.league.overtime) {
             firstHalf = new ToggleButton(FIRST_HALF);
             firstHalf.setSelected(true);
             secondHalf = new ToggleButton(SECOND_HALF);
             penaltyShoot = new ToggleButton(PENALTY_SHOOT);
-            refereeTimeout = new ToggleButton(REFEREE_TIMEOUT);
+            refereeTimeout = new ToggleButton(LocalizationManager.getLocalization().TAKE_REFEREE_TIMEOUT);
 
             halfGroup = new ButtonGroup();
             halfGroup.add(firstHalf);
@@ -68,7 +69,7 @@ public class SequenceGameStates extends AbstractComponent {
             firstHalfOvertime = new ToggleButton(FIRST_HALF_OVERTIME);
             secondHalfOvertime = new ToggleButton(SECOND_HALF_OVERTIME);
             penaltyShoot = new ToggleButton(PENALTY_SHOOT_SHORT);
-            refereeTimeout = new ToggleButton(REFEREE_TIMEOUT);
+            refereeTimeout = new ToggleButton(LocalizationManager.getLocalization().TAKE_REFEREE_TIMEOUT);
 
             halfGroup = new ButtonGroup();
             halfGroup.add(firstHalf);
@@ -138,6 +139,12 @@ public class SequenceGameStates extends AbstractComponent {
                     && (data.firstHalf != GameControlData.C_TRUE));
         }
         penaltyShoot.setSelected(data.secGameState == SecondaryGameStates.PENALTYSHOOT || data.previousSecGameState == SecondaryGameStates.PENALTYSHOOT);
+
+        if (data.refereeTimeout) {
+            refereeTimeout.setText(LocalizationManager.getLocalization().END_REFEREE_TIMEOUT);
+        } else {
+            refereeTimeout.setText(LocalizationManager.getLocalization().TAKE_REFEREE_TIMEOUT);
+        }
 
         refereeTimeout.setSelected(data.refereeTimeout);
         refereeTimeout.setEnabled(ActionBoard.refereeTimeout.isLegal(data));

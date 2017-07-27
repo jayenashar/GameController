@@ -43,5 +43,9 @@ public class GameClock implements Serializable {
         return durationInSeconds - getSecondsSince(millis);
     }
 
+    public boolean isSecondaryClockLowerThan(Integer value) {
+        Integer secondaryClock = getSecondaryTime();
+        return secondaryClock != null && secondaryClock <= value;
+    }
 
 }

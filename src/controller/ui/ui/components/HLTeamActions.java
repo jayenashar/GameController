@@ -37,7 +37,7 @@ public class HLTeamActions extends TeamActions {
         TotalScaleLayout layout = new TotalScaleLayout(container);
         container.setLayout(layout);
 
-        timeOut = new JToggleButton(TIMEOUT);
+        timeOut = new JButton(LocalizationManager.getLocalization().TAKE_TIMEOUT);
         out = new JButton(OUT);
 
         directFreeKick = new JMultiStepIndicatorButton(LocalizationManager.getLocalization().DIRECT_FREE_KICK, 2);

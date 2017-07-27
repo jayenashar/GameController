@@ -2,22 +2,14 @@ package controller.ui.ui.components;
 
 import common.TotalScaleLayout;
 import controller.action.ActionBoard;
-import controller.net.RobotOnlineStatus;
-import controller.net.RobotWatcher;
-import controller.ui.gameplay.GUI;
-import controller.ui.ui.customized.Button;
+import controller.ui.localization.LocalizationManager;
 import data.Rules;
-import data.communication.GameControlData;
-import data.hl.HL;
 import data.spl.SPL;
 import data.states.AdvancedData;
 import data.values.GameStates;
-import data.values.Penalties;
-import data.values.SecondaryGameStates;
 import data.values.Side;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * Created by rkessler on 2017-03-29.
@@ -26,33 +18,32 @@ public class TeamActions extends AbstractComponent {
 
     private static final int TIMEOUT_HIGHLIGHT_SECONDS = 10;
 
-    protected static final String TIMEOUT = "Timeout";
     protected static final String OUT = "Out";
     protected static final String STUCK = "Global <br/> Game <br/> Stuck";
 
     protected Side side;
 
-    protected JToggleButton timeOut;
+    protected JButton timeOut;
     protected JButton stuck;
     protected JButton out;
 
     protected JPanel container;
 
-    public TeamActions(Side side){
+    public TeamActions(Side side) {
         this.side = side;
 
         defineLayout();
     }
 
 
-    public void defineLayout(){
+    public void defineLayout() {
         container = new JPanel();
         container.setVisible(true);
 
         TotalScaleLayout layout = new TotalScaleLayout(container);
         container.setLayout(layout);
 
-        timeOut = new JToggleButton(TIMEOUT);
+        timeOut = new JButton(LocalizationManager.getLocalization().TAKE_TIMEOUT);
         out = new JButton(OUT);
         stuck = new JButton(STUCK);
 
@@ -101,51 +92,52 @@ public class TeamActions extends AbstractComponent {
     /**
      * Updates the time-out.
      *
-     * @param data     The current data (model) the GUI should view.
+     * @param data The current data (model) the GUI should view.
      */
-    protected void updateTimeOut(AdvancedData data)
-    {
+    protected void updateTimeOut(AdvancedData data) {
+
+        if (data.timeOutActive[side.value()]) {
+            timeOut.setText(LocalizationManager.getLocalization().END_TIMEOUT);
+        } else {
+            timeOut.setText(LocalizationManager.getLocalization().TAKE_TIMEOUT);
+        }
+
         if (!data.timeOutActive[side.value()]) {
             timeOut.setSelected(false);
-            highlight(timeOut, false);
+            resetHighlighting(timeOut);
         } else {
-            boolean shouldHighlight = (data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.timeOutTime) < TIMEOUT_HIGHLIGHT_SECONDS)
-                    && (timeOut.getBackground() != GUI.COLOR_HIGHLIGHT);
-            timeOut.setSelected(!GUI.IS_OSX || !shouldHighlight);
-            highlight(timeOut, shouldHighlight);
+            if (data.isSecondaryClockLowerThan(TIMEOUT_HIGHLIGHT_SECONDS)) {
+                highlight(timeOut);
+            }
         }
-        timeOut.setEnabled(ActionBoard.timeOut[side.value()].isLegal(data));
 
+        timeOut.setEnabled(ActionBoard.timeOut[side.value()].isLegal(data));
     }
 
     /**
      * Updates the global game stuck.
      *
-     * @param data     The current data (model) the GUI should view.
+     * @param data The current data (model) the GUI should view.
      */
-    protected void updateGlobalStuck(AdvancedData data)
-    {
+    protected void updateGlobalStuck(AdvancedData data) {
         if (data.gameState == GameStates.PLAYING
-                && data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime + Rules.league.minDurationBeforeStuck) > 0)
-        {
+                && data.getRemainingSeconds(data.whenCurrentGameStateBegan, Rules.league.kickoffTime + Rules.league.minDurationBeforeStuck) > 0) {
             stuck.setEnabled(false);
-            stuck.setText("<font color=#808080>"+STUCK);
+            stuck.setText("<font color=#808080>" + STUCK);
         } else {
             stuck.setEnabled(ActionBoard.stuck[side.value()].isLegal(data));
-            stuck.setText((ActionBoard.stuck[side.value()].isLegal(data) ? "<font color=#000000>" : "<font color=#808080>")+STUCK);
+            stuck.setText((ActionBoard.stuck[side.value()].isLegal(data) ? "<font color=#000000>" : "<font color=#808080>") + STUCK);
         }
 
     }
 
 
-
     /**
      * Updates the out.
      *
-     * @param data     The current data (model) the GUI should view.
+     * @param data The current data (model) the GUI should view.
      */
-    protected void updateOut(AdvancedData data)
-    {
+    protected void updateOut(AdvancedData data) {
         out.setEnabled(ActionBoard.out[side.value()].isLegal(data));
     }
 }

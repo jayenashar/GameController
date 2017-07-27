@@ -524,4 +524,9 @@ public class AdvancedData extends GameControlData implements Cloneable
         sides_as_started = !sides_as_started;
     }
 
+    public boolean isSecondaryClockLowerThan(Integer value){
+        return getSecondaryTime(0) <= value || gameClock.isSecondaryClockLowerThan(value);
+
+    }
+
 }

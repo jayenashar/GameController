@@ -22,4 +22,11 @@ public class Localization {
 
     public final String ILLEGAL_BALL_CONTACT = "illegal ball contact";
     public final String PUSHING = "pushing";
+
+
+    public final String TAKE_TIMEOUT = "Take Timeout";
+    public final String END_TIMEOUT = "End Timeout";
+
+    public final String TAKE_REFEREE_TIMEOUT = "Take<br>Referee<br>Timeout";
+    public final String END_REFEREE_TIMEOUT = "End<br>Referee<br>Timeout";
 }

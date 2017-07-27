@@ -30,6 +30,19 @@ public abstract class AbstractComponent extends JPanel {
         }
     }
 
+    void highlight(AbstractButton button)
+    {
+        if (button.getBackground() == COLOR_STANDARD){
+            button.setBackground(COLOR_HIGHLIGHT);
+        } else {
+            button.setBackground(COLOR_STANDARD);
+        }
+    }
+
+    void resetHighlighting(AbstractButton button){
+        button.setBackground(COLOR_STANDARD);
+    }
+
     public abstract void update(AdvancedData data);
 
 }
