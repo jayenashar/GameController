@@ -17,14 +17,14 @@ import java.util.List;
  */
 public abstract class AbstractUI extends JFrame implements GCGUI {
 
-    protected List<AbstractComponent> uiElements;
+    protected List<AbstractComponent> elementsReceivingUpdates;
     protected AdvancedData initialData;
     protected GamePreparationData gamePrepData;
 
     public AbstractUI(boolean fullscreen, AdvancedData initialData, GamePreparationData gamePrepData){
         super("GameController");
 
-        uiElements = new ArrayList<>();
+        elementsReceivingUpdates = new ArrayList<>();
         this.initialData = initialData;
         this.gamePrepData = gamePrepData;
 
@@ -40,7 +40,7 @@ public abstract class AbstractUI extends JFrame implements GCGUI {
 
     @Override
     public void update(AdvancedData data) {
-        for(AbstractComponent uiPart : uiElements){
+        for(AbstractComponent uiPart : elementsReceivingUpdates){
             uiPart.update(data);
         }
         repaint();

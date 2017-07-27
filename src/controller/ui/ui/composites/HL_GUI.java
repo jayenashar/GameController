@@ -8,7 +8,6 @@ import data.states.GamePreparationData;
 import data.values.Side;
 
 import javax.swing.*;
-import java.awt.*;
 
 
 public class HL_GUI extends AbstractUI {
@@ -66,14 +65,14 @@ public class HL_GUI extends AbstractUI {
 
 
         GameMetaInfo meta_info = new GameMetaInfo(initialData, gamePrepData);
-        uiElements.add(meta_info);
+        elementsReceivingUpdates.add(meta_info);
 
         // Adding the meta level top component
         layout.add(.01, .01, .98, .07, meta_info);
 
         // Adding the History component
         GameStateHistoryLogger gshl = new GameStateHistoryLogger();
-        uiElements.add(gshl);
+        elementsReceivingUpdates.add(gshl);
         layout.add(.01, .88, .98, .10, gshl);
 
         // Add the root container
@@ -82,19 +81,19 @@ public class HL_GUI extends AbstractUI {
 
     private void setupCenterPanel(TotalScaleLayout center_panel_layout) {
         SequenceGameStates sgs = new SequenceGameStates();
-        uiElements.add(sgs);
+        elementsReceivingUpdates.add(sgs);
         center_panel_layout.add(0.01, 0.01, 0.98, 0.1, sgs);
 
         GameStateComponent gsc = new GameStateComponent();
-        uiElements.add(gsc);
+        elementsReceivingUpdates.add(gsc);
         center_panel_layout.add(0.01, 0.12, 0.98, 0.05, gsc);
 
         ClockComponent cc = new ClockComponent();
-        uiElements.add(cc);
+        elementsReceivingUpdates.add(cc);
         center_panel_layout.add(0.01, 0.18, 0.98, 0.25, cc);
 
         PenaltyComponent pc = new PenaltyComponent();
-        uiElements.add(pc);
+        elementsReceivingUpdates.add(pc);
         center_panel_layout.add(0.01, 0.44, 0.98, 0.45, pc);
 
     }
@@ -104,8 +103,8 @@ public class HL_GUI extends AbstractUI {
 
         TeamActions ta_left = new HLTeamActions (Side.LEFT);
 
-        uiElements.add(rl_left);
-        uiElements.add(ta_left);
+        elementsReceivingUpdates.add(rl_left);
+        elementsReceivingUpdates.add(ta_left);
 
         left_panel_layout.add(0.0, 0.0, 1.0, 0.8, rl_left);
         left_panel_layout.add(0.0, 0.8, 1.0, 0.2, ta_left);
@@ -116,8 +115,8 @@ public class HL_GUI extends AbstractUI {
 
         TeamActions ta_right = new HLTeamActions (Side.RIGHT);
 
-        uiElements.add(rl_right);
-        uiElements.add(ta_right);
+        elementsReceivingUpdates.add(rl_right);
+        elementsReceivingUpdates.add(ta_right);
 
         right_team_panel.add(0.0, 0.0, 1.0, 0.8, rl_right);
         right_team_panel.add(0.0, 0.8, 1.0, 0.2, ta_right);

@@ -36,6 +36,9 @@ public class AdvancedData extends GameControlData implements Cloneable
     /** This message is set when the data is put into the timeline */
     public String message = "";
 
+    /** Indicates whether the side assignment is the same as from the game start (true) or flipped (false) */
+    public boolean sides_as_started = true;
+
     /** How much time summed up before the current state? (ms)*/
     public long timeBeforeCurrentGameState;
     
@@ -485,6 +488,42 @@ public class AdvancedData extends GameControlData implements Cloneable
 
     public void addToPenaltyQueue(int side, long whenPenalized, Penalties penalty, int penaltyCount) {
         penaltyQueueForSubPlayers.get(side).add(new PenaltyQueueData(whenPenalized, penalty, penaltyCount));
+    }
+
+
+    public void changeSide()
+    {
+        // TODO fix quick
+        AdvancedData data = this;
+        TeamInfo team = data.team[0];
+        data.team[0] = data.team[1];
+        data.team[1] = team;
+        boolean[] ejected = data.ejected[0];
+        data.ejected[0] = data.ejected[1];
+        data.ejected[1] = ejected;
+        // if necessary, swap back team colors
+        if (data.secGameState != SecondaryGameStates.PENALTYSHOOT
+                && data.colorChangeAuto) {
+            TeamColors color = data.team[0].teamColor;
+            data.team[0].teamColor = data.team[1].teamColor;
+            data.team[1].teamColor = color;
+        }
+
+        if (Rules.league.timeOutPerHalf && (data.secGameState != SecondaryGameStates.PENALTYSHOOT)) {
+            data.timeOutTaken = new boolean[] {false, false};
+        } else {
+            boolean timeOutTaken = data.timeOutTaken[0];
+            data.timeOutTaken[0] = data.timeOutTaken[1];
+            data.timeOutTaken[1] = timeOutTaken;
+        }
+
+        data.timeBeforeCurrentGameState = 0;
+        data.whenDropIn = 0;
+        if(data.secGameState != SecondaryGameStates.PENALTYSHOOT) {
+            data.resetPenalties();
+        }
+
+        sides_as_started = !sides_as_started;
     }
 
 }
