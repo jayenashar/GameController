@@ -279,6 +279,7 @@ public class StartInput extends JFrame implements Serializable {
             league.addItem(Rules.LEAGUES[i].leagueName);
             if (Rules.LEAGUES[i] == Rules.league) {
                 league.setSelectedIndex(i);
+                gamePrepData.switchRules(Rules.league);
             }
         }
 
