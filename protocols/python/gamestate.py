@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
-from construct import Byte, Struct, Enum, Bytes, Const, Array, Renamed, Short
+from construct import Byte, Struct, Enum, Bytes, Const, Array, Renamed, Int16ul
+
+Short = Int16ul
 
 RobotInfo = "robot_info" / Struct(
     # define NONE                        0
@@ -44,8 +46,8 @@ TeamInfo = "team" / Struct(
 
 GameState = "gamedata" / Struct(
     "header" / Const(Bytes(4), b'RGme'),
-    "version" / Const(Byte, 12),
-    "packet_number" / Short,
+    "version" / Const(Short, 12),
+    "packet_number" / Byte,
     "players_per_team" / Byte,
     "game_type" / Byte,
     "game_state" / Enum(Byte,
@@ -66,9 +68,11 @@ GameState = "gamedata" / Struct(
                              STATE_PENALTYSHOOT=1,
                              STATE_OVERTIME=2,
                              STATE_TIMEOUT=3,
-                             STATE_FREEKICK=4,
-                             STATE_PENALTYKICK=5,
-                             DROPBALL=128
+                             STATE_DIRECT_FREEKICK=4,
+                             STATE_INDIRECT_FREEKICK=5,
+                             STATE_PENALTYKICK=6,
+                             DROPBALL=128,
+							 UNKNOWN=255
                              ),
     "secondary_state_info" / Bytes(4),
     "drop_in_team" / Byte,
