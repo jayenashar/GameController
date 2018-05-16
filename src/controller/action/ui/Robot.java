@@ -13,11 +13,11 @@ import controller.action.ui.penalty.PickUp;
 import controller.action.ui.penalty.PickUpHL;
 import controller.action.ui.penalty.ServiceHL;
 import controller.action.ui.penalty.Substitute;
+import data.hl.HL;
 import data.states.AdvancedData;
 import data.states.AdvancedData.PenaltyQueueData;
 import data.PlayerInfo;
 import data.Rules;
-import data.spl.SPL;
 import data.values.Penalties;
 
 /**
@@ -103,12 +103,12 @@ public class Robot extends GCAction
                 || EventHandler.getInstance().lastUIEvent instanceof ServiceHL
                 && data.team[side].player[number].penalty != Penalties.HL_SERVICE
                 && data.team[side].player[number].penalty != Penalties.SUBSTITUTE
-                || (EventHandler.getInstance().lastUIEvent instanceof PickUp && Rules.league instanceof SPL)
+                || (EventHandler.getInstance().lastUIEvent instanceof PickUp && !(Rules.league instanceof HL))
                 && data.team[side].player[number].penalty != Penalties.SPL_REQUEST_FOR_PICKUP
                 && data.team[side].player[number].penalty != Penalties.SUBSTITUTE
                 || EventHandler.getInstance().lastUIEvent instanceof Substitute
                 && data.team[side].player[number].penalty != Penalties.SUBSTITUTE
-                && (!isCoach(data) && (!(Rules.league instanceof SPL) || number != 0))
+                && (!isCoach(data) && (Rules.league instanceof HL) || number != 0))
                 || (EventHandler.getInstance().lastUIEvent instanceof CoachMotion)
                     && (isCoach(data) && (data.team[side].coach.penalty != Penalties.SPL_COACH_MOTION))
                 || data.team[side].player[number].penalty == Penalties.NONE
@@ -117,7 +117,7 @@ public class Robot extends GCAction
                     && !(EventHandler.getInstance().lastUIEvent instanceof Substitute)
                     && (!isCoach(data))
                 || (data.team[side].player[number].penalty == Penalties.NONE)
-                    && (EventHandler.getInstance().lastUIEvent instanceof TeammatePushing))
+                    && (EventHandler.getInstance().lastUIEvent instanceof TeammatePushing)
                 || data.testmode;
     }
     

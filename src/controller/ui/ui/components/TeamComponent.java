@@ -2,17 +2,11 @@ package controller.ui.ui.components;
 
 import common.TotalScaleLayout;
 import controller.action.ActionBoard;
-import controller.net.RobotOnlineStatus;
-import controller.net.RobotWatcher;
 import controller.ui.ui.customized.Button;
-
 import data.Rules;
 import data.communication.GameControlData;
-import data.hl.HL;
-import data.spl.SPL;
 import data.states.AdvancedData;
 import data.values.GameStates;
-import data.values.Penalties;
 import data.values.SecondaryGameStates;
 import data.values.Side;
 
@@ -57,7 +51,7 @@ public class TeamComponent extends AbstractComponent {
     public static final String KICKOFF = "Kickoff";
     private int teamSize;
 
-    public TeamComponent(Side side, ButtonGroup kickOffGroup){
+    public TeamComponent(Side side, ButtonGroup kickOffGroup) {
         this.side = side;
 
         goalInc = new Button("+");
@@ -80,14 +74,14 @@ public class TeamComponent extends AbstractComponent {
         pushes.setHorizontalAlignment(JLabel.CENTER);
 
 
-        lanOnline = new ImageIcon(ICONS_PATH+ONLINE);
-        lanHighLatency = new ImageIcon(ICONS_PATH+HIGH_LATENCY);
-        lanOffline = new ImageIcon(ICONS_PATH+OFFLINE);
-        lanUnknown = new ImageIcon(ICONS_PATH+UNKNOWN_ONLINE_STATUS);
+        lanOnline = new ImageIcon(ICONS_PATH + ONLINE);
+        lanHighLatency = new ImageIcon(ICONS_PATH + HIGH_LATENCY);
+        lanOffline = new ImageIcon(ICONS_PATH + OFFLINE);
+        lanUnknown = new ImageIcon(ICONS_PATH + UNKNOWN_ONLINE_STATUS);
 
         teamSize = Rules.league.teamSize;
 
-        if (Rules.league.isCoachAvailable){
+        if (Rules.league.isCoachAvailable) {
             teamSize += 1;
         }
 
@@ -95,10 +89,10 @@ public class TeamComponent extends AbstractComponent {
     }
 
 
-    public void defineLayout(){
+    public void defineLayout() {
         int teamSize = Rules.league.teamSize;
 
-        if (Rules.league.isCoachAvailable){
+        if (Rules.league.isCoachAvailable) {
             teamSize += 1;
         }
 
@@ -120,7 +114,7 @@ public class TeamComponent extends AbstractComponent {
         lanIcon = new ImageIcon[teamSize];
         robotTime = new JProgressBar[teamSize];
 
-        for (int j=0; j < teamSize; j++) {
+        for (int j = 0; j < teamSize; j++) {
             robot[j] = new Button();
             robotLabel[j] = new JLabel();
             robotLabel[j].setHorizontalAlignment(JLabel.CENTER);
@@ -132,7 +126,7 @@ public class TeamComponent extends AbstractComponent {
             robot[j].setLayout(new BoxLayout(robot[j], BoxLayout.Y_AXIS));
             robot[j].add(robotLabel[j]);
             robot[j].add(robotTime[j]);
-            tsc.add(0, 0.2+0.1*j, 1, 0.1, robot[j]);
+            tsc.add(0, 0.2 + 0.1 * j, 1, 0.1, robot[j]);
 
             robot[j].addActionListener(ActionBoard.robot[side.value()][j]);
         }
@@ -150,33 +144,28 @@ public class TeamComponent extends AbstractComponent {
     protected static final String SHOTS = "Shots";
 
 
-
     protected static final String STANDARD_FONT = "Helvetica";
 
-    protected void updatePushes(AdvancedData data)
-    {
-            if (data.secGameState != SecondaryGameStates.PENALTYSHOOT && data.previousSecGameState != SecondaryGameStates.PENALTYSHOOT) {
-                if (Rules.league.pushesToEjection == null || Rules.league.pushesToEjection.length == 0) {
-                    pushes.setText("");
-                } else {
-                    pushes.setText(PUSHES+": "+data.pushes[side.value()]);
-                }
+    protected void updatePushes(AdvancedData data) {
+        if (data.secGameState != SecondaryGameStates.PENALTYSHOOT && data.previousSecGameState != SecondaryGameStates.PENALTYSHOOT) {
+            if (Rules.league.pushesToEjection == null || Rules.league.pushesToEjection.length == 0) {
+                pushes.setText("");
             } else {
-                pushes.setText((side.value() == 0 && (data.gameState == GameStates.SET
-                        || data.gameState == GameStates.PLAYING) ? SHOT : SHOTS)+": "+data.team[side.value()].penaltyShot);
+                pushes.setText(PUSHES + ": " + data.pushes[side.value()]);
             }
+        } else {
+            pushes.setText((side.value() == 0 && (data.gameState == GameStates.SET
+                    || data.gameState == GameStates.PLAYING) ? SHOT : SHOTS) + ": " + data.team[side.value()].penaltyShot);
+        }
 
     }
 
-    public void updateKickOff(AdvancedData data)
-    {
+    public void updateKickOff(AdvancedData data) {
         if (data.kickOffTeam == GameControlData.DROPBALL) {
             kickOff.setSelected(true);
-        }
-        else if (data.team[side.value()].teamNumber == data.kickOffTeam){
+        } else if (data.team[side.value()].teamNumber == data.kickOffTeam) {
             kickOff.setSelected(true);
-        }
-        else {
+        } else {
             kickOff.setSelected(false);
         }
 
@@ -201,9 +190,9 @@ public class TeamComponent extends AbstractComponent {
         goalInc.setEnabled(ActionBoard.goalInc[side.value()].isLegal(data));
         goalDec.setVisible(ActionBoard.goalDec[side.value()].isLegal(data));
 
-        Font titleFont = new Font(STANDARD_FONT, Font.PLAIN, (int)(20));
+        Font titleFont = new Font(STANDARD_FONT, Font.PLAIN, (int) (20));
 
-        for (int j=0; j<teamSize; j++) {
+        for (int j = 0; j < teamSize; j++) {
             robotLabel[j].setFont(titleFont);
         }
     }

@@ -13,7 +13,6 @@ import data.Helper;
 import data.PlayerInfo;
 import data.Rules;
 import data.hl.HL;
-import data.spl.SPL;
 import data.states.AdvancedData;
 import data.values.Penalties;
 import data.values.Side;
@@ -169,26 +168,18 @@ public class Robot extends AbstractComponent {
             if (robotInfo.penalty != Penalties.NONE) {
                 if (!data.ejected[sideValue][robotId]) {
                     int seconds = data.getRemainingPenaltyTime(sideValue, robotId);
-                    boolean pickup = ((Rules.league instanceof SPL &&
-                            robotInfo.penalty == Penalties.SPL_REQUEST_FOR_PICKUP)
-                            || (Rules.league instanceof HL &&
+                    boolean pickup = Rules.league instanceof HL &&
                             (robotInfo.penalty == Penalties.HL_PICKUP_OR_INCAPABLE
-                                    || robotInfo.penalty == Penalties.HL_SERVICE))
-                    );
-                    boolean illegalMotion = Rules.league instanceof SPL
-                            && robotInfo.penalty == Penalties.SPL_ILLEGAL_MOTION_IN_SET;
+                                    || robotInfo.penalty == Penalties.HL_SERVICE);
+
                     if (seconds == 0) {
                         if (pickup) {
                             robotLabel.setText(data.team[sideValue].teamColor + " " + (robotId + 1) + " (" + Penalties.SPL_REQUEST_FOR_PICKUP.toString() + ")");
                             highlight(robot, true);
-                        } else if (illegalMotion) {
-                            robotLabel.setText(data.team[sideValue].teamColor + " " + (robotId + 1) + " (" + Penalties.SPL_ILLEGAL_MOTION_IN_SET.toString() + ")");
-                            highlight(robot, true);
                         } else if (robotInfo.penalty == Penalties.SUBSTITUTE) {
                             robotLabel.setText(data.team[sideValue].teamColor + " " + (robotId + 1) + " (" + Penalties.SUBSTITUTE.toString() + ")");
                             highlight(robot, false);
-                        } else if (!(Rules.league instanceof SPL) ||
-                                !(robotInfo.penalty == Penalties.SPL_COACH_MOTION)) {
+                        } else if (Rules.league instanceof HL || robotInfo.penalty != Penalties.SPL_COACH_MOTION) {
                             robotLabel.setText(data.team[sideValue].teamColor + " " + (robotId + 1) + ": " + Helper.formatTime(seconds));
                             highlight(robot, seconds <= UNPEN_HIGHLIGHT_SECONDS && robot.getBackground() != COLOR_HIGHLIGHT);
                         }

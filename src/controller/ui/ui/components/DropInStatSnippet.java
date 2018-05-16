@@ -1,24 +1,10 @@
 package controller.ui.ui.components;
 
 import common.TotalScaleLayout;
-import controller.action.ActionBoard;
-import controller.action.ActionType;
-import controller.action.GCAction;
-import controller.net.RobotOnlineStatus;
-import controller.net.RobotWatcher;
 import controller.ui.ui.customized.Button;
-import data.Rules;
-import data.communication.GameControlData;
-import data.hl.HL;
-import data.spl.SPL;
-import data.states.AdvancedData;
-import data.values.GameStates;
-import data.values.Penalties;
-import data.values.SecondaryGameStates;
 import data.values.Side;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -37,7 +23,7 @@ public class DropInStatSnippet extends JLabel implements Refreshable {
     private JButton robotPointsDec;
     private JLabel robotPointsLabel;
 
-    public DropInStatSnippet(Side side, int robotId, DropInPointCounter dropInPointCounter){
+    public DropInStatSnippet(Side side, int robotId, DropInPointCounter dropInPointCounter) {
         this.side = side;
         this.robotId = robotId;
         this.dropInPointCounter = dropInPointCounter;
@@ -65,13 +51,13 @@ public class DropInStatSnippet extends JLabel implements Refreshable {
         defineLayout();
     }
 
-    private void updateDropInPointsLabels(){
+    private void updateDropInPointsLabels() {
         int points = dropInPointCounter.getPoints(side, robotId);
         robotPointsLabel.setText(points + " Points");
     }
 
 
-    public void defineLayout(){
+    public void defineLayout() {
         TotalScaleLayout layout = new TotalScaleLayout(this);
         this.setLayout(layout);
 

@@ -1,26 +1,12 @@
 package controller.ui.gameplay;
 
-import common.Log;
 import common.TotalScaleLayout;
 import controller.Clock;
-import controller.EventHandler;
-import controller.action.ActionBoard;
-import controller.action.GCAction;
-import controller.net.RobotOnlineStatus;
-import controller.net.RobotWatcher;
 import controller.ui.GCGUI;
-import controller.ui.ui.customized.ImageButton;
 import controller.ui.ui.customized.ImagePanel;
 import data.Rules;
-import data.Teams;
 import data.communication.GameControlData;
-import data.hl.HL;
-import data.spl.SPL;
 import data.states.AdvancedData;
-import data.values.GameStates;
-import data.values.Penalties;
-import data.values.SecondaryGameStates;
-import data.values.TeamColors;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,16 +16,15 @@ import java.awt.event.WindowEvent;
 
 /**
  * @author Michel Bartsch
- *
+ * <p>
  * This is the main GUI.
  * In this class you will find the whole graphical output and the bindings
  * of buttons to their actions, nothing less and nothing more.
  */
-public class GUI extends JFrame implements GCGUI, CommonGUI
-{
+public class GUI extends JFrame implements GCGUI, CommonGUI {
     public static final boolean IS_OSX = System.getProperty("os.name").contains("OS X");
     public static final boolean IS_APPLE_JAVA = IS_OSX && System.getProperty("java.version").compareTo("1.7") < 0;
-    public static final Insets insets = IS_APPLE_JAVA ? new Insets (2, -30, 2, -30) : null;
+    public static final Insets insets = IS_APPLE_JAVA ? new Insets(2, -30, 2, -30) : null;
     public static final String BUTTON_MASK = IS_APPLE_JAVA
             ? "<html><div style=\"padding: 0px 12px\"><center>%s</center></div></html>"
             : "<html><center>%s</center></html>";
@@ -65,14 +50,18 @@ public class GUI extends JFrame implements GCGUI, CommonGUI
     public static final Color COLOR_HIGHLIGHT = Color.YELLOW;
     public static final int FINISH_HIGHLIGHT_SECONDS = 10;
 
-    /** Some attributes used in the GUI components. */
+    /**
+     * Some attributes used in the GUI components.
+     */
     protected ImageIcon clockImgReset;
     protected ImageIcon clockImgPlay;
     protected ImageIcon clockImgPause;
     protected ImageIcon clockImgPlus;
     protected ImageIcon[][] backgroundSide;
 
-    /** All the components of this GUI. */
+    /**
+     * All the components of this GUI.
+     */
 
     protected JPanel[] robots;
 
@@ -80,9 +69,7 @@ public class GUI extends JFrame implements GCGUI, CommonGUI
     protected ImagePanel bottom;
 
 
-
-    public GUI(boolean fullscreen, GameControlData data)
-    {
+    public GUI(boolean fullscreen, GameControlData data) {
         super(WINDOW_TITLE);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setResizable(true);
@@ -90,10 +77,9 @@ public class GUI extends JFrame implements GCGUI, CommonGUI
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         int width = gd.getDisplayMode().getWidth();
         int height = gd.getDisplayMode().getHeight();
-        setLocation((width-WINDOW_WIDTH)/2, (height-WINDOW_HEIGHT)/2);
+        setLocation((width - WINDOW_WIDTH) / 2, (height - WINDOW_HEIGHT) / 2);
 
-        addWindowListener(new WindowAdapter()
-        {
+        addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 Clock.getInstance().interrupt();
@@ -101,26 +87,26 @@ public class GUI extends JFrame implements GCGUI, CommonGUI
             }
         });
 
-        clockImgReset = new ImageIcon(ICONS_PATH+CLOCK_RESET);
-        clockImgPlay = new ImageIcon(ICONS_PATH+CLOCK_PLAY);
-        clockImgPause = new ImageIcon(ICONS_PATH+CLOCK_PAUSE);
-        clockImgPlus = new ImageIcon(ICONS_PATH+CLOCK_PLUS);
+        clockImgReset = new ImageIcon(ICONS_PATH + CLOCK_RESET);
+        clockImgPlay = new ImageIcon(ICONS_PATH + CLOCK_PLAY);
+        clockImgPause = new ImageIcon(ICONS_PATH + CLOCK_PAUSE);
+        clockImgPlus = new ImageIcon(ICONS_PATH + CLOCK_PLUS);
 
         backgroundSide = new ImageIcon[2][Rules.league.teamColor.length];
 
-        for (int i=0; i<Rules.league.backgroundSide.length; i++) {
-            for (int j=0; j<Rules.league.backgroundSide[i].length; j++) {
-                backgroundSide[i][j] = new ImageIcon(ICONS_PATH+Rules.league.leagueDirectory+"/"+Rules.league.backgroundSide[i][j]);
+        for (int i = 0; i < Rules.league.backgroundSide.length; i++) {
+            for (int j = 0; j < Rules.league.backgroundSide[i].length; j++) {
+                backgroundSide[i][j] = new ImageIcon(ICONS_PATH + Rules.league.leagueDirectory + "/" + Rules.league.backgroundSide[i][j]);
             }
         }
 
 
-        mid = new ImagePanel(new ImageIcon(ICONS_PATH+BACKGROUND_MID).getImage());
-        bottom = new ImagePanel(new ImageIcon(ICONS_PATH+BACKGROUND_BOTTOM).getImage());
+        mid = new ImagePanel(new ImageIcon(ICONS_PATH + BACKGROUND_MID).getImage());
+        bottom = new ImagePanel(new ImageIcon(ICONS_PATH + BACKGROUND_BOTTOM).getImage());
 
         //  robots
         robots = new JPanel[2];
-        for (int i=0; i<2; i++) {
+        for (int i = 0; i < 2; i++) {
             robots[i] = new JPanel();
         }
 
@@ -170,19 +156,17 @@ public class GUI extends JFrame implements GCGUI, CommonGUI
     }
 
     @Override
-    public void update(AdvancedData data)
-    {
+    public void update(AdvancedData data) {
         repaint();
     }
 
     /**
      * Always update fonts before drawing.
      *
-     * @param g     The graphics context to draw to.
+     * @param g The graphics context to draw to.
      */
     @Override
-    public void paint(Graphics g)
-    {
+    public void paint(Graphics g) {
         //updateFonts();
         super.paint(g);
     }

@@ -10,13 +10,10 @@ import controller.action.ui.penalty.Penalty;
 import controller.ui.ui.customized.ToggleButton;
 import data.Rules;
 import data.hl.HL;
-import data.spl.SPL;
 import data.states.AdvancedData;
 import data.values.Penalties;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,25 +50,6 @@ public class PenaltyComponent extends AbstractComponent {
 
     public void defineLayout() {
         // TODO Customizable with inheritance
-        if (Rules.league instanceof SPL) {
-            addButtonByPenalty(Penalties.SPL_PLAYER_PUSHING, ActionBoard.pushing);
-            addButtonByPenalty(Penalties.SPL_LEAVING_THE_FIELD, ActionBoard.leaving);
-            addButtonByPenalty(Penalties.SPL_INACTIVE_PLAYER, ActionBoard.inactive);
-            addButtonByPenalty(Penalties.SPL_ILLEGAL_DEFENDER, ActionBoard.defender);
-            addButtonByPenalty(Penalties.SPL_ILLEGAL_MOTION_IN_SET, ActionBoard.motionInSet);
-            addButtonByPenalty(Penalties.SPL_KICK_OFF_GOAL, ActionBoard.kickOffGoal);
-            addButtonByPenalty(Penalties.SPL_ILLEGAL_BALL_CONTACT, ActionBoard.ballContact);
-            addButtonByPenalty(Penalties.SPL_REQUEST_FOR_PICKUP, ActionBoard.pickUp);
-            addButtonByPenalty(Penalties.SUBSTITUTE, ActionBoard.substitute);
-
-            if (Rules.league.dropInPlayerMode) {
-                // TODO - Figure out what the SPL wants here?
-                //addButtonByPenalty(Penalties.TEAM_MATE_PUSHING);
-            } else {
-                addButtonByPenalty(Penalties.SPL_COACH_MOTION, ActionBoard.ballManipulation);
-            }
-        }
-
         if (Rules.league instanceof HL) {
             addButtonByPenalty(Penalties.HL_BALL_MANIPULATION, ActionBoard.ballManipulation);
             addButtonByPenalty(Penalties.HL_PHYSICAL_CONTACT, new HLPushing());
