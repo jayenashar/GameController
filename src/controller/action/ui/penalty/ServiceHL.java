@@ -9,7 +9,7 @@ import data.values.Penalties;
  *
  * @author Daniel Seifert
  */
-public class ServiceHL extends PickUp
+public class ServiceHL extends Penalty
 {
     /**
      * Performs this action`s penalty on a selected player.
@@ -32,5 +32,11 @@ public class ServiceHL extends PickUp
             handleRepeatedPenalty(data, player, side, number);
             Log.state(data, "Additional Request for Service " + data.team[side].teamColor + " " + (number+1));
         }
+    }
+
+    @Override
+    public boolean isLegal(AdvancedData data)
+    {
+        return true;
     }
 }

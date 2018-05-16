@@ -458,9 +458,7 @@ public class AdvancedData extends GameControlData implements Cloneable
                 && getSecondsSince(whenCurrentGameStateBegan) >= Rules.league.delayedSwitchToPlaying) {
             for (TeamInfo t : team) {
                 for (PlayerInfo p : t.player) {
-                    if (p.penalty == Penalties.SPL_ILLEGAL_MOTION_IN_SET) {
-                        p.penalty = Penalties.NONE;
-                    }
+
                 }
             }
         }

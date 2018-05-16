@@ -64,7 +64,7 @@ public class Robot extends AbstractComponent {
     }
 
 
-    public void updateLayout(double aspectRatio){
+    public void updateLayout(double aspectRatio) {
         TotalScaleLayout robotLayout = new TotalScaleLayout(robot);
         robot.setLayout(robotLayout);
         robot.removeAll();
@@ -73,10 +73,10 @@ public class Robot extends AbstractComponent {
         double rightOffset = 0.01;
 
         double cardWidth = 0.4 / aspectRatio;
-        robotLayout.add(1-cardWidth - rightOffset, 0.1, cardWidth, 0.75, yellowCard);
-        robotLayout.add(1-2*cardWidth - rightOffset, 0.1, cardWidth, 0.75, redCard);
+        robotLayout.add(1 - cardWidth - rightOffset, 0.1, cardWidth, 0.75, yellowCard);
+        robotLayout.add(1 - 2 * cardWidth - rightOffset, 0.1, cardWidth, 0.75, redCard);
 
-        double restWidth = 1 - 2*cardWidth - rightOffset;
+        double restWidth = 1 - 2 * cardWidth - rightOffset;
 
         robotLayout.add(0, 0, restWidth, 0.9, robotLabel);
 
@@ -123,7 +123,7 @@ public class Robot extends AbstractComponent {
         this.setVisible(true);
     }
 
-    private void updateRobotOnlineStatus(){
+    private void updateRobotOnlineStatus() {
         int sideValue = this.side.value();
         int j = this.id;
 
@@ -157,50 +157,42 @@ public class Robot extends AbstractComponent {
         // then we update the yellow and red card buttons with the number of cards
         updatePenaltyCards(robotInfo);
 
-        if (ActionBoard.robot[sideValue][robotId].isCoach(data)) {
-            if (data.team[sideValue].coach.penalty == Penalties.SPL_COACH_MOTION) {
-                robot.setEnabled(false);
-                robotLabel.setText(LocalizationManager.getLocalization().EJECTED);
-            } else {
-                robotLabel.setText(data.team[sideValue].teamColor + " " + LocalizationManager.getLocalization().COACH);
-            }
-        } else {
-            if (robotInfo.penalty != Penalties.NONE) {
-                if (!data.ejected[sideValue][robotId]) {
-                    int seconds = data.getRemainingPenaltyTime(sideValue, robotId);
-                    boolean pickup = Rules.league instanceof HL &&
-                            (robotInfo.penalty == Penalties.HL_PICKUP_OR_INCAPABLE
-                                    || robotInfo.penalty == Penalties.HL_SERVICE);
 
-                    if (seconds == 0) {
-                        if (pickup) {
-                            robotLabel.setText(data.team[sideValue].teamColor + " " + (robotId + 1) + " (" + Penalties.SPL_REQUEST_FOR_PICKUP.toString() + ")");
-                            highlight(robot, true);
-                        } else if (robotInfo.penalty == Penalties.SUBSTITUTE) {
-                            robotLabel.setText(data.team[sideValue].teamColor + " " + (robotId + 1) + " (" + Penalties.SUBSTITUTE.toString() + ")");
-                            highlight(robot, false);
-                        } else if (Rules.league instanceof HL || robotInfo.penalty != Penalties.SPL_COACH_MOTION) {
-                            robotLabel.setText(data.team[sideValue].teamColor + " " + (robotId + 1) + ": " + Helper.formatTime(seconds));
-                            highlight(robot, seconds <= UNPEN_HIGHLIGHT_SECONDS && robot.getBackground() != COLOR_HIGHLIGHT);
-                        }
-                    } else {
-                        robotLabel.setText(data.team[sideValue].teamColor + " " + (robotId + 1) + ": " + Helper.formatTime(seconds) + (pickup ? " (P)" : ""));
+        if (robotInfo.penalty != Penalties.NONE) {
+            if (!data.ejected[sideValue][robotId]) {
+                int seconds = data.getRemainingPenaltyTime(sideValue, robotId);
+                boolean pickup = Rules.league instanceof HL &&
+                        (robotInfo.penalty == Penalties.HL_PICKUP_OR_INCAPABLE
+                                || robotInfo.penalty == Penalties.HL_SERVICE);
+
+                if (seconds == 0) {
+                    if (pickup) {
+                        robotLabel.setText(data.team[sideValue].teamColor + " " + (robotId + 1) + " (" + Penalties.HL_PICKUP_OR_INCAPABLE.toString() + ")");
+                        highlight(robot, true);
+                    } else if (robotInfo.penalty == Penalties.SUBSTITUTE) {
+                        robotLabel.setText(data.team[sideValue].teamColor + " " + (robotId + 1) + " (" + Penalties.SUBSTITUTE.toString() + ")");
+                        highlight(robot, false);
+                    } else if (Rules.league instanceof HL) {
+                        robotLabel.setText(data.team[sideValue].teamColor + " " + (robotId + 1) + ": " + Helper.formatTime(seconds));
                         highlight(robot, seconds <= UNPEN_HIGHLIGHT_SECONDS && robot.getBackground() != COLOR_HIGHLIGHT);
                     }
-                    // Update the robot time component
-                    int penTime = (seconds + data.getSecondsSince(data.whenPenalized[sideValue][robotId]));
-                    double percent = 100.0 * seconds / (double) penTime;
-                    progressBar.updateValue(percent);
                 } else {
-                    robotLabel.setText(LocalizationManager.getLocalization().EJECTED);
-                    highlight(robot, false);
-                    progressBar.setVisible(false);
+                    robotLabel.setText(data.team[sideValue].teamColor + " " + (robotId + 1) + ": " + Helper.formatTime(seconds) + (pickup ? " (P)" : ""));
+                    highlight(robot, seconds <= UNPEN_HIGHLIGHT_SECONDS && robot.getBackground() != COLOR_HIGHLIGHT);
                 }
+                // Update the robot time component
+                int penTime = (seconds + data.getSecondsSince(data.whenPenalized[sideValue][robotId]));
+                double percent = 100.0 * seconds / (double) penTime;
+                progressBar.updateValue(percent);
             } else {
-                robotLabel.setText(data.team[sideValue].teamColor + " " + (robotId + 1));
+                robotLabel.setText(LocalizationManager.getLocalization().EJECTED);
                 highlight(robot, false);
                 progressBar.setVisible(false);
             }
+        } else {
+            robotLabel.setText(data.team[sideValue].teamColor + " " + (robotId + 1));
+            highlight(robot, false);
+            progressBar.setVisible(false);
         }
     }
 
@@ -213,13 +205,13 @@ public class Robot extends AbstractComponent {
         redCard.setMargin(new Insets(0, 0, 0, 0));
         redCard.setFont(FontHelper.boldStandardFont());
 
-        if (playerInfo.yellowCardCount > 0){
+        if (playerInfo.yellowCardCount > 0) {
             yellowCard.setBackground(new Color(255, 255, 0));
         } else {
             yellowCard.setBackground(new Color(255, 251, 181));
         }
 
-        if (playerInfo.redCardCount > 0){
+        if (playerInfo.redCardCount > 0) {
             redCard.setBackground(new Color(255, 0, 0));
         } else {
             redCard.setBackground(new Color(255, 174, 171));
