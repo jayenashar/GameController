@@ -3,12 +3,14 @@ package controller.ui.ui.components;
 import common.TotalScaleLayout;
 import controller.action.ActionBoard;
 import controller.action.ui.CardIncrease;
+import controller.action.ui.MakeGoalieAction;
 import controller.net.RobotOnlineStatus;
 import controller.net.RobotWatcher;
 import controller.ui.helper.FontHelper;
 import controller.ui.localization.LocalizationManager;
 import controller.ui.ui.customized.Button;
 import controller.ui.ui.customized.CountDownBar;
+import controller.ui.ui.customized.ImageButton;
 import data.Helper;
 import data.PlayerInfo;
 import data.Rules;
@@ -16,12 +18,12 @@ import data.hl.HL;
 import data.states.AdvancedData;
 import data.values.Penalties;
 import data.values.Side;
+import teamcomm.Config;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.*;
 
 /**
  * Created by rkessler on 2017-06-11.
@@ -36,17 +38,26 @@ public class Robot extends AbstractComponent {
     protected JButton yellowCard;
     protected JButton redCard;
 
+    protected JButton makeGoalie;
+
     private ImageIcon lanIcon;
     private ImageIcon lanOnline;
     private ImageIcon lanHighLatency;
     private ImageIcon lanOffline;
     private ImageIcon lanUnknown;
 
+    private ImageIcon makeGoalieImage;
+    private ImageIcon isGoalieImage;
+
     protected CountDownBar progressBar;
 
     private static final String ICONS_PATH = "config/icons/";
     private static final String ONLINE = "wlan_status_green.png";
     private static final String OFFLINE = "wlan_status_red.png";
+
+    private static final String IS_GOALIE = "goalkeeper.png";
+    private static final String MAKE_GOALIE = "goalkeeper_fade.png";
+
     private static final String HIGH_LATENCY = "wlan_status_yellow.png";
     private static final String UNKNOWN_ONLINE_STATUS = "wlan_status_grey.png";
     public static final Color COLOR_HIGHLIGHT = Color.YELLOW;
@@ -57,10 +68,16 @@ public class Robot extends AbstractComponent {
     public Robot(Side side, int id) {
         this.side = side;
         this.id = id;
-        lanOnline = new ImageIcon(ICONS_PATH + ONLINE);
-        lanHighLatency = new ImageIcon(ICONS_PATH + HIGH_LATENCY);
-        lanOffline = new ImageIcon(ICONS_PATH + OFFLINE);
-        lanUnknown = new ImageIcon(ICONS_PATH + UNKNOWN_ONLINE_STATUS);
+        lanOnline = new ImageIcon(Config.CONFIG_ROOT + ICONS_PATH + ONLINE);
+        lanHighLatency = new ImageIcon(Config.CONFIG_ROOT + ICONS_PATH + HIGH_LATENCY);
+        lanOffline = new ImageIcon(Config.CONFIG_ROOT +  ICONS_PATH + OFFLINE);
+        lanUnknown = new ImageIcon(Config.CONFIG_ROOT +  ICONS_PATH + UNKNOWN_ONLINE_STATUS);
+
+        makeGoalieImage = new ImageIcon(Config.CONFIG_ROOT + ICONS_PATH + MAKE_GOALIE);
+        isGoalieImage = new ImageIcon(Config.CONFIG_ROOT + ICONS_PATH + IS_GOALIE);
+
+        System.out.println(makeGoalieImage);
+        System.out.println(isGoalieImage);
     }
 
 
@@ -75,6 +92,8 @@ public class Robot extends AbstractComponent {
         double cardWidth = 0.4 / aspectRatio;
         robotLayout.add(1 - cardWidth - rightOffset, 0.1, cardWidth, 0.75, yellowCard);
         robotLayout.add(1 - 2 * cardWidth - rightOffset, 0.1, cardWidth, 0.75, redCard);
+
+        robotLayout.add(1 - 4 * cardWidth - rightOffset, 0.1, cardWidth*2, 0.75, makeGoalie);
 
         double restWidth = 1 - 2 * cardWidth - rightOffset;
 
@@ -111,6 +130,12 @@ public class Robot extends AbstractComponent {
 
         redCard = new Button("Red");
         redCard.addActionListener(new CardIncrease(side, this.id, Color.RED));
+
+        makeGoalie = new JButton("");
+        makeGoalie.addActionListener(new MakeGoalieAction(side, this.id));
+        makeGoalie.setIcon(makeGoalieImage);
+
+        makeGoalie.setVisible(true);
 
         robotLabel.setVisible(true);
 
@@ -149,14 +174,14 @@ public class Robot extends AbstractComponent {
         int robotId = this.id;
         PlayerInfo robotInfo = data.team[sideValue].player[robotId];
 
-
         // First of all we update the Online Status of the Robot
         updateRobotOnlineStatus();
-
 
         // then we update the yellow and red card buttons with the number of cards
         updatePenaltyCards(robotInfo);
 
+        // Update the goalie info
+        updateGoalieMarker(robotInfo);
 
         if (robotInfo.penalty != Penalties.NONE) {
             if (!data.ejected[sideValue][robotId]) {
@@ -193,6 +218,14 @@ public class Robot extends AbstractComponent {
             robotLabel.setText(data.team[sideValue].teamColor + " " + (robotId + 1));
             highlight(robot, false);
             progressBar.setVisible(false);
+        }
+    }
+
+    private void updateGoalieMarker(PlayerInfo playerInfo){
+        if (playerInfo.isGoalie == 1){
+            makeGoalie.setIcon(isGoalieImage);
+        } else {
+            makeGoalie.setIcon(makeGoalieImage);
         }
     }
 

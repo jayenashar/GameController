@@ -30,6 +30,7 @@ public class PlayerInfo implements Serializable
     public byte secsTillUnpenalised;    // estimate of time till unpenalised
     public byte yellowCardCount = 0;    // estimate of time till unpenalised
     public byte redCardCount = 0;    // estimate of time till unpenalised
+    public byte isGoalie = 0;    // Save the information whether they are the goalie here to make it easier for the ux
 
     /**
      * Packing this Java class to the C-structure to be send.

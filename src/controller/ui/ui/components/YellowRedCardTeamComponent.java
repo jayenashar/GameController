@@ -31,6 +31,8 @@ public class YellowRedCardTeamComponent extends AbstractComponent {
 
     private Robot[] robot;
 
+    private int defaultGoalieIndex = 0;
+
     private static final String KICKOFF_PENALTY_SHOOTOUT = "P.-taker";
 
     private static final String KICKOFF = "Kickoff";

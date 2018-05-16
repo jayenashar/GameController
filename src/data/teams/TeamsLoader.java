@@ -2,6 +2,7 @@ package data.teams;
 
 import common.Log;
 import data.Rules;
+import teamcomm.Config;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -20,11 +21,8 @@ import java.util.*;
  */
 public class TeamsLoader
 {
-    /** Dynamically settable path to the config root folder */
-    private static final String CONFIG_ROOT = System.getProperty("CONFIG_ROOT", "");
-
     /** The path to the leagues directories. */
-    private static final String PATH = CONFIG_ROOT + "config/";
+    private static final String PATH = Config.CONFIG_ROOT + "config/";
 
     /** The name of the config file. */
     private static final String CONFIG = "teams.cfg";
