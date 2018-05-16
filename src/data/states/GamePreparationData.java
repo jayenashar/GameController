@@ -2,8 +2,7 @@ package data.states;
 
 import data.Helper;
 import data.Rules;
-import data.hl.HL;
-import data.hl.HLDropIn;
+import data.hl.HLDropInStandard;
 import data.teams.TeamLoadInfo;
 import data.teams.TeamsLoader;
 
@@ -53,7 +52,7 @@ public class GamePreparationData {
         _active_rules = _new_rules;
         refreshTeams();
 
-        if (_new_rules instanceof HLDropIn){
+        if (_new_rules instanceof HLDropInStandard){
             firstTeam = new PrepTeam(availableTeams.get(1));
             secondTeam = new PrepTeam(availableTeams.get(2));
             firstTeam.setTeamColor("red");
