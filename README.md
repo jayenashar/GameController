@@ -14,18 +14,14 @@ For questions regarding the protocol please check the [Wiki](https://github.com/
 The sources mentioned in some sections of this document are available at
 [https://github.com/RoboCup-Humanoid-TC/GameController](https://github.com/RoboCup-Humanoid-TC/GameController).
 
-### Latest Changes (2017)
+### Upcoming changes (2018)
 
-### 2017 - v2
-- [x] Drop in challenge for Humanoid League (2017.2)
-- [x] Moved to Protocol Version 12 (2017.2)
-  - Split up FREE_KICK into DIRECT_FREE_KICK and INDIRECT_FREE_KICK
-  - Updated bytes for secondary states
-  - secondary state info got additional field with meaning during free kick
-  - Added number of yellow cards and number of red cards to RobotInfo
-- [x] Direct and Indirect Free-Kick are delivering additional info in secondary state info (2017.2)
-- [X] Moved humanoid normal games to new component based UI (2017.2)
-- [x] Removed switch of kick-off after timeout for HL 
+- [x] Removal of Illegal Defense and Illegal Attack
+- [x] Allow Adult league to play drop in 2 vs. 2
+- [ ] Skip extra time in knockout games
+- [ ] Fix point counting on drop in challenge
+- [ ] Fix "GameController goes to extended time even in normal mode"
+- [ ] Highlight and make "current goalkeeper" changeable in UI
 
 _See [CHANGELOG](CHANGELOG.md) for more details and history._
 

@@ -4,7 +4,6 @@ import common.TotalScaleLayout;
 import controller.action.ActionBoard;
 import controller.ui.localization.LocalizationManager;
 import data.Rules;
-import data.spl.SPL;
 import data.states.AdvancedData;
 import data.values.GameStates;
 import data.values.Side;
@@ -55,23 +54,13 @@ public class TeamActions extends AbstractComponent {
         stuck.setVisible(false);
         timeOut.setVisible(false);
 
-        if (Rules.league instanceof SPL && !Rules.league.dropInPlayerMode) {
-            timeOut.setVisible(true);
-            stuck.setVisible(true);
-        } else {
-            if (Rules.league instanceof SPL) {
-                stuck.setVisible(true);
-            } else {
-                timeOut.setVisible(true);
-            }
-        }
+
+
+        timeOut.setVisible(true);
         out.setVisible(true);
 
         timeOut.addActionListener(ActionBoard.timeOut[side.value()]);
         out.addActionListener(ActionBoard.out[side.value()]);
-        if (Rules.league instanceof SPL) {
-            stuck.addActionListener(ActionBoard.stuck[side.value()]);
-        }
 
         this.setLayout(new TotalScaleLayout(this));
         ((TotalScaleLayout) this.getLayout()).add(0, 0, 1, 1, container);
@@ -83,10 +72,6 @@ public class TeamActions extends AbstractComponent {
     public void update(AdvancedData data) {
         updateTimeOut(data);
         updateOut(data);
-
-        if (Rules.league instanceof SPL) {
-            updateGlobalStuck(data);
-        }
     }
 
     /**

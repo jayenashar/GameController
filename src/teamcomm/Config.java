@@ -21,6 +21,9 @@ public class Config {
 
     private static final String CONFIG_FILE = "config/TCM.cfg";
 
+    /** Dynamically settable path to the config root folder */
+    public static final String CONFIG_ROOT = System.getProperty("CONFIG_ROOT", "");
+
     private static Config instance = null;
 
     private final HashMap<String, Serializable> map;

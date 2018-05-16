@@ -1,6 +1,5 @@
 import data.hl.HL;
 import data.hl.HLTeen;
-import data.spl.SPL;
 import data.teams.TeamLoadInfo;
 import data.teams.TeamsLoader;
 import org.junit.BeforeClass;
@@ -23,17 +22,6 @@ public class TestTeamLoader {
         System.setProperty("CONFIG_ROOT", "test_resources/");
     }
 
-
-    @Test
-    public void test_spl_loads_correct_size() {
-        TeamsLoader tl = TeamsLoader.getInstance();
-
-        SPL spl_rules = new SPL();
-
-        ArrayList<String> names = tl.getNames(spl_rules.leagueName, true);
-
-        assertEquals(5, names.size());
-    }
 
     @Test
     public void test_hl_kid_loads_correct_size() {

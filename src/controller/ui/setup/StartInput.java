@@ -18,8 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 import data.*;
-import data.spl.SPL;
-import data.spl.SPLDropIn;
 import data.states.GamePreparationData;
 import data.states.PrepTeam;
 import data.teams.TeamLoadInfo;
@@ -375,26 +373,10 @@ public class StartInput extends JFrame implements Serializable {
         teamSelectionDropDown[0].removeActionListener(chooseTeam1Listener);
         teamSelectionDropDown[1].removeActionListener(chooseTeam2Listener);
 
-        Rules active = gamePrepData.getCurrentRules();
-
-        if (active instanceof SPLDropIn) {
-            nofulltime.setVisible(false);
-            fulltime.setVisible(false);
-            autoColorChange.setVisible(false);
-        } else {
-            nofulltime.setVisible(true);
-            fulltime.setVisible(true);
-            if (Rules.league instanceof SPL) {
-                nofulltime.setText(FULLTIME_LABEL_NO);
-                fulltime.setText(FULLTIME_LABEL_YES);
-                autoColorChange.setVisible(false);
-            } else {
-                nofulltime.setText(FULLTIME_LABEL_HL_NO);
-                fulltime.setText(FULLTIME_LABEL_HL_YES);
-                autoColorChange.setState(Rules.league.colorChangeAuto);
-                autoColorChange.setVisible(true);
-            }
-        }
+        nofulltime.setText(FULLTIME_LABEL_HL_NO);
+        fulltime.setText(FULLTIME_LABEL_HL_YES);
+        autoColorChange.setState(Rules.league.colorChangeAuto);
+        autoColorChange.setVisible(true);
 
         showAvailableTeams(); // Reloads the available teams
         drawTeamColors(); // Draws the team color selection buttons

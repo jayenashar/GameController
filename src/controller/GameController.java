@@ -8,13 +8,11 @@ import controller.net.SPLCoachMessageReceiver;
 import controller.net.Sender;
 import controller.ui.GCGUI;
 import controller.ui.ui.composites.HL_DropIn;
-import controller.ui.gameplay.GUI;
 import controller.ui.KeyboardListener;
 import controller.ui.setup.StartInput;
 import controller.ui.ui.composites.HL_GUI;
 import data.*;
 import data.communication.GameControlData;
-import data.spl.SPL;
 import data.states.AdvancedData;
 import data.states.GamePreparationData;
 import data.values.GameTypes;
@@ -294,11 +292,7 @@ public class GameController {
             gui = new HL_DropIn(gpd.getFullScreen(), data, gpd);
         }
         else{
-            if (Rules.league instanceof SPL) {
-                gui = new GUI(gpd.getFullScreen(), data);
-            } else {
-                gui = new HL_GUI(gpd.getFullScreen(), data, gpd);
-            }
+            gui = new HL_GUI(gpd.getFullScreen(), data, gpd);
         }
 
         new KeyboardListener();

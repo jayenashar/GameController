@@ -101,7 +101,7 @@ public class HL_GUI extends AbstractUI {
     private void setupLeftPanel(TotalScaleLayout left_panel_layout) {
         YellowRedCardTeamComponent rl_left = new YellowRedCardTeamComponent(Side.LEFT, kickOffGroup, initialData);
 
-        TeamActions ta_left = new HLTeamActions (Side.LEFT);
+        TeamActions ta_left = new HLTeamActions(Side.LEFT);
 
         elementsReceivingUpdates.add(rl_left);
         elementsReceivingUpdates.add(ta_left);
@@ -113,7 +113,7 @@ public class HL_GUI extends AbstractUI {
     private void setupRightPanel(TotalScaleLayout right_team_panel) {
         YellowRedCardTeamComponent rl_right = new YellowRedCardTeamComponent(Side.RIGHT, kickOffGroup, initialData);
 
-        TeamActions ta_right = new HLTeamActions (Side.RIGHT);
+        TeamActions ta_right = new HLTeamActions(Side.RIGHT);
 
         elementsReceivingUpdates.add(rl_right);
         elementsReceivingUpdates.add(ta_right);

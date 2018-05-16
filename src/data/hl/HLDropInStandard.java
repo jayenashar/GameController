@@ -5,12 +5,12 @@ package data.hl;
  *
  * @author Michel-Zen
  */
-public class HLDropIn extends HL
+public class HLDropInStandard extends HL
 {
-    public HLDropIn()
+    public HLDropInStandard()
     {
         /** The league´s name this rules are for. */
-        leagueName = "HL Drop In";
+        leagueName = "HL Drop In - Default";
         /** The league´s directory name with it´s teams and icons. */
         leagueDirectory = "hl_dropin";
         /** If true, the drop-in player competition is active */

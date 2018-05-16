@@ -2,7 +2,6 @@ package controller.ui.ui.components;
 
 import common.TotalScaleLayout;
 import controller.action.ActionBoard;
-import controller.ui.gameplay.GUIBackup;
 import controller.ui.localization.LocalizationManager;
 import controller.ui.ui.customized.Button;
 import controller.ui.ui.customized.ToggleButton;

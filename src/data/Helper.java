@@ -3,8 +3,6 @@ package data;
 import data.hl.HL;
 import data.hl.HLAdult;
 import data.hl.HLTeen;
-import data.spl.SPL;
-import data.spl.SPLDropIn;
 
 import java.awt.*;
 
@@ -14,9 +12,7 @@ import java.awt.*;
 public class Helper {
 
     public static boolean isValidRule(Rules rules){
-        boolean result = rules instanceof SPL;
-        result |= rules instanceof SPLDropIn;
-        result |= rules instanceof HL;
+        boolean result = rules instanceof HL;
         result |= rules instanceof HLTeen;
         result |= rules instanceof HLAdult;
         return result;

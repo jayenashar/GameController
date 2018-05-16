@@ -1,9 +1,6 @@
 package data;
 
-import controller.ui.GCGUI;
 import data.hl.*;
-import data.spl.SPL;
-import data.spl.SPLDropIn;
 import data.values.Penalties;
 
 import java.awt.Color;
@@ -18,12 +15,11 @@ public abstract class Rules
 {   
     /** Note all league´s rules here to have them available. */
     public static final Rules[] LEAGUES = {
-        new SPL(),
-        new SPLDropIn(),
         new HL(),
         new HLTeen(),
         new HLAdult(),
-        new HLDropIn()
+        new HLDropInStandard(),
+        new HLDropInAdult()
     };
 
     public boolean equals(Rules rules) {
