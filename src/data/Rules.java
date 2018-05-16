@@ -19,7 +19,7 @@ public abstract class Rules
         new HLTeen(),
         new HLAdult(),
         new HLDropInStandard(),
-        new HLDropIn2()
+        new HLDropInAdult()
     };
 
     public boolean equals(Rules rules) {
