@@ -1,51 +1,50 @@
 package data.states;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by rkessler on 2017-03-23.
  */
 public class GameClock implements Serializable {
 
-    private Integer secondaryTime;
-    private Long secondaryTimeStart;
+    List<ExtraClock> _extraClocks = new ArrayList<>();
+
+    private ExtraClock secondaryClock;
+
+    public void addExtraClock(String label, int lifetime){
+        _extraClocks.add(new ExtraClock(label, lifetime));
+    }
+
+    public List<ExtraClock>  getExtraClocks(){
+        for (ExtraClock e: _extraClocks){
+            if (e.isLowerThan(0)){
+                _extraClocks.remove(e);
+            }
+        }
+        return _extraClocks;
+    }
 
     public Integer getSecondaryTime() {
-        if (secondaryTimeStart == null || secondaryTime == null){
+        if (secondaryClock == null){
             return null;
         } else {
-            return getRemainingSeconds(secondaryTimeStart, secondaryTime);
+            return secondaryClock.getRemainingSeconds();
         }
     }
 
     public void setSecondaryClock(int time_in_seconds){
-        secondaryTimeStart = System.currentTimeMillis();
-        secondaryTime = time_in_seconds;
+        secondaryClock = new ExtraClock(time_in_seconds);
     }
 
     public void clearSecondaryClock(){
-        secondaryTimeStart = null;
-        secondaryTime = null;
+        secondaryClock = null;
     }
 
-
-
-    public long getTime()
-    {
-        return System.currentTimeMillis();
-    }
-
-    public int getSecondsSince(long millis) {
-        return millis == 0 ? 100000 : (int) (getTime() - millis) / 1000;
-    }
-
-    public int getRemainingSeconds(long millis, int durationInSeconds) {
-        return durationInSeconds - getSecondsSince(millis);
-    }
 
     public boolean isSecondaryClockLowerThan(Integer value) {
-        Integer secondaryClock = getSecondaryTime();
-        return secondaryClock != null && secondaryClock <= value;
+       return secondaryClock != null && secondaryClock.isLowerThan(value);
     }
 
 }

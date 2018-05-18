@@ -3,16 +3,15 @@ package controller.ui.ui.components;
 import common.TotalScaleLayout;
 import controller.action.ActionBoard;
 import controller.ui.helper.FontHelper;
-import controller.ui.ui.customized.ImageButton;
-import controller.ui.ui.customized.ImagePanel;
 import data.Helper;
-import data.Rules;
 import data.states.AdvancedData;
+import data.states.ExtraClock;
 import data.values.GameStates;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -22,60 +21,30 @@ public class ClockComponent extends AbstractComponent {
 
     private JLabel clock;
     private JLabel clockSub;
-    private ImageButton incGameClock;
-    private ImageButton clockPause;
-    private ImageButton clockReset;
 
+    private List<JLabel> extraClockLabels = new ArrayList<JLabel>();
 
-    private static final String CLOCK_RESET = "reset.png";
-    private static final String CLOCK_PAUSE = "pause.png";
-    private static final String CLOCK_PLAY = "play.png";
-    private static final String CLOCK_PLUS = "plus.png";
-
-    private static final String BACKGROUND_CLOCK_SMALL = "time_ground_small.png";
-    private static final String BACKGROUND_CLOCK = "time_ground.png";
-
-    private static final String ICONS_PATH = "config/icons/";
+    private JButton clockPause;
+    private JButton clockReset;
 
     private static final int KICKOFF_BLOCKED_HIGHLIGHT_SECONDS = 3;
 
     private static final Color COLOR_HIGHLIGHT = Color.YELLOW;
-    private static final Color SUB_CLOCK_COLOUR = Color.LIGHT_GRAY;
-    private static final Color CLOCK_COLOUR = Color.WHITE;
+    private static final Color SUB_CLOCK_COLOUR = new Color(35, 35, 35);
+    private static final Color CLOCK_COLOUR = new Color(0, 0, 0);
 
-    private ImageIcon clockImgReset;
-    private ImageIcon clockImgPlay;
-    private ImageIcon clockImgPause;
-    private ImageIcon clockImgPlus;
 
     public ClockComponent() {
-        clockImgReset = new ImageIcon(ICONS_PATH + CLOCK_RESET);
-        clockImgPlay = new ImageIcon(ICONS_PATH + CLOCK_PLAY);
-        clockImgPlus = new ImageIcon(ICONS_PATH + CLOCK_PLUS);
-        clockImgPause = new ImageIcon(ICONS_PATH + CLOCK_PAUSE);
-
         defineLayout();
     }
 
     public void defineLayout() {
-        //--mid--
-        //  time
-        clockReset = new ImageButton(clockImgReset.getImage());
-        clockReset.setOpaque(false);
-        clockReset.setBorder(null);
-        ImagePanel clockContainer;
-        if (Rules.league.lostTime) {
-            clockContainer = new ImagePanel(new ImageIcon(ICONS_PATH + BACKGROUND_CLOCK_SMALL).getImage());
-        } else {
-            clockContainer = new ImagePanel(new ImageIcon(ICONS_PATH + BACKGROUND_CLOCK).getImage());
-        }
-        clockContainer.setOpaque(false);
-
+        this.setBackground(new Color(210, 210, 210));
         clock = new JLabel("10:00");
         clock.setForeground(CLOCK_COLOUR);
         clock.setHorizontalAlignment(JLabel.CENTER);
 
-        clockPause = new ImageButton(clockImgReset.getImage());
+        clockPause = new JButton("Pause clock");
         clockPause.setOpaque(false);
         clockPause.setBorder(null);
 
@@ -83,40 +52,40 @@ public class ClockComponent extends AbstractComponent {
         clockSub.setHorizontalAlignment(JLabel.CENTER);
         clockSub.setForeground(SUB_CLOCK_COLOUR);
 
-        incGameClock = new ImageButton(clockImgPlus.getImage());
-        incGameClock.setOpaque(false);
-        incGameClock.setBorder(null);
+        // Define extra clocks that can be shown dynamically for specific events
+        for (int i = 0; i < 3; i++) {
+            JLabel extraClock = new JLabel("0:00");
+            extraClock.setHorizontalAlignment(JLabel.LEFT);
+            extraClock.setForeground(SUB_CLOCK_COLOUR);
+            extraClockLabels.add(extraClock);
+        }
+
+        clockReset = new JButton("Reset clock");
+        clockReset.setOpaque(false);
+        clockReset.setBorder(null);
 
         clock.setVisible(true);
         clockPause.setVisible(true);
         clockSub.setVisible(true);
 
-
         TotalScaleLayout tsl = new TotalScaleLayout(this);
 
-        tsl.add(0, 0, 0.85, 0.5, clock);
-        tsl.add(0, 0.5, 0.85, 0.5, clockSub);
+        tsl.add(0, 0, 1, 0.4, clock);
+        tsl.add(0, 0.4, 1, 0.2, clockSub);
 
-        tsl.add(0.05, 0.05, 0.75, 0.9, clockContainer);
+        tsl.add(0.02, 0.7, 0.74, 0.1, extraClockLabels.get(0));
+        tsl.add(0.02, 0.8, 0.74, 0.1, extraClockLabels.get(1));
+        tsl.add(0.02, 0.9, 0.74, 0.1, extraClockLabels.get(2));
 
-        tsl.add(0.85, 0, 0.15, 0.33, clockPause);
-        tsl.add(0.85, 0.33, 0.15, 0.33, clockReset);
-        tsl.add(0.85, 0.66, 0.15, 0.34, incGameClock);
+        tsl.add(0.75, 0.5, 0.25, 0.25, clockPause);
+        tsl.add(0.75, 0.75, 0.25, 0.25, clockReset);
 
         clockReset.addActionListener(ActionBoard.clockReset);
         clockPause.addActionListener(ActionBoard.clockPause);
-        if (Rules.league.lostTime) {
-            incGameClock.addActionListener(ActionBoard.incGameClock);
-        } else {
-            incGameClock.setVisible(false);
-        }
 
         this.setLayout(tsl);
         this.setVisible(true);
     }
-
-
-
 
     @SuppressWarnings("Duplicates")
     @Override
@@ -142,17 +111,27 @@ public class ClockComponent extends AbstractComponent {
             clockSub.setForeground(SUB_CLOCK_COLOUR);
         }
 
-        ImageIcon tmp;
-        if (ActionBoard.clock.isClockRunning(data)) {
-            tmp = clockImgPause;
-        } else {
-            tmp = clockImgPlay;
-        }
-        clockPause.setImage(tmp.getImage());
+        updateExtraClocks(data);
+
         clockReset.setVisible(ActionBoard.clockReset.isLegal(data));
         clockPause.setVisible(ActionBoard.clockPause.isLegal(data));
-        if (Rules.league.lostTime) {
-            incGameClock.setEnabled(ActionBoard.incGameClock.isLegal(data));
+    }
+
+
+    public void updateExtraClocks(AdvancedData data) {
+        List<ExtraClock> extraClocks = data.gameClock.getExtraClocks();
+
+        for (JLabel label : extraClockLabels) {
+            label.setVisible(false);
+        }
+
+        for (int i = 0; i < Math.min(3, extraClocks.size()); i++) {
+            ExtraClock extraClock = extraClocks.get(i);
+            JLabel extraClockLabel = extraClockLabels.get(i);
+            extraClockLabel.setFont(FontHelper.extraClockFont);
+
+            extraClockLabel.setVisible(true);
+            extraClockLabel.setText(extraClock.getLabel() + " " + Helper.formatTime(extraClock.getRemainingSeconds()));
         }
     }
 }
