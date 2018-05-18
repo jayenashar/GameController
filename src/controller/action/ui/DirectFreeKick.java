@@ -61,6 +61,7 @@ public class DirectFreeKick extends GCAction
                 data.secGameStateInfo.reset();
                 data.gameClock.clearSecondaryClock();
                 Log.setNextMessage("End DirectFreeKick " + data.team[side].teamColor.toString());
+                data.gameClock.addExtraClock("Direct Free Kick", 10);
                 ActionBoard.clockPause.perform(data);
             }
         }

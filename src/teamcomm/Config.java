@@ -24,6 +24,8 @@ public class Config {
     /** Dynamically settable path to the config root folder */
     public static final String CONFIG_ROOT = System.getProperty("CONFIG_ROOT", "");
 
+    public static final String ICON_PATH = CONFIG_ROOT + "config/icons/";
+
     private static Config instance = null;
 
     private final HashMap<String, Serializable> map;

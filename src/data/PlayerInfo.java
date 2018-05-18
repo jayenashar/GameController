@@ -32,6 +32,8 @@ public class PlayerInfo implements Serializable
     public byte redCardCount = 0;    // estimate of time till unpenalised
     public byte isGoalie = 0;    // Save the information whether they are the goalie here to make it easier for the ux
 
+    public byte dropInPoints = 0; // Number of drop in points
+
     /**
      * Packing this Java class to the C-structure to be send.
      * @return Byte array representing the C-structure.

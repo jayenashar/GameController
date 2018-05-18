@@ -13,13 +13,10 @@ import java.awt.*;
 
 public class HL_DropIn extends AbstractUI {
 
-    private DropInPointCounter dropInPointCounter;
     private ButtonGroup kickOffGroup;
 
     public HL_DropIn(boolean fullscreen, AdvancedData data, GamePreparationData gamePrepData) {
         super(fullscreen, data, gamePrepData);
-        dropInPointCounter = new DropInPointCounter();
-        elementsReceivingUpdates.add(dropInPointCounter);
 
         kickOffGroup = new ButtonGroup();
 
@@ -107,7 +104,7 @@ public class HL_DropIn extends AbstractUI {
     }
 
     private void setupLeftPanel(TotalScaleLayout left_panel_layout) {
-        DropInTeamComponent rl_left = new DropInTeamComponent(Side.LEFT, dropInPointCounter, kickOffGroup);
+        DropInTeamComponent rl_left = new DropInTeamComponent(Side.LEFT, kickOffGroup);
         rl_left.setBackground(Color.green);
         TeamActions ta_left = new HLTeamActions (Side.LEFT);
         elementsReceivingUpdates.add(rl_left);
@@ -118,7 +115,7 @@ public class HL_DropIn extends AbstractUI {
     }
 
     private void setupRightPanel(TotalScaleLayout right_team_panel) {
-        DropInTeamComponent rl_right = new DropInTeamComponent(Side.RIGHT, dropInPointCounter, kickOffGroup);
+        DropInTeamComponent rl_right = new DropInTeamComponent(Side.RIGHT, kickOffGroup);
 
         TeamActions ta_right = new HLTeamActions (Side.RIGHT);
 

@@ -37,12 +37,12 @@ public class ClockPause extends GCAction
                 data.manPlay = false;
             } else {
                 data.manWhenClockChanged = data.getTime();
-                data.manPause = true;
+                data.setManualPause(true);
             }
             Log.state(data, "Time manual paused");
         } else {
             if (data.manPause) {
-                data.manPause = false;
+                data.setManualPause(false);
                 data.manTimeOffset -= data.getTime() - data.manWhenClockChanged;
             } else {
                 data.manWhenClockChanged = data.getTime();

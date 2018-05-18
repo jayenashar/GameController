@@ -25,4 +25,12 @@ public enum Side {
             return LEFT;
         }
     }
+
+    public static Side getFromInt(int side){
+        if (side == 0){
+            return LEFT;
+        } else {
+            return RIGHT;
+        }
+    }
 }

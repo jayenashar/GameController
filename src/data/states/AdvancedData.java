@@ -205,6 +205,10 @@ public class AdvancedData extends GameControlData implements Cloneable
         return durationInSeconds - getSecondsSince(millis);
     }
 
+    public void setManualPause(boolean value){
+        manPause = value;
+    }
+
     /**
      * Update all durations in the GameControlData packet.
      */
@@ -382,7 +386,6 @@ public class AdvancedData extends GameControlData implements Cloneable
         if (secGameState == SecondaryGameStates.INDIRECT_FREEKICK){
             return gameClock.getSecondaryTime();
         }
-
 
         if (secGameState == SecondaryGameStates.PENALTYKICK){
             return gameClock.getSecondaryTime();

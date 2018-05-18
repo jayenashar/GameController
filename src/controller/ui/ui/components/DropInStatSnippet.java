@@ -1,10 +1,14 @@
 package controller.ui.ui.components;
 
 import common.TotalScaleLayout;
+import controller.action.ui.CardIncrease;
+import controller.action.ui.DropinPointDelta;
 import controller.ui.ui.customized.Button;
+import data.states.AdvancedData;
 import data.values.Side;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,49 +17,28 @@ import java.awt.event.ActionListener;
  * Can be added to the robot label if necessary
  * Created by rkessler on 2017-03-29.
  */
-public class DropInStatSnippet extends JLabel implements Refreshable {
+public class DropInStatSnippet  extends AbstractComponent {
 
     private Side side;
     private int robotId;
-    private DropInPointCounter dropInPointCounter;
 
     private JButton robotPointsInc;
     private JButton robotPointsDec;
     private JLabel robotPointsLabel;
 
-    public DropInStatSnippet(Side side, int robotId, DropInPointCounter dropInPointCounter) {
+    public DropInStatSnippet(Side side, int robotId) {
         this.side = side;
         this.robotId = robotId;
-        this.dropInPointCounter = dropInPointCounter;
 
         robotPointsInc = new Button("+");
         robotPointsDec = new Button("-");
         robotPointsLabel = new JLabel("0 Points");
 
-        robotPointsInc.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                dropInPointCounter.deltaPoints(side, robotId, 1);
-                updateDropInPointsLabels();
-            }
-        });
-
-        robotPointsDec.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                dropInPointCounter.deltaPoints(side, robotId, -1);
-                updateDropInPointsLabels();
-            }
-        });
+        robotPointsInc.addActionListener(new DropinPointDelta(side, this.robotId, 1));
+        robotPointsDec.addActionListener(new DropinPointDelta(side, this.robotId, -1));
 
         defineLayout();
     }
-
-    private void updateDropInPointsLabels() {
-        int points = dropInPointCounter.getPoints(side, robotId);
-        robotPointsLabel.setText(points + " Points");
-    }
-
 
     public void defineLayout() {
         TotalScaleLayout layout = new TotalScaleLayout(this);
@@ -67,7 +50,9 @@ public class DropInStatSnippet extends JLabel implements Refreshable {
     }
 
     @Override
-    public void refresh() {
-        updateDropInPointsLabels();
+    public void update(AdvancedData data)
+    {
+        int points = data.getTeam(this.side).player[robotId].dropInPoints;
+        robotPointsLabel.setText(points + " Points");
     }
 }

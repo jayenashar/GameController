@@ -17,7 +17,7 @@ import javax.swing.*;
 /**
  * Created by rkessler on 2017-03-29.
  */
-public class DropInTeamComponent extends AbstractComponent implements Refreshable {
+public class DropInTeamComponent extends AbstractComponent {
 
     private Side side;
 
@@ -28,7 +28,6 @@ public class DropInTeamComponent extends AbstractComponent implements Refreshabl
     private JPanel robots;
 
     private RobotWithDropInCounter[] robot;
-    private DropInPointCounter dropInPointCounter;
 
     private static final String KICKOFF_PENALTY_SHOOTOUT = "P.-taker";
 
@@ -36,9 +35,8 @@ public class DropInTeamComponent extends AbstractComponent implements Refreshabl
     private int teamSize;
 
 
-    public DropInTeamComponent(Side side, DropInPointCounter dropInPointCounter, ButtonGroup kickOffGroup) {
+    public DropInTeamComponent(Side side, ButtonGroup kickOffGroup) {
         this.side = side;
-        this.dropInPointCounter = dropInPointCounter;
 
         goalInc = new Button("+");
         goalInc.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -72,22 +70,6 @@ public class DropInTeamComponent extends AbstractComponent implements Refreshabl
             teamSize += 1;
         }
 
-        dropInPointCounter.initializeSide(side, teamSize, this);
-
-        goalInc.addActionListener(new GCAction(ActionType.UI) {
-            @Override
-            public void perform(AdvancedData data) {
-                dropInPointCounter.scoreGoal(data, side);
-                refresh();
-            }
-
-            @Override
-            public boolean isLegal(AdvancedData data) {
-                return true;
-            }
-        });
-
-
         // Define the layout
         defineLayout();
     }
@@ -114,7 +96,7 @@ public class DropInTeamComponent extends AbstractComponent implements Refreshabl
         double robot_height = 0.12;
 
         for (int j = 0; j < teamSize; j++) {
-            robot[j] = new RobotWithDropInCounter(side, j, dropInPointCounter);
+            robot[j] = new RobotWithDropInCounter(side, j);
             robot[j].setup();
 
             tsc.add(0, 0.1 + robot_height * j + 0.01 * j, 1, robot_height, robot[j]);
@@ -179,13 +161,6 @@ public class DropInTeamComponent extends AbstractComponent implements Refreshabl
 
         for (int j = 0; j < teamSize; j++) {
             robot[j].update(data);
-        }
-    }
-
-    @Override
-    public void refresh() {
-        for (int j = 0; j < teamSize; j++) {
-            robot[j].refresh();
         }
     }
 }

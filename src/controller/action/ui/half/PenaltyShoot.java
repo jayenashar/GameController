@@ -58,15 +58,15 @@ public class PenaltyShoot extends GCAction
     @Override
     public boolean isLegal(AdvancedData data)
     {
+        // Penalty shootout is not possible in round robin
+        if (data.gameType == GameTypes.ROUNDROBIN){
+            return false;
+        }
+
         return (data.secGameState == SecondaryGameStates.PENALTYSHOOT)
           || (data.previousSecGameState == SecondaryGameStates.PENALTYSHOOT)
           || ((data.firstHalf != GameControlData.C_TRUE)
-            && (data.gameState == GameStates.FINISHED)
-            && !(Rules.league.overtime
-                && (data.gameType == GameTypes.PLAYOFF)
-                && (data.secGameState == SecondaryGameStates.NORMAL)
-                && (data.team[0].score == data.team[1].score)
-                && (data.team[0].score > 0)) )
+            && (data.gameState == GameStates.FINISHED))
           || (data.testmode);
     }
 }

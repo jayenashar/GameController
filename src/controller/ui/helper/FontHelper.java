@@ -17,9 +17,11 @@ public class FontHelper {
 
     protected static final int TIME_FONT_SIZE = 50;
     protected static final int TIME_SUB_FONT_SIZE = 40;
+    protected static final int TIME_EXTRA_CLOCK_SIZE = 20;
 
     public static Font timeFont = new Font(STANDARD_FONT, Font.PLAIN,  TIME_FONT_SIZE);
     public static Font timeSubFont = new Font(STANDARD_FONT, Font.PLAIN,  TIME_SUB_FONT_SIZE);
+    public static Font extraClockFont = new Font(STANDARD_FONT, Font.PLAIN,  TIME_EXTRA_CLOCK_SIZE);
 
     static public Font boldHeadlineFont(){
         return new Font(STANDARD_FONT, Font.BOLD, HEADLINE_FONT_SIZE);
