@@ -18,10 +18,10 @@ The sources mentioned in some sections of this document are available at
 
 - [x] Removal of Illegal Defense and Illegal Attack
 - [x] Allow Adult league to play drop in 2 vs. 2
-- [ ] Skip extra time in knockout games
-- [ ] Fix point counting on drop in challenge
-- [ ] Fix "GameController goes to extended time even in normal mode"
-- [ ] Highlight and make "current goalkeeper" changeable in UI
+- [x] Skip extra time in knockout games
+- [x] Fix point counting on drop in challenge
+- [x] Fix "GameController goes to extended time even in normal mode"
+- [x] Highlight and make "current goalkeeper" changeable in UI
 
 _See [CHANGELOG](CHANGELOG.md) for more details and history._
 
