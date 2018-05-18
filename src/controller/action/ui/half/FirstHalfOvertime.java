@@ -50,6 +50,10 @@ public class FirstHalfOvertime extends GCAction {
      */
     @Override
     public boolean isLegal(AdvancedData data) {
+        if (data.gameType == GameTypes.ROUNDROBIN){
+            return false;
+        }
+
         if (data.testmode) {
             return true;
         }
