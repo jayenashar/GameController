@@ -18,8 +18,10 @@ public abstract class Rules
         new HL(),
         new HLTeen(),
         new HLAdult(),
-        new HLDropInStandard(),
-        new HLDropInAdult()
+        new HLDropIn2(),
+        new HLDropIn3(),
+        new HLDropIn4(),
+        new HLDropIn5()
     };
 
     public boolean equals(Rules rules) {
