@@ -1,25 +1,23 @@
 package controller.ui.ui.components;
 
 import common.TotalScaleLayout;
+import data.states.AdvancedData;
 import data.values.Side;
 
 /**
  * Created by rkessler on 2017-06-11.
  */
-public class RobotWithDropInCounter extends Robot implements Refreshable {
+public class RobotWithDropInCounter extends Robot {
 
-    DropInPointCounter dropInPointCounter;
-    DropInStatSnippet diss;
+    private DropInStatSnippet diss;
 
-    public RobotWithDropInCounter(Side side, int id, DropInPointCounter dropInPointCounter) {
+    public RobotWithDropInCounter(Side side, int id) {
         super(side, id);
-        this.dropInPointCounter = dropInPointCounter;
+        diss = new DropInStatSnippet(side, id);
     }
 
 
     public void setup() {
-        diss = new DropInStatSnippet(side, id, dropInPointCounter);
-
         super.setup();
     }
 
@@ -45,8 +43,10 @@ public class RobotWithDropInCounter extends Robot implements Refreshable {
         robotLayout.add(0, 0.9, 1, 0.1, progressBar);
     }
 
+
     @Override
-    public void refresh() {
-        diss.refresh();
+    public void update(AdvancedData data) {
+        super.update(data);
+        diss.update(data);
     }
 }

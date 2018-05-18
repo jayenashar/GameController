@@ -6,7 +6,9 @@ import controller.action.ActionType;
 import controller.action.GCAction;
 import data.states.AdvancedData;
 import data.values.GameStates;
+import data.values.GameTypes;
 import data.values.SecondaryGameStates;
+import data.values.Side;
 
 
 /**
@@ -44,6 +46,18 @@ public class Goal extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
+        // If we are in a dropin game we want to count dropin points
+        // We are doing this here with forwarding an action to later call the action directly
+        // from the button click of a score goal
+        if (data.gameType == GameTypes.DROPIN){
+            if (this.set > 0){
+                new DropInPointsEvaluation(Side.getFromInt(this.side)).perform(data);
+            } else {
+                new DropInPointsEvaluation(Side.getFromInt(this.side).getOther()).perform(data);
+            }
+        }
+
+        // Normal goal action
         data.team[side].score += set;
         if (set == 1) {
             if (data.secGameState != SecondaryGameStates.PENALTYSHOOT) {
