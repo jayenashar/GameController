@@ -45,7 +45,11 @@ Building the source code requires the JDK 1.8 or newer.
 
 Double-click GameController.jar or run 
 
-Usage: `java -jar GameController.jar {options}`
+Usage: 
+```bash
+cd build/jar
+java -jar GameController.jar {options}
+```
 
     (-h | --help)                   display help
     (-t | --test)                   use test-mode - currently only disabling the
