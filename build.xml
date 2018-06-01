@@ -46,7 +46,7 @@
 
     <target name="jar" depends="compile">
         <mkdir dir="${jar.dir}"/>
-        <jar destfile="${jar.dir}/GameController.jar" basedir="${classes.dir}" includes="${common_classes} controller/ teamcomm/net/">
+        <jar destfile="${jar.dir}/GameController.jar" basedir="${classes.dir}" includes="${common_classes} controller/ teamcomm/">
             <manifest>
                 <attribute name="Main-Class" value="controller.GameController"/>
                 <attribute name="Author" value="Michel Bartsch, Marcel Steinbeck, Thomas Roefer" />
