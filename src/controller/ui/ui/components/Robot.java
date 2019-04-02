@@ -187,9 +187,7 @@ public class Robot extends AbstractComponent {
             if (!data.ejected[sideValue][robotId]) {
                 int seconds = data.getRemainingPenaltyTime(sideValue, robotId);
                 boolean servingPenalty = data.isServingPenalty[sideValue][robotId];
-                boolean pickup = Rules.league instanceof HL &&
-                        (robotInfo.penalty == Penalties.HL_PICKUP_OR_INCAPABLE
-                                || robotInfo.penalty == Penalties.HL_SERVICE);
+                boolean pickup = Rules.league instanceof HL && robotInfo.penalty == Penalties.HL_PICKUP_OR_INCAPABLE;
 
                 if (!servingPenalty) {
                     if (pickup) {

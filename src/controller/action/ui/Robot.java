@@ -8,7 +8,6 @@ import controller.action.ActionType;
 import controller.action.GCAction;
 import controller.action.ui.penalty.Penalty;
 import controller.action.ui.penalty.PickUpHL;
-import controller.action.ui.penalty.ServiceHL;
 import controller.action.ui.penalty.Substitute;
 import data.hl.HL;
 import data.states.AdvancedData;
@@ -99,10 +98,6 @@ public class Robot extends GCAction
                 && (data.team[side].player[number].penalty != Penalties.SUBSTITUTE || data.getNumberOfRobotsInPlay(side) < Rules.league.robotsPlaying)
                 && !isCoach(data)
                 || EventHandler.getInstance().lastUIEvent instanceof PickUpHL
-                && data.team[side].player[number].penalty != Penalties.HL_SERVICE
-                && data.team[side].player[number].penalty != Penalties.SUBSTITUTE
-                || EventHandler.getInstance().lastUIEvent instanceof ServiceHL
-                && data.team[side].player[number].penalty != Penalties.HL_SERVICE
                 && data.team[side].player[number].penalty != Penalties.SUBSTITUTE
                 || EventHandler.getInstance().lastUIEvent instanceof Substitute
                 && data.team[side].player[number].penalty != Penalties.SUBSTITUTE

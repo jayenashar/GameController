@@ -54,7 +54,6 @@ public class PenaltyComponent extends AbstractComponent {
             addButtonByPenalty(Penalties.HL_BALL_MANIPULATION, ActionBoard.ballManipulation);
             addButtonByPenalty(Penalties.HL_PHYSICAL_CONTACT, new HLPushing());
             addButtonByPenalty(Penalties.HL_PICKUP_OR_INCAPABLE, ActionBoard.pickUpHL);
-            addButtonByPenalty(Penalties.HL_SERVICE, ActionBoard.serviceHL);
             addButtonByPenalty(Penalties.SUBSTITUTE, ActionBoard.substitute);
         }
         penaltyButtonContainer.setVisible(true);
@@ -86,7 +85,6 @@ public class PenaltyComponent extends AbstractComponent {
     private void updatePenaltiesHL(AdvancedData data) {
         penaltyButtons.get(Penalties.HL_BALL_MANIPULATION).setEnabled(ActionBoard.ballManipulation.isLegal(data));
         penaltyButtons.get(Penalties.HL_PICKUP_OR_INCAPABLE).setEnabled(ActionBoard.pickUpHL.isLegal(data));
-        penaltyButtons.get(Penalties.HL_SERVICE).setEnabled(ActionBoard.serviceHL.isLegal(data));
         penaltyButtons.get(Penalties.SUBSTITUTE).setEnabled(ActionBoard.substitute.isLegal(data));
 
         GCAction hightlightEvent = EventHandler.getInstance().lastUIEvent;
@@ -94,7 +92,6 @@ public class PenaltyComponent extends AbstractComponent {
         penaltyButtons.get(Penalties.HL_BALL_MANIPULATION).setSelected(hightlightEvent == ActionBoard.ballManipulation);
         penaltyButtons.get(Penalties.HL_PHYSICAL_CONTACT).setSelected(new HLPushing().equals(hightlightEvent));
         penaltyButtons.get(Penalties.HL_PICKUP_OR_INCAPABLE).setSelected(hightlightEvent == ActionBoard.pickUpHL);
-        penaltyButtons.get(Penalties.HL_SERVICE).setSelected(hightlightEvent == ActionBoard.serviceHL);
         penaltyButtons.get(Penalties.SUBSTITUTE).setSelected(hightlightEvent == ActionBoard.substitute);
     }
 }
