@@ -57,6 +57,9 @@ public class AdvancedData extends GameControlData implements Cloneable
     /** When was each player penalized last (ms, 0 = never)? */
     public long[][] whenPenalized = Rules.league.isCoachAvailable ? new long[2][Rules.league.teamSize+1] : new long[2][Rules.league.teamSize];
 
+    /** Is a player currently serving a penalty */
+    public boolean[][] isServingPenalty = Rules.league.isCoachAvailable ? new boolean[2][Rules.league.teamSize+1] : new boolean[2][Rules.league.teamSize];
+
     /** How often was each team penalized? */
     public int[] penaltyCount = new int[2];
 
@@ -226,8 +229,11 @@ public class AdvancedData extends GameControlData implements Cloneable
         for (int side = 0; side < team.length; ++side) {
             for (int number = 0; number < team[side].player.length; ++number) {
                 PlayerInfo player = team[side].player[number];
-                player.secsTillUnpenalised = player.penalty == Penalties.NONE
-                        ? 0 : (byte) getRemainingPenaltyTime(side, number);
+                if (player.penalty == Penalties.NONE) {
+                    player.secsTillUnpenalised = 0;
+                } else {
+                    player.secsTillUnpenalised = (byte)getRemainingPenaltyTime(side, number);
+                }
             }
         }
     }
@@ -336,7 +342,7 @@ public class AdvancedData extends GameControlData implements Cloneable
      * Calculates the remaining time a certain robot has to stay penalized.
      * @param side 0 or 1 depending on whether the robot's team is shown left or right.
      * @param number The robot's number starting with 0.
-     * @return The number of seconds the robot has to stay penalized.
+     * @return The number of seconds the robot has to stay penalized, 0 in case Penalty is manual or substitute
      */
     public int getRemainingPenaltyTime(int side, int number)
     {
@@ -346,10 +352,16 @@ public class AdvancedData extends GameControlData implements Cloneable
             penaltyTime = penalty.penaltyTime() + Rules.league.penaltyIncreaseTime * robotPenaltyCount[side][number];
         }
         assert penalty == Penalties.MANUAL || penalty == Penalties.SUBSTITUTE || penaltyTime != -1;
-        return penalty == Penalties.MANUAL || penalty == Penalties.SUBSTITUTE ? 0
-                : gameState == GameStates.READY && Rules.league.returnRobotsInGameStoppages && whenPenalized[side][number] >= whenCurrentGameStateBegan
-                ? Rules.league.readyTime - getSecondsSince(whenCurrentGameStateBegan)
-                : Math.max(0, getRemainingSeconds(whenPenalized[side][number], penaltyTime));
+        if (penalty == Penalties.MANUAL || penalty == Penalties.SUBSTITUTE) {
+            return 0;
+        }
+        else if (!isServingPenalty[side][number]) {// If robot has not started serving the penalty time, remaining time is fixed
+            return penaltyTime;
+        }
+        else if (gameState == GameStates.READY && Rules.league.returnRobotsInGameStoppages && whenPenalized[side][number] >= whenCurrentGameStateBegan) {
+            return Rules.league.readyTime - getSecondsSince(whenCurrentGameStateBegan);
+        }
+        return Math.max(0, getRemainingSeconds(whenPenalized[side][number], penaltyTime));
     }
     
     /**
@@ -457,11 +469,12 @@ public class AdvancedData extends GameControlData implements Cloneable
     }
     
     public void updatePenalties() {
-        if (secGameState == SecondaryGameStates.NORMAL && gameState == GameStates.PLAYING
-                && getSecondsSince(whenCurrentGameStateBegan) >= Rules.league.delayedSwitchToPlaying) {
-            for (TeamInfo t : team) {
-                for (PlayerInfo p : t.player) {
-
+        for (TeamInfo t : team) {
+            for (PlayerInfo p : t.player) {
+                // Auto-remove penalties once robots have served penalty time
+                if (p.penalty != Penalties.NONE && p.secsTillUnpenalised == 0 && p.penalty != Penalties.MANUAL && p.penalty != Penalties.SUBSTITUTE) {
+                    p.penalty = Penalties.NONE;
+                    System.out.println("Unpenalising a robot automatically");
                 }
             }
         }

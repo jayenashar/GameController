@@ -28,6 +28,7 @@ public class HLPushing extends Penalty
         data.pushes[side]++;
         handleRepeatedPenalty(data, player, side, number, GameStates.PLAYING);
         data.whenPenalized[side][number] = data.getTime();
+        data.isServingPenalty[side][number] = false;
         
         Log.state(data, "Player Pushing " + data.team[side].teamColor + " " + (number+1));
     }

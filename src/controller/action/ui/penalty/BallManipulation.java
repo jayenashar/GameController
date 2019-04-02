@@ -30,6 +30,7 @@ public class BallManipulation extends Penalty
         player.penalty = Penalties.HL_BALL_MANIPULATION;
         handleRepeatedPenalty(data, player, side, number);
         data.whenPenalized[side][number] = data.getTime();
+        data.isServingPenalty[side][number] = false;
         Log.state(data, "Ball Manipulation " + data.team[side].teamColor + " " + (number+1));
     }
     

@@ -72,9 +72,14 @@ public class Robot extends GCAction
                 || EventHandler.getInstance().lastUIEvent instanceof TeammatePushing) {
             EventHandler.getInstance().lastUIEvent.performOn(data, player, side, number);
         }
-        else if (player.penalty != Penalties.NONE) {
-            player.penalty = Penalties.NONE;
-            Log.state(data, ("Unpenalised ") + data.team[side].teamColor + " " + (number+1));
+        else if (data.isServingPenalty[side][number]) {// If robot is currently serving penalty, reset penalty time
+            data.whenPenalized[side][number] = data.getTime();
+            Log.state(data, "Resetting penalty for " + data.team[side].teamColor + " " + (number+1));
+        }
+        else if (player.penalty != Penalties.NONE) {// Robot will now starts serving its penalty time
+            data.whenPenalized[side][number] = data.getTime();
+            data.isServingPenalty[side][number] = true;
+            Log.state(data, "Start serving penalty for " + data.team[side].teamColor + " " + (number+1));
         }
     }
     

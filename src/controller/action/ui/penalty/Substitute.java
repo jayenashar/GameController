@@ -31,6 +31,7 @@ public class Substitute extends Penalty
         player.penalty = Penalties.SUBSTITUTE;
         data.robotPenaltyCount[side][number] = 0;
         data.whenPenalized[side][number] = data.getTime();
+        data.isServingPenalty[side][number] = false;
         Log.state(data, "Leaving Player " + data.team[side].teamColor + " " + (number+1));
     }
     

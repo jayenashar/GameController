@@ -28,6 +28,7 @@ public class PickUpHL extends Penalty
 
         player.penalty = Penalties.HL_PICKUP_OR_INCAPABLE;
         handleRepeatedPenalty(data, player, side, number);
+        data.isServingPenalty[side][number] = false;
         Log.state(data, "Request for PickUp / Incapable Player " + data.team[side].teamColor + " " + (number+1));
     }
 

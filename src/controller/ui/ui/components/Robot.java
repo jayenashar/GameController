@@ -186,11 +186,12 @@ public class Robot extends AbstractComponent {
         if (robotInfo.penalty != Penalties.NONE) {
             if (!data.ejected[sideValue][robotId]) {
                 int seconds = data.getRemainingPenaltyTime(sideValue, robotId);
+                boolean servingPenalty = data.isServingPenalty[sideValue][robotId];
                 boolean pickup = Rules.league instanceof HL &&
                         (robotInfo.penalty == Penalties.HL_PICKUP_OR_INCAPABLE
                                 || robotInfo.penalty == Penalties.HL_SERVICE);
 
-                if (seconds == 0) {
+                if (!servingPenalty) {
                     if (pickup) {
                         robotLabel.setText(data.team[sideValue].teamColor + " " + (robotId + 1) + " (" + Penalties.HL_PICKUP_OR_INCAPABLE.toString() + ")");
                         highlight(robot, true);
@@ -201,14 +202,15 @@ public class Robot extends AbstractComponent {
                         robotLabel.setText(data.team[sideValue].teamColor + " " + (robotId + 1) + ": " + Helper.formatTime(seconds));
                         highlight(robot, seconds <= UNPEN_HIGHLIGHT_SECONDS && robot.getBackground() != COLOR_HIGHLIGHT);
                     }
+                    progressBar.setVisible(false);
                 } else {
                     robotLabel.setText(data.team[sideValue].teamColor + " " + (robotId + 1) + ": " + Helper.formatTime(seconds) + (pickup ? " (P)" : ""));
                     highlight(robot, seconds <= UNPEN_HIGHLIGHT_SECONDS && robot.getBackground() != COLOR_HIGHLIGHT);
+                    // Update the robot time component
+                    int penTime = (seconds + data.getSecondsSince(data.whenPenalized[sideValue][robotId]));
+                    double percent = 100.0 * seconds / (double) penTime;
+                    progressBar.updateValue(percent);
                 }
-                // Update the robot time component
-                int penTime = (seconds + data.getSecondsSince(data.whenPenalized[sideValue][robotId]));
-                double percent = 100.0 * seconds / (double) penTime;
-                progressBar.updateValue(percent);
             } else {
                 robotLabel.setText(LocalizationManager.getLocalization().EJECTED);
                 highlight(robot, false);
