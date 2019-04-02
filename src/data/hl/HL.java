@@ -33,7 +33,7 @@ public class HL extends Rules
         /** Time in seconds one half is long. */
         halfTime = 10*60;
         /** Time in seconds the ready state is long. */
-        readyTime = 30;
+        readyTime = 45;
         /** Time in seconds between first and second half. */
         pauseTime = 5*60;
         /** If left and right side may both have the first kickoff. */
@@ -107,9 +107,9 @@ public class HL extends Rules
         };
 
         /** The time a team has to prepare for the free kick **/
-        free_kick_preparation_time = 15;
+        free_kick_preparation_time = 30;
 
         /** The time a team has to prepare for the penalty kick **/
-        penalty_kick_preparation_time = 15;
+        penalty_kick_preparation_time = 30;
     }
 }
