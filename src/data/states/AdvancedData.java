@@ -233,6 +233,11 @@ public class AdvancedData extends GameControlData implements Cloneable
                     player.secsTillUnpenalised = 0;
                 } else {
                     player.secsTillUnpenalised = (byte)getRemainingPenaltyTime(side, number);
+                    // Auto-remove penalties once robots have served penalty time
+                    if (player.penalty != Penalties.NONE && player.secsTillUnpenalised == 0 &&
+                            player.penalty != Penalties.MANUAL && player.penalty != Penalties.SUBSTITUTE) {
+                        player.penalty = Penalties.NONE;
+                    }
                 }
             }
         }
@@ -471,11 +476,6 @@ public class AdvancedData extends GameControlData implements Cloneable
     public void updatePenalties() {
         for (TeamInfo t : team) {
             for (PlayerInfo p : t.player) {
-                // Auto-remove penalties once robots have served penalty time
-                if (p.penalty != Penalties.NONE && p.secsTillUnpenalised == 0 && p.penalty != Penalties.MANUAL && p.penalty != Penalties.SUBSTITUTE) {
-                    p.penalty = Penalties.NONE;
-                    System.out.println("Unpenalising a robot automatically");
-                }
             }
         }
     }

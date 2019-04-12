@@ -183,7 +183,7 @@ public class Robot extends AbstractComponent {
         // Update the goalie info
         updateGoalieMarker(robotInfo);
 
-        if (robotInfo.penalty != Penalties.NONE) {
+        if (robotInfo.penalty != Penalties.NONE && data.getRemainingPenaltyTime(sideValue, robotId) > 0) {
             if (!data.ejected[sideValue][robotId]) {
                 int seconds = data.getRemainingPenaltyTime(sideValue, robotId);
                 boolean servingPenalty = data.isServingPenalty[sideValue][robotId];
@@ -198,7 +198,7 @@ public class Robot extends AbstractComponent {
                         highlight(robot, false);
                     } else if (Rules.league instanceof HL) {
                         robotLabel.setText(data.team[sideValue].teamColor + " " + (robotId + 1) + ": " + Helper.formatTime(seconds));
-                        highlight(robot, seconds <= UNPEN_HIGHLIGHT_SECONDS && robot.getBackground() != COLOR_HIGHLIGHT);
+                        highlight(robot, true);
                     }
                     progressBar.setVisible(false);
                 } else {
