@@ -107,7 +107,7 @@ public class HL extends Rules
         };
 
         /** The time a team has to prepare for the free kick **/
-        free_kick_preparation_time = 30;
+        game_interruption_preparation_time = 30;
 
         /** The time a team has to prepare for the penalty kick **/
         penalty_kick_preparation_time = 30;

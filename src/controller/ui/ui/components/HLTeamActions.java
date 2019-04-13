@@ -7,6 +7,7 @@ import controller.action.ui.IndirectFreeKick;
 import controller.action.ui.PenaltyKick;
 import controller.ui.localization.LocalizationManager;
 import controller.ui.ui.customized.Button;
+import controller.ui.ui.customized.GameInterruptionButton;
 import controller.ui.ui.customized.JMultiStepIndicatorButton;
 import data.states.AdvancedData;
 import data.values.SecondaryGameStates;
@@ -20,9 +21,9 @@ import java.awt.*;
  */
 public class HLTeamActions extends TeamActions {
 
-    private JMultiStepIndicatorButton indirectFreeKick;
-    private JMultiStepIndicatorButton directFreeKick;
-    private JMultiStepIndicatorButton penaltyKick;
+    private GameInterruptionButton indirectFreeKick;
+    private GameInterruptionButton directFreeKick;
+    private GameInterruptionButton penaltyKick;
 
     public HLTeamActions(Side side) {
         super(side);
@@ -40,9 +41,9 @@ public class HLTeamActions extends TeamActions {
         timeOut = new JButton(LocalizationManager.getLocalization().TAKE_TIMEOUT);
         out = new JButton(OUT);
 
-        directFreeKick = new JMultiStepIndicatorButton(LocalizationManager.getLocalization().DIRECT_FREE_KICK, 2);
-        indirectFreeKick = new JMultiStepIndicatorButton(LocalizationManager.getLocalization().INDIRECT_FREE_KICK, 2);
-        penaltyKick = new JMultiStepIndicatorButton(LocalizationManager.getLocalization().PENALTY_KICK, 2);
+        directFreeKick = new GameInterruptionButton(LocalizationManager.getLocalization().DIRECT_FREE_KICK);
+        indirectFreeKick = new GameInterruptionButton(LocalizationManager.getLocalization().INDIRECT_FREE_KICK);
+        penaltyKick = new GameInterruptionButton(LocalizationManager.getLocalization().PENALTY_KICK);
 
         directFreeKick.addActionListener(new DirectFreeKick(side.value()));
         indirectFreeKick.addActionListener(new IndirectFreeKick(side.value()));
@@ -90,18 +91,11 @@ public class HLTeamActions extends TeamActions {
             // Only change text and color if it is our team
             boolean isUs = team == data.team[side.value()].teamNumber;
 
-            if (isUs){
-                if (subMode == 1){
-                    directFreeKick.setText(LocalizationManager.getLocalization().DIRECT_FREE_KICK_READY);
-                    directFreeKick.setStep(1);
-                } else {
-                    directFreeKick.setText(LocalizationManager.getLocalization().DIRECT_FREE_KICK_EXECUTE);
-                    directFreeKick.setStep(2);
-                }
+            if (isUs) {
+                directFreeKick.setSubMode(subMode);
             }
         } else {
-            directFreeKick.setText(LocalizationManager.getLocalization().DIRECT_FREE_KICK);
-            directFreeKick.setStep(0);
+            directFreeKick.setInitialMode();
         }
     }
 
@@ -120,17 +114,10 @@ public class HLTeamActions extends TeamActions {
             boolean isUs = team == data.team[side.value()].teamNumber;
 
             if (isUs){
-                if (subMode == 1){
-                    indirectFreeKick.setText(LocalizationManager.getLocalization().INDIRECT_FREE_KICK_READY);
-                    indirectFreeKick.setStep(1);
-                } else {
-                    indirectFreeKick.setText(LocalizationManager.getLocalization().INDIRECT_FREE_KICK_EXECUTE);
-                    indirectFreeKick.setStep(2);
-                }
+                indirectFreeKick.setSubMode(subMode);
             }
         } else {
-            indirectFreeKick.setText(LocalizationManager.getLocalization().INDIRECT_FREE_KICK);
-            indirectFreeKick.setStep(0);
+            indirectFreeKick.setInitialMode();
         }
     }
 
@@ -148,18 +135,10 @@ public class HLTeamActions extends TeamActions {
             boolean isUs = team == data.team[side.value()].teamNumber;
 
             if (isUs) {
-                if (subMode == 1) {
-                    penaltyKick.setText(LocalizationManager.getLocalization().PENALTY_KICK_READY);
-                    penaltyKick.setStep(1);
-                } else {
-                    penaltyKick.setText(LocalizationManager.getLocalization().PENALTY_KICK_EXECUTE);
-                    penaltyKick.setStep(2);
-
-                }
+                penaltyKick.setSubMode(subMode);
             }
         } else {
-            penaltyKick.setText(LocalizationManager.getLocalization().PENALTY_KICK);
-            penaltyKick.setStep(0);
+            penaltyKick.setInitialMode();
         }
     }
 }
