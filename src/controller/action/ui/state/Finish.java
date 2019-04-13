@@ -58,7 +58,10 @@ public class Finish extends GCAction {
         // Cannot move to finish when we are in a penalty or free kick
         if (data.secGameState == SecondaryGameStates.PENALTYKICK ||
                 data.secGameState == SecondaryGameStates.DIRECT_FREEKICK ||
-                data.secGameState == SecondaryGameStates.INDIRECT_FREEKICK) {
+                data.secGameState == SecondaryGameStates.INDIRECT_FREEKICK ||
+                data.secGameState == SecondaryGameStates.CORNER_KICK ||
+                data.secGameState == SecondaryGameStates.GOAL_KICK ||
+                data.secGameState == SecondaryGameStates.THROW_IN) {
             return false;
         }
 

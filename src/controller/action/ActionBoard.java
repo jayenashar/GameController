@@ -60,6 +60,9 @@ public class ActionBoard {
     public static IndirectFreeKick[] indirectFreeKick = new IndirectFreeKick[2];
     public static DirectFreeKick[] directFreeKick = new DirectFreeKick[2];
     public static PenaltyKick[] penaltyKick = new PenaltyKick[2];
+    public static CornerKick[] cornerKick = new CornerKick[2];
+    public static GoalKick[] goalKick = new GoalKick[2];
+    public static ThrowIn[] throwIn = new ThrowIn[2];
 
     public static Manual[][] manualPen = Rules.league.isCoachAvailable ? new Manual[2][Rules.league.teamSize + 1] : new Manual[2][Rules.league.teamSize];
     public static Manual[][] manualUnpen = Rules.league.isCoachAvailable ? new Manual[2][Rules.league.teamSize + 1] : new Manual[2][Rules.league.teamSize];
@@ -99,6 +102,9 @@ public class ActionBoard {
             indirectFreeKick[i] = new IndirectFreeKick(i);
             directFreeKick[i] = new DirectFreeKick(i);
             penaltyKick[i] = new PenaltyKick(i);
+            cornerKick[i] = new CornerKick(i);
+            goalKick[i] = new GoalKick(i);
+            throwIn[i] = new ThrowIn(i);
         }
 
         clockReset = new ClockReset();

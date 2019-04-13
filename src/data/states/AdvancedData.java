@@ -264,9 +264,7 @@ public class AdvancedData extends GameControlData implements Cloneable
         int regularNumberOfPenaltyShots = (gameType == GameTypes.PLAYOFF) ? Rules.league.numberOfPenaltyShotsLong : Rules.league.numberOfPenaltyShotsShort;
         int duration = secGameState == SecondaryGameStates.TIMEOUT ? secsRemaining :
                 secGameState == SecondaryGameStates.NORMAL ? Rules.league.halfTime :
-                secGameState == SecondaryGameStates.DIRECT_FREEKICK ? secsRemaining :
-                secGameState == SecondaryGameStates.INDIRECT_FREEKICK ? secsRemaining :
-                secGameState == SecondaryGameStates.PENALTYKICK ? secsRemaining
+                secGameState.isGameInterruption() ? secsRemaining
                 : secGameState == SecondaryGameStates.OVERTIME ? Rules.league.overtimeTime
                 : Math.max(team[0].penaltyShot, team[1].penaltyShot) > regularNumberOfPenaltyShots
                 ? Rules.league.penaltyShotTimeSuddenDeath
@@ -396,15 +394,7 @@ public class AdvancedData extends GameControlData implements Cloneable
     public Integer getSecondaryTime(int timeKickOffBlockedOvertime)
     {
 
-        if (secGameState == SecondaryGameStates.DIRECT_FREEKICK){
-            return gameClock.getSecondaryTime();
-        }
-
-        if (secGameState == SecondaryGameStates.INDIRECT_FREEKICK){
-            return gameClock.getSecondaryTime();
-        }
-
-        if (secGameState == SecondaryGameStates.PENALTYKICK){
+        if (secGameState.isGameInterruption()) {
             return gameClock.getSecondaryTime();
         }
 

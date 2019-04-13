@@ -76,7 +76,7 @@ public class GameInterruption extends GCAction {
                     break;
                 case 2:
                     data.secGameState = data.previousSecGameState;
-                    data.previousSecGameState = SecondaryGameStates.DIRECT_FREEKICK;
+                    data.previousSecGameState = secGameState;
                     data.secGameStateInfo.reset();
                     Log.setNextMessage("End " + secGameState.toString() + data.team[side].teamColor.toString());
                     data.gameClock.addExtraClock(secGameState.toString(), 10);
@@ -98,4 +98,7 @@ public class GameInterruption extends GCAction {
         return validGameState && validSecGameState;
     }
 
+    public SecondaryGameStates getSecGameState() {
+        return secGameState;
+    }
 }

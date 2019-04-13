@@ -71,7 +71,9 @@ public class TeamActions extends AbstractComponent {
     @Override
     public void update(AdvancedData data) {
         updateTimeOut(data);
-        updateOut(data);
+        if (out != null) {
+            updateOut(data);
+        }
     }
 
     /**
