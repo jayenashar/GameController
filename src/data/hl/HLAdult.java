@@ -14,8 +14,8 @@ public class HLAdult extends HL
         /** The league´s directory name with it´s teams and icons. */
         leagueDirectory = "hl_adult";
         /** How many robots are in a team. */
-        teamSize = 3;
+        teamSize = 4;
         /** How many robots of each team may play at one time. */
-        robotsPlaying = 1;
+        robotsPlaying = 2;
     }
 }

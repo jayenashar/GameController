@@ -25,7 +25,10 @@ public class SecondaryStateInfo implements Serializable {
     /**
      * Updates the additional info in the secondary game state regarding free kicks
      * @param teamPerforming - The team that is performing the free kick
-     * @param subMode - The mode we are in (0 = prepare, 1 = ready, switch back to normal means execute)
+     * @param subMode - The mode we are in:
+     *                0 = Robots should stay still, referee places the ball on the ground
+     *                1 = Robots can place themselves toward the ball
+     *                2 = Robots should stay still and referees ask to remove illegally positioned robots
      */
     public void setFreeKickData(byte teamPerforming, byte subMode){
         secondaryStateInfo[0] = teamPerforming;

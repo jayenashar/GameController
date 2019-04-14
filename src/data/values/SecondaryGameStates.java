@@ -14,7 +14,10 @@ public enum SecondaryGameStates implements DocumentingMarkdown {
     DIRECT_FREEKICK(4, "Direct Free Kick"),
     INDIRECT_FREEKICK(5, "Indirect Free Kick"),
 
-    PENALTYKICK(6, "Penalty Kick");
+    PENALTYKICK(6, "Penalty Kick"),
+    CORNER_KICK(7, "Corner Kick"),
+    GOAL_KICK(8, "Goal Kick"),
+    THROW_IN(9, "Throw-In"),;
 
     private byte byte_value;
     private String humanReadable;
@@ -37,6 +40,23 @@ public enum SecondaryGameStates implements DocumentingMarkdown {
         }
         System.out.println("Warning: Could not resolve SecondaryGameState byte.");
         return UNKNOWN;
+    }
+
+    /**
+     * @see controller.action.ui.GameInterruption
+     * @return true if secondary game state is on of the 6 game interruptions
+     */
+    public boolean isGameInterruption(){
+        switch (this) {
+            case PENALTYKICK:
+            case DIRECT_FREEKICK:
+            case INDIRECT_FREEKICK:
+            case CORNER_KICK:
+            case GOAL_KICK:
+            case THROW_IN:
+                return true;
+        }
+        return false;
     }
 
     public String toString(){

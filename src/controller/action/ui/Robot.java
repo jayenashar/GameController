@@ -8,7 +8,6 @@ import controller.action.ActionType;
 import controller.action.GCAction;
 import controller.action.ui.penalty.Penalty;
 import controller.action.ui.penalty.PickUpHL;
-import controller.action.ui.penalty.ServiceHL;
 import controller.action.ui.penalty.Substitute;
 import data.hl.HL;
 import data.states.AdvancedData;
@@ -72,9 +71,14 @@ public class Robot extends GCAction
                 || EventHandler.getInstance().lastUIEvent instanceof TeammatePushing) {
             EventHandler.getInstance().lastUIEvent.performOn(data, player, side, number);
         }
-        else if (player.penalty != Penalties.NONE) {
-            player.penalty = Penalties.NONE;
-            Log.state(data, ("Unpenalised ") + data.team[side].teamColor + " " + (number+1));
+        else if (data.isServingPenalty[side][number]) {// If robot is currently serving penalty, reset penalty time
+            data.whenPenalized[side][number] = data.getTime();
+            Log.state(data, "Resetting penalty for " + data.team[side].teamColor + " " + (number+1));
+        }
+        else if (player.penalty != Penalties.NONE) {// Robot will now starts serving its penalty time
+            data.whenPenalized[side][number] = data.getTime();
+            data.isServingPenalty[side][number] = true;
+            Log.state(data, "Start serving penalty for " + data.team[side].teamColor + " " + (number+1));
         }
     }
     
@@ -94,10 +98,6 @@ public class Robot extends GCAction
                 && (data.team[side].player[number].penalty != Penalties.SUBSTITUTE || data.getNumberOfRobotsInPlay(side) < Rules.league.robotsPlaying)
                 && !isCoach(data)
                 || EventHandler.getInstance().lastUIEvent instanceof PickUpHL
-                && data.team[side].player[number].penalty != Penalties.HL_SERVICE
-                && data.team[side].player[number].penalty != Penalties.SUBSTITUTE
-                || EventHandler.getInstance().lastUIEvent instanceof ServiceHL
-                && data.team[side].player[number].penalty != Penalties.HL_SERVICE
                 && data.team[side].player[number].penalty != Penalties.SUBSTITUTE
                 || EventHandler.getInstance().lastUIEvent instanceof Substitute
                 && data.team[side].player[number].penalty != Penalties.SUBSTITUTE
