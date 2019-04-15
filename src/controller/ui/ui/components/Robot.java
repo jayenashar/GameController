@@ -183,9 +183,11 @@ public class Robot extends AbstractComponent {
         // Update the goalie info
         updateGoalieMarker(robotInfo);
 
-        if (robotInfo.penalty != Penalties.NONE && data.getRemainingPenaltyTime(sideValue, robotId) > 0) {
-            if (!data.ejected[sideValue][robotId]) {
-                int seconds = data.getRemainingPenaltyTime(sideValue, robotId);
+        int seconds = data.getRemainingPenaltyTime(sideValue, robotId);
+        boolean isEjected = data.ejected[sideValue][robotId];
+        if (robotInfo.penalty != Penalties.NONE &&
+                (seconds > 0 || robotInfo.penalty == Penalties.SUBSTITUTE || isEjected)) {
+            if (!isEjected) {
                 boolean servingPenalty = data.isServingPenalty[sideValue][robotId];
                 boolean pickup = Rules.league instanceof HL && robotInfo.penalty == Penalties.HL_PICKUP_OR_INCAPABLE;
 
