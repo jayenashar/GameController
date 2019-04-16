@@ -33,8 +33,9 @@ public class RobotWithDropInCounter extends Robot {
 
         robotLayout.add(1 - rightOffset + 0.02, 0.1, 0.18, 0.75, diss);
 
-        robotLayout.add(1 - cardWidth - rightOffset, 0.1, cardWidth, 0.75, yellowCard);
-        robotLayout.add(1 - 2 * cardWidth - rightOffset, 0.1, cardWidth, 0.75, redCard);
+        robotLayout.add(1 - cardWidth - rightOffset, 0.1, cardWidth, 0.75, warningCard);
+        robotLayout.add(1 - 2 *cardWidth - rightOffset, 0.1, cardWidth, 0.75, yellowCard);
+        robotLayout.add(1 - 3 * cardWidth - rightOffset, 0.1, cardWidth, 0.75, redCard);
 
         double restWidth = 1 - 2 * cardWidth - rightOffset;
 

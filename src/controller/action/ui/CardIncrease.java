@@ -24,6 +24,7 @@ public class CardIncrease extends GCAction {
         this.color = color;
     }
 
+
     private void giveRedCard(AdvancedData data){
         int currentCount = data.team[side.value()].player[player].redCardCount;
 
@@ -43,12 +44,31 @@ public class CardIncrease extends GCAction {
         }
 
         if (currentCount == 2){
+            data.team[side.value()].player[player].yellowCardCount = 0;
             giveRedCard(data);
+        }
+    }
+
+    private void giveWarningCard(AdvancedData data){
+        int currentCount = data.team[side.value()].player[player].warningCardCount;
+
+        if (currentCount < 2){
+            currentCount += 1;
+            data.team[side.value()].player[player].warningCardCount = (byte) currentCount;
+            Log.state(data, "Added warning card");
+        }
+
+        if (currentCount == 2){
+            data.team[side.value()].player[player].warningCardCount = 0;
+            giveYellowCard(data);
         }
     }
 
     @Override
     public void perform(AdvancedData data) {
+        if (this.color == Color.BLUE) {
+            giveWarningCard(data);
+        }
         if (this.color == Color.YELLOW) {
             giveYellowCard(data);
         }
@@ -59,7 +79,7 @@ public class CardIncrease extends GCAction {
 
     @Override
     public boolean isLegal(AdvancedData data) {
-        return true;
+        return data.team[side.value()].player[player].redCardCount != 1;
     }
 
 }
