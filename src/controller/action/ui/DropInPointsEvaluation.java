@@ -20,7 +20,7 @@ public class DropInPointsEvaluation extends GCAction {
     @Override
     public void perform(AdvancedData data) {
         for(PlayerInfo pi : data.getTeam(this.scoring_side).player){
-            if (pi.penalty == Penalties.NONE) {
+            if (pi.penalty == Penalties.NONE && pi.redCardCount == 0) {
                 pi.dropInPoints += 1;
             }
         }
