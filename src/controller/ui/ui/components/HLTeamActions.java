@@ -25,6 +25,7 @@ public class HLTeamActions extends TeamActions {
     private GameInterruptionButton cornerKick;
     private GameInterruptionButton goalKick;
     private GameInterruptionButton throwIn;
+    private JButton retake;
 
     public HLTeamActions(Side side) {
         super(side);
@@ -47,8 +48,7 @@ public class HLTeamActions extends TeamActions {
         cornerKick = new GameInterruptionButton(LocalizationManager.getLocalization().CORNER_KICK);
         goalKick = new GameInterruptionButton(LocalizationManager.getLocalization().GOAL_KICK);
         throwIn = new GameInterruptionButton(LocalizationManager.getLocalization().THROW_IN);
-
-        System.out.println("Adding action listeners");
+        retake = new GameInterruptionButton(LocalizationManager.getLocalization().RETAKE);
 
         directFreeKick.addActionListener(new DirectFreeKick(side.value()));
         indirectFreeKick.addActionListener(new IndirectFreeKick(side.value()));
@@ -56,10 +56,9 @@ public class HLTeamActions extends TeamActions {
         cornerKick.addActionListener(new CornerKick(side.value()));
         goalKick.addActionListener(new GoalKick(side.value()));
         throwIn.addActionListener(new ThrowIn(side.value()));
+        retake.addActionListener(new RetakeGameInterruption(side.value()));
 
-        System.out.println("Adding action listeners");
-
-        int nb_rows = 7;
+        int nb_rows = 8;
         int row = 0;
         double row_height = 1.0 / nb_rows;
         layout.add(0, 0, 1, row_height, timeOut); row++;
@@ -69,6 +68,7 @@ public class HLTeamActions extends TeamActions {
         layout.add(0, row * row_height, 1, row_height, cornerKick);row++;
         layout.add(0, row * row_height, 1, row_height, goalKick);row++;
         layout.add(0, row * row_height, 1, row_height, throwIn);row++;
+        layout.add(0, row * row_height, 1, row_height, retake);row++;
 
         timeOut.setVisible(true);
 
@@ -89,6 +89,9 @@ public class HLTeamActions extends TeamActions {
         update(data, cornerKick, new CornerKick(side.value()));
         update(data, goalKick, new GoalKick(side.value()));
         update(data, throwIn, new ThrowIn(side.value()));
+
+        boolean isRetakeAllowed = new RetakeGameInterruption(side.value()).isLegal(data);
+        retake.setEnabled(isRetakeAllowed);
     }
 
     private void update(AdvancedData data, GameInterruptionButton button, GameInterruption action) {

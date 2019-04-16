@@ -8,8 +8,6 @@ package controller.ui.ui.customized;
  * - Penalty Kick
  * - Direct Free Kick
  * - Indirect Free Kick
- *
- * Soon to be introduced
  * - Corner Kick
  * - Goal Kick
  * - Throw-in
