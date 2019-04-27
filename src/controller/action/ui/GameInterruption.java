@@ -16,8 +16,6 @@ import data.values.SecondaryGameStates;
  * - Penalty Kick
  * - Direct Free Kick
  * - Indirect Free Kick
- *
- * Soon to be introduced
  * - Corner Kick
  * - Goal Kick
  * - Throw-in

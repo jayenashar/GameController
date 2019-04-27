@@ -35,6 +35,7 @@ public class Robot extends AbstractComponent {
     Button robot;
     protected JLabel robotLabel;
 
+    protected JButton warningCard;
     protected JButton yellowCard;
     protected JButton redCard;
 
@@ -90,10 +91,11 @@ public class Robot extends AbstractComponent {
         double rightOffset = 0.01;
 
         double cardWidth = 0.4 / aspectRatio;
-        robotLayout.add(1 - cardWidth - rightOffset, 0.1, cardWidth, 0.75, yellowCard);
-        robotLayout.add(1 - 2 * cardWidth - rightOffset, 0.1, cardWidth, 0.75, redCard);
+        robotLayout.add(1 - cardWidth - rightOffset, 0.1, cardWidth, 0.75, warningCard);
+        robotLayout.add(1 - 2 * cardWidth - rightOffset, 0.1, cardWidth, 0.75, yellowCard);
+        robotLayout.add(1 - 3 * cardWidth - rightOffset, 0.1, cardWidth, 0.75, redCard);
 
-        robotLayout.add(1 - 4 * cardWidth - rightOffset, 0.1, cardWidth*2, 0.75, makeGoalie);
+        robotLayout.add(1 - 5 * cardWidth - rightOffset, 0.1, cardWidth*2, 0.75, makeGoalie);
 
         double restWidth = 1 - 2 * cardWidth - rightOffset;
 
@@ -124,6 +126,10 @@ public class Robot extends AbstractComponent {
         robotLabel.setHorizontalAlignment(JLabel.LEFT);
         robotLabel.setIcon(lanIcon);
         robotLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+
+        warningCard = new Button("Warning");
+        warningCard.addActionListener(new CardIncrease(side, this.id, Color.BLUE));
 
         yellowCard = new Button("Yellow");
         yellowCard.addActionListener(new CardIncrease(side, this.id, Color.YELLOW));
@@ -183,9 +189,11 @@ public class Robot extends AbstractComponent {
         // Update the goalie info
         updateGoalieMarker(robotInfo);
 
-        if (robotInfo.penalty != Penalties.NONE && data.getRemainingPenaltyTime(sideValue, robotId) > 0) {
-            if (!data.ejected[sideValue][robotId]) {
-                int seconds = data.getRemainingPenaltyTime(sideValue, robotId);
+        int seconds = data.getRemainingPenaltyTime(sideValue, robotId);
+        boolean isEjected = data.ejected[sideValue][robotId];
+        if (robotInfo.penalty != Penalties.NONE &&
+                (seconds > 0 || robotInfo.penalty == Penalties.SUBSTITUTE || isEjected)) {
+            if (!isEjected) {
                 boolean servingPenalty = data.isServingPenalty[sideValue][robotId];
                 boolean pickup = Rules.league instanceof HL && robotInfo.penalty == Penalties.HL_PICKUP_OR_INCAPABLE;
 
@@ -230,6 +238,10 @@ public class Robot extends AbstractComponent {
     }
 
     private void updatePenaltyCards(PlayerInfo playerInfo) {
+        warningCard.setText(String.valueOf(playerInfo.warningCardCount));
+        warningCard.setMargin(new Insets(0, 0, 0, 0));
+        warningCard.setFont(FontHelper.boldStandardFont());
+
         yellowCard.setText(String.valueOf(playerInfo.yellowCardCount));
         yellowCard.setMargin(new Insets(0, 0, 0, 0));
         yellowCard.setFont(FontHelper.boldStandardFont());
@@ -237,6 +249,12 @@ public class Robot extends AbstractComponent {
         redCard.setText(String.valueOf(playerInfo.redCardCount));
         redCard.setMargin(new Insets(0, 0, 0, 0));
         redCard.setFont(FontHelper.boldStandardFont());
+
+        if (playerInfo.warningCardCount > 0) {
+            warningCard.setBackground(new Color(0, 100, 255));
+        } else {
+            warningCard.setBackground(new Color(50, 180, 255));
+        }
 
         if (playerInfo.yellowCardCount > 0) {
             yellowCard.setBackground(new Color(255, 255, 0));
