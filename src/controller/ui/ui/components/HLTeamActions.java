@@ -7,6 +7,7 @@ import controller.ui.localization.LocalizationManager;
 import controller.ui.ui.customized.Button;
 import controller.ui.ui.customized.GameInterruptionButton;
 import controller.ui.ui.customized.JMultiStepIndicatorButton;
+import controller.ui.ui.customized.RetakeButton;
 import data.states.AdvancedData;
 import data.values.SecondaryGameStates;
 import data.values.Side;
@@ -25,7 +26,7 @@ public class HLTeamActions extends TeamActions {
     private GameInterruptionButton cornerKick;
     private GameInterruptionButton goalKick;
     private GameInterruptionButton throwIn;
-    private JButton retake;
+    private RetakeButton retake;
 
     public HLTeamActions(Side side) {
         super(side);
@@ -48,7 +49,7 @@ public class HLTeamActions extends TeamActions {
         cornerKick = new GameInterruptionButton(LocalizationManager.getLocalization().CORNER_KICK);
         goalKick = new GameInterruptionButton(LocalizationManager.getLocalization().GOAL_KICK);
         throwIn = new GameInterruptionButton(LocalizationManager.getLocalization().THROW_IN);
-        retake = new GameInterruptionButton(LocalizationManager.getLocalization().RETAKE);
+        retake = new RetakeButton(LocalizationManager.getLocalization().RETAKE);
 
         directFreeKick.addActionListener(new DirectFreeKick(side.value()));
         indirectFreeKick.addActionListener(new IndirectFreeKick(side.value()));
