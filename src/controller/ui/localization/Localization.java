@@ -12,6 +12,8 @@ public class Localization {
     public final String GOAL_KICK = "Goal Kick";
     public final String THROW_IN = "Throw-In";
 
+    public final String RETAKE = "Retake";
+
     public final String COACH = "Coach";
     public final String EJECTED = "Ejected";
 
