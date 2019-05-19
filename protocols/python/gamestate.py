@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
-from construct import Byte, Struct, Enum, Bytes, Const, Array, Renamed, Int16ul
+from construct import Byte, Struct, Enum, Bytes, Const, Array, Int16ul, Int32ul, PaddedString, Flag, Int16sl
 
 Short = Int16ul
 
@@ -16,7 +16,7 @@ RobotInfo = "robot_info" / Struct(
     # define PENALTY_HL_KID_REQUEST_FOR_PICKUP_2_SERVICE 7
     # define MANUAL                      15
     "penalty" / Byte,
-    "secs_till_unpenalised" / Byte,
+    "secs_till_unpenalized" / Byte,
     "number_of_yellow_cards" / Byte,
     "number_of_red_cards" / Byte
 )
@@ -39,14 +39,14 @@ TeamInfo = "team" / Struct(
     "penalty_shot" / Byte,  # penalty shot counter
     "single_shots" / Short,  # bits represent penalty shot success
     "coach_sequence" / Byte,
-    "coach_message" / Bytes(253),
-    Renamed("coach", RobotInfo),
+    "coach_message" / PaddedString(253, 'utf8'),
+    "coach" / RobotInfo,
     "players" / Array(11, RobotInfo)
 )
 
 GameState = "gamedata" / Struct(
-    "header" / Const(Bytes(4), b'RGme'),
-    "version" / Const(Short, 12),
+    "header" / Const(b'RGme'),
+    "version" / Const(12, Short),
     "packet_number" / Byte,
     "players_per_team" / Byte,
     "game_type" / Byte,
@@ -61,7 +61,7 @@ GameState = "gamedata" / Struct(
                         # spiel zu ende
                         STATE_FINISHED=4
                         ),
-    "first_half" / Byte,
+    "first_half" / Flag,
     "kick_of_team" / Byte,
     "secondary_state" / Enum(Byte,
                              STATE_NORMAL=0,
@@ -72,21 +72,21 @@ GameState = "gamedata" / Struct(
                              STATE_INDIRECT_FREEKICK=5,
                              STATE_PENALTYKICK=6,
                              DROPBALL=128,
-							 UNKNOWN=255
+                             UNKNOWN=255
                              ),
     "secondary_state_info" / Bytes(4),
-    "drop_in_team" / Byte,
+    "drop_in_team" / Flag,
     "drop_in_time" / Short,
-    "seconds_remaining" / Short,
+    "seconds_remaining" / Int16sl,
     "secondary_seconds_remaining" / Short,
-    Array(2, Renamed("teams", TeamInfo))
+    "teams" / Array(2, "team" / TeamInfo)
 )
 
 GAME_CONTROLLER_RESPONSE_VERSION = 2
 
-ReturnData = "returndata" / Struct(
-    "header" / Const(Bytes(4), b"RGrt"),
-    "version" / Const(Byte, 2),
+ReturnData = Struct(
+    "header" / Const(b"RGrt"),
+    "version" / Const(2, Byte),
     "team" / Byte,
     "player" / Byte,
     "message" / Byte
