@@ -503,6 +503,12 @@ public class AdvancedData extends GameControlData implements Cloneable
         boolean[] ejected = data.ejected[0];
         data.ejected[0] = data.ejected[1];
         data.ejected[1] = ejected;
+
+        boolean[] t1 = data.isServingPenalty[0];
+        data.isServingPenalty[0] = data.isServingPenalty[1];
+        data.isServingPenalty[1] = t1;
+
+
         // if necessary, swap back team colors
         if (data.secGameState != SecondaryGameStates.PENALTYSHOOT
                 && data.colorChangeAuto) {
