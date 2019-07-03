@@ -6,16 +6,13 @@ package controller.ui.localization;
 public class Localization {
 
     public final String DIRECT_FREE_KICK = "Direct Free Kick";
-    public final String DIRECT_FREE_KICK_READY = "Direct Free Kick Ready";
-    public final String DIRECT_FREE_KICK_EXECUTE = "Execute Direct Free Kick";
-
     public final String INDIRECT_FREE_KICK = "Indirect Free Kick";
-    public final String INDIRECT_FREE_KICK_READY = "Indirect Free Kick Ready";
-    public final String INDIRECT_FREE_KICK_EXECUTE = "Execute Indirect Free Kick";
-
     public final String PENALTY_KICK = "Penalty Kick";
-    public final String PENALTY_KICK_READY = "Penalty Kick Ready";
-    public final String PENALTY_KICK_EXECUTE = "Execute Penalty Kick";
+    public final String CORNER_KICK = "Corner Kick";
+    public final String GOAL_KICK = "Goal Kick";
+    public final String THROW_IN = "Throw-In";
+
+    public final String RETAKE = "Retake";
 
     public final String COACH = "Coach";
     public final String EJECTED = "Ejected";

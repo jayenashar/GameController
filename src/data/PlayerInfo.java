@@ -28,8 +28,9 @@ public class PlayerInfo implements Serializable
     //this is streamed
     public Penalties penalty = Penalties.NONE; // penalty state of the player
     public byte secsTillUnpenalised;    // estimate of time till unpenalised
-    public byte yellowCardCount = 0;    // estimate of time till unpenalised
-    public byte redCardCount = 0;    // estimate of time till unpenalised
+    public byte warningCardCount = 0; // Number of warnings received by the robot (not serialized)
+    public byte yellowCardCount = 0;    // Number of yellow cards received by the robot
+    public byte redCardCount = 0;    // Number of red cards received by the robot
     public byte isGoalie = 0;    // Save the information whether they are the goalie here to make it easier for the ux
 
     public byte dropInPoints = 0; // Number of drop in points

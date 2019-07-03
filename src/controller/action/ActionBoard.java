@@ -54,13 +54,16 @@ public class ActionBoard {
     public static Finish finish;
     public static BallManipulation ballManipulation;
     public static PickUpHL pickUpHL;
-    public static ServiceHL serviceHL;
     public static TeammatePushing teammatePushing;
     public static Substitute substitute;
     public static DropBall dropBall;
     public static IndirectFreeKick[] indirectFreeKick = new IndirectFreeKick[2];
     public static DirectFreeKick[] directFreeKick = new DirectFreeKick[2];
     public static PenaltyKick[] penaltyKick = new PenaltyKick[2];
+    public static CornerKick[] cornerKick = new CornerKick[2];
+    public static GoalKick[] goalKick = new GoalKick[2];
+    public static ThrowIn[] throwIn = new ThrowIn[2];
+    public static RetakeGameInterruption[] retakeGameInterruptions = new RetakeGameInterruption[2];
 
     public static Manual[][] manualPen = Rules.league.isCoachAvailable ? new Manual[2][Rules.league.teamSize + 1] : new Manual[2][Rules.league.teamSize];
     public static Manual[][] manualUnpen = Rules.league.isCoachAvailable ? new Manual[2][Rules.league.teamSize + 1] : new Manual[2][Rules.league.teamSize];
@@ -100,6 +103,10 @@ public class ActionBoard {
             indirectFreeKick[i] = new IndirectFreeKick(i);
             directFreeKick[i] = new DirectFreeKick(i);
             penaltyKick[i] = new PenaltyKick(i);
+            cornerKick[i] = new CornerKick(i);
+            goalKick[i] = new GoalKick(i);
+            throwIn[i] = new ThrowIn(i);
+            retakeGameInterruptions[i] = new RetakeGameInterruption(i);
         }
 
         clockReset = new ClockReset();
@@ -121,7 +128,6 @@ public class ActionBoard {
         ballManipulation = new BallManipulation();
 
         pickUpHL = new PickUpHL();
-        serviceHL = new ServiceHL();
         teammatePushing = new TeammatePushing();
         substitute = new Substitute();
         dropBall = new DropBall();
