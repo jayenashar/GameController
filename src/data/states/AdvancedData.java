@@ -242,6 +242,22 @@ public class AdvancedData extends GameControlData implements Cloneable
             }
         }
     }
+
+    /**
+     * Ensures that all robots which have served their penalties are now considered as without penalty
+     */
+    public void clearPenaltiesServed()
+    {
+        for (int side = 0; side < 2; side++) {
+            for (int robot = 0; robot < Rules.league.teamSize; robot++) {
+                boolean has_ended_serving_penalty = isServingPenalty[side][robot] && getRemainingPenaltyTime(side, robot) == 0;
+                if (has_ended_serving_penalty) {
+                    isServingPenalty[side][robot] = false;
+                    team[side].player[robot].penalty = Penalties.NONE;
+                }
+            }
+        }
+    }
     
     /**
      * Add the time passed in the current game state to the time that already passed before.

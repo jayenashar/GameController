@@ -4,11 +4,10 @@ import common.Log;
 import controller.action.ActionBoard;
 import controller.action.ActionType;
 import controller.action.GCAction;
+import data.PlayerInfo;
+import data.Rules;
 import data.states.AdvancedData;
-import data.values.GameStates;
-import data.values.GameTypes;
-import data.values.SecondaryGameStates;
-import data.values.Side;
+import data.values.*;
 
 
 /**
@@ -46,6 +45,8 @@ public class Goal extends GCAction
     @Override
     public void perform(AdvancedData data)
     {
+        // Before adding the dropin points, dirty penalty serving states for the robots should be cleared
+        data.clearPenaltiesServed();
         // If we are in a dropin game we want to count dropin points
         // We are doing this here with forwarding an action to later call the action directly
         // from the button click of a score goal
