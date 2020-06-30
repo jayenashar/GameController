@@ -1,0 +1,23 @@
+button {
+  min-height: 48px;
+  min-width: 48px;
+
+  &[data-active="true"] {
+    background: hsl(220, 100%, 38%);
+    color: white;
+    font-weight: bolder;
+  }
+}
+
+.game-periods-periods, .game-period-states {
+  display: flex;
+
+  > * {
+    flex: 1;
+  }
+}
+
+.game-period-time {
+  text-align: center;
+  font-size: xx-large;
+}
