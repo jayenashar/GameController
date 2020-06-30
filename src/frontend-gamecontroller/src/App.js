@@ -31,6 +31,9 @@ function GamePeriod() {
             <div className='game-period-time'>
                 10:02
             </div>
+            <div className='game-period-kickoff' data-team={2}>
+                Kickoff
+            </div>
         </div>
     );
 }
@@ -38,7 +41,24 @@ function GamePeriod() {
 function Teams() {
     return (
         <div className='teams'>
+            <Team index={1}/>
+            <Team index={2}/>
+        </div>
+    );
+}
 
+function Team({index}) {
+    return (
+        <div className='team' data-index={index}>
+            <div className='team-header'>
+                <div className='team-name'>
+                    {index === 1 ? 'Rhoban' : 'Starkit'}
+                </div>
+                <img className='team-icon' src={`/spl/${index === 1 ? '18.gif' : '5.png'}`}/>
+                <button className='team-score'>
+                    {index === 1 ? 18 : 5}
+                </button>
+            </div>
         </div>
     );
 }

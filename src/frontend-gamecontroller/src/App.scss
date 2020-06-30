@@ -3,9 +3,20 @@ button {
   min-width: 48px;
 
   &[data-active="true"] {
-    background: hsl(220, 100%, 38%);
-    color: white;
+    //background: hsl(220, 100%, 38%);
+    //color: white;
+    filter: invert(1);
     font-weight: bolder;
+  }
+}
+
+.game {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .teams {
+    flex: 1;
   }
 }
 
@@ -20,4 +31,43 @@ button {
 .game-period-time {
   text-align: center;
   font-size: xx-large;
+}
+
+.game-period-kickoff[data-team="2"] {
+  text-align: right;
+}
+
+.teams {
+  display: flex;
+
+  > * {
+    flex: 1;
+  }
+}
+
+.team {
+  &[data-index="1"] {
+    background: red;
+  }
+
+  &[data-index="2"] {
+    background: blue;
+  }
+}
+
+.team-header {
+  display: flex;
+  justify-content: space-evenly;
+  line-height: 48px;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.5);
+
+  [data-index="2"] & {
+    flex-direction: row-reverse;
+  }
+}
+
+.team-icon {
+  max-width: 48px;
+  max-height: 48px;
 }
