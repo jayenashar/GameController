@@ -1,6 +1,9 @@
 button {
   min-height: 48px;
-  min-width: 48px;
+  // disabled because most buttons are flex:1 and this is unnecessary.  both makes them width:48px when wrapping.
+  //min-width: 48px;
+  // disabled because this makes it less visually appealing when there is space for it
+  //padding: 0;
 
   &[data-active="true"] {
     //background: hsl(220, 100%, 38%);
@@ -46,11 +49,11 @@ button {
 }
 
 .team {
-  &[data-index="1"] {
+  &[data-team-index="1"] {
     background: red;
   }
 
-  &[data-index="2"] {
+  &[data-team-index="2"] {
     background: blue;
   }
 }
@@ -62,7 +65,7 @@ button {
   align-items: center;
   background: rgba(255, 255, 255, 0.5);
 
-  [data-index="2"] & {
+  [data-team-index="2"] & {
     flex-direction: row-reverse;
   }
 }
@@ -70,4 +73,86 @@ button {
 .team-icon {
   max-width: 48px;
   max-height: 48px;
+}
+
+.team-score {
+  min-width: 48px;
+}
+
+.team-actions {
+  display: flex;
+  flex-wrap: wrap;
+
+  [data-team-index="2"] & {
+    flex-direction: row-reverse;
+  }
+
+  > * {
+    flex: 1;
+  }
+}
+
+.players {
+  display: flex;
+
+  [data-team-index="2"] & {
+    flex-direction: row-reverse;
+  }
+
+  > * {
+    flex: 1;
+  }
+}
+
+.player-actions, .players-players {
+  display: flex;
+  flex-direction: column;
+
+  > * {
+    flex: 1;
+  }
+}
+
+.player {
+  display: flex;
+  align-items: center;
+
+  [data-team-index="2"] & {
+    flex-direction: row-reverse;
+  }
+}
+
+.player-player {
+  min-width: 48px;
+  flex: 1;
+  opacity: 0.9;
+}
+
+.player-card, .player-goalkeeper {
+  min-width: 48px;
+  opacity: 0.9;
+}
+
+.player-card-red {
+  background: red;
+}
+
+.player-card-red[data-value="0"] {
+  background: pink;
+}
+
+.player-card-yellow {
+  background: yellow;
+}
+
+.player-card-yellow[data-value="0"] {
+  background: lightyellow;
+}
+
+.player-card-green {
+  background: green;
+}
+
+.player-card-green[data-value="0"] {
+  background: lightgreen;
 }

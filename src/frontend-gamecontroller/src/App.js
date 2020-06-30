@@ -48,17 +48,66 @@ function Teams() {
 }
 
 function Team({index}) {
+    const teamName = index === 1 ? 'Rhoban' : 'Starkit';
     return (
-        <div className='team' data-index={index}>
+        <div className='team' data-team-index={index}>
             <div className='team-header'>
                 <div className='team-name'>
-                    {index === 1 ? 'Rhoban' : 'Starkit'}
+                    {teamName}
                 </div>
-                <img className='team-icon' src={`/spl/${index === 1 ? '18.gif' : '5.png'}`}/>
+                <img alt={teamName} className='team-icon' src={`/images/spl/${index === 1 ? '18.gif' : '5.png'}`}/>
                 <button className='team-score'>
                     {index === 1 ? 18 : 5}
                 </button>
             </div>
+            <div className='team-actions'>
+                {/*could/should we visually group the kicks?*/}
+                <button>Team Timeout</button>
+                <button>Penalty Kick</button>
+                <button>Direct Free Kick</button>
+                <button>Indirect Free Kick</button>
+                <button>Corner Kick</button>
+                <button>Goal Kick</button>
+                <button>Throw-in</button>
+                <button>Retake</button>
+            </div>
+            <Players teamIndex={index}/>
+        </div>
+    );
+}
+
+function Players({teamIndex}) {
+    return (
+        <div className='players'>
+            <div className='players-players'>
+                <Player teamIndex={teamIndex} index={1}/>
+                <Player teamIndex={teamIndex} index={2}/>
+                <Player teamIndex={teamIndex} index={3}/>
+                <Player teamIndex={teamIndex} index={4}/>
+                <Player teamIndex={teamIndex} index={5}/>
+                <Player teamIndex={teamIndex} index={6}/>
+            </div>
+            <div className='player-actions'>
+                <button>Pushing</button>
+                <button>Ball handling</button>
+                <button>Pickup/Incapable</button>
+            </div>
+        </div>
+    );
+}
+
+function Player({teamIndex, index}) {
+    const numCardsRed    = Math.floor(2 * Math.random());
+    const numCardsYellow = Math.floor(2 * Math.random());
+    const numCardsGreen  = Math.floor(2 * Math.random());
+    return (
+        <div className='player'>
+            <img alt='grey' src='/images/icons/wlan_status_grey.png'/>
+            <button className='player-player'>{index}{index > 4 && ' (sub)'}</button>
+            <button className='player-goalkeeper' data-active={teamIndex === 1 && index === 3}>G</button>
+            <button className='player-card player-card-red' data-value={numCardsRed}>{numCardsRed}</button>
+            <button className='player-card player-card-yellow' data-value={numCardsYellow}>{numCardsYellow}</button>
+            <button className='player-card player-card-green' data-value={numCardsGreen}>{numCardsGreen}</button>
         </div>
     );
 }
