@@ -62,14 +62,14 @@ function Team({index}) {
             </div>
             <div className='team-actions'>
                 {/*could/should we visually group the kicks?*/}
-                <button>Team Timeout</button>
+                <button disabled>Team Timeout</button>
                 <button>Penalty Kick</button>
                 <button>Direct Free Kick</button>
                 <button>Indirect Free Kick</button>
                 <button>Corner Kick</button>
                 <button>Goal Kick</button>
                 <button>Throw-in</button>
-                <button>Retake</button>
+                <button disabled>Retake</button>
             </div>
             <Players teamIndex={index}/>
         </div>
