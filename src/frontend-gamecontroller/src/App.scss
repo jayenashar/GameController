@@ -16,7 +16,7 @@ button {
 .game {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  min-height: 100%;
 
   .teams {
     flex: 1;
@@ -185,4 +185,13 @@ button {
 
 .player-card-green[data-value="0"] {
   background: lightgreen;
+}
+
+.action-list {
+  display: flex;
+  overflow-x: auto;
+
+  > * {
+    flex: 1;
+  }
 }

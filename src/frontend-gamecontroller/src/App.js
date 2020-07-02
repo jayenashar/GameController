@@ -130,7 +130,13 @@ function Player({teamIndex, index}) {
 function ActionList() {
     return (
         <div className='action-list'>
-
+            <button style={{background: 'red'}}>2 - Red card</button>
+            <button style={{background: 'red'}}>3 - Yellow card</button>
+            <button style={{background: 'blue'}}>3 - Yellow card</button>
+            <button style={{background: 'blue', opacity: 0.5}}>1 - Red card</button>
+            <button style={{background: 'red'}}>Goal</button>
+            <button>Set</button>
+            <button>Playing</button>
         </div>
     );
 }
