@@ -29,7 +29,7 @@ function GamePeriod() {
                 <button>Finished</button>
             </div>
             <div className='game-period-time'>
-                10:02
+                18m05s
             </div>
             <div className='game-period-kickoff' data-team={2}>
                 Kickoff
@@ -97,13 +97,26 @@ function Players({teamIndex}) {
 }
 
 function Player({teamIndex, index}) {
-    const numCardsRed    = Math.floor(2 * Math.random());
-    const numCardsYellow = Math.floor(2 * Math.random());
-    const numCardsGreen  = Math.floor(2 * Math.random());
+    const numCardsRed             = Math.floor(2 * Math.random());
+    const numCardsYellow          = Math.floor(2 * Math.random());
+    const numCardsGreen           = Math.floor(2 * Math.random());
+    const isPenalised             = Math.random() < 2 / 12;
+    const PENALTY_SECONDS         = 30;
+    const penaltyRemainingSeconds = Math.floor(PENALTY_SECONDS * Math.random());
+    const penaltyRemainingPercent = penaltyRemainingSeconds / PENALTY_SECONDS * 100;
     return (
         <div className='player'>
             <img alt='grey' src='/images/icons/wlan_status_grey.png'/>
-            <button className='player-player'>{index}{index > 4 && ' (sub)'}</button>
+            <div className='player-player' style={{position: 'relative'}}>
+                <button>
+                    <div style={isPenalised ?
+                                {background: `linear-gradient(to right, yellow ${penaltyRemainingPercent}%, transparent ${penaltyRemainingPercent}%)`} :
+                                {}}>
+                        {index}{index > 4 && ' (sub)'}
+                        {isPenalised && <><br/>{penaltyRemainingSeconds}s</>}
+                    </div>
+                </button>
+            </div>
             <button className='player-goalkeeper'>
                 <img src='/images/icons/goalkeeper.png' data-active={teamIndex === 1 && index === 3}/>
             </button>
