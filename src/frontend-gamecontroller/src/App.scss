@@ -133,6 +133,10 @@ button {
   opacity: 0.9;
 }
 
+.player-goalkeeper [data-active="false"] {
+  opacity: 0.5;
+}
+
 .player-card-red {
   background: red;
 }

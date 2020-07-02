@@ -55,7 +55,7 @@ function Team({index}) {
                 <div className='team-name'>
                     {teamName}
                 </div>
-                <img alt={teamName} className='team-icon' src={`/images/spl/${index === 1 ? '18.gif' : '5.png'}`}/>
+                <img alt={teamName} className='team-icon' src={`/images/hl_kid/${index === 1 ? '11.png' : '12.png'}`}/>
                 <button className='team-score'>
                     {index === 1 ? 18 : 5}
                 </button>
@@ -104,7 +104,9 @@ function Player({teamIndex, index}) {
         <div className='player'>
             <img alt='grey' src='/images/icons/wlan_status_grey.png'/>
             <button className='player-player'>{index}{index > 4 && ' (sub)'}</button>
-            <button className='player-goalkeeper' data-active={teamIndex === 1 && index === 3}>G</button>
+            <button className='player-goalkeeper'>
+                <img src='/images/icons/goalkeeper.png' data-active={teamIndex === 1 && index === 3}/>
+            </button>
             <button className='player-card player-card-red' data-value={numCardsRed}>{numCardsRed}</button>
             <button className='player-card player-card-yellow' data-value={numCardsYellow}>{numCardsYellow}</button>
             <button className='player-card player-card-green' data-value={numCardsGreen}>{numCardsGreen}</button>
