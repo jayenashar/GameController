@@ -1,5 +1,11 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Getting started
+
+1. [Install node.js](https://nodejs.org/en/download/package-manager/)
+2. [Install yarn](https://classic.yarnpkg.com/en/docs/install)
+3. Install project dependencies by running `yarn` (with no arguments, in the project directory)
+
 ## Available Scripts
 
 In the project directory, you can run:
